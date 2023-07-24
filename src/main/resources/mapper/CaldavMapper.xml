@@ -2,4 +2,87 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.emgram.kr.dobby.dao.CaldavDao">
+
+    <select id="getCalendarInfo" parameterType="hashmap" resultType="com.emgram.kr.dobby.dto.caldav.CaldavCalendar">
+        select calendar_id as calendarId
+             , calendar_name as calendarName
+             , calendar_tag as cTag
+        from caldav_calendar_info
+        where calendar_id = #{calendarId}
+    </select>
+
+    <insert id="insertCalendarInfo" parameterType="hashmap">
+        insert into caldav_calendar_info
+            (calendar_id, calendar_name, calendar_tag)
+        values
+            (#{calendarId}, #{calendarName}, #{cTag})
+    </insert>
+
+    <update id="updateCalendarInfo" parameterType="hashmap">
+        update caldav_calendar_info
+        set calendar_name = #{calendarName}
+          , calendar_tag = #{cTag}
+          , update_dt = now()
+        where
+            calendar_id = #{calendarId};
+    </update>
+
+    <select id="getAllEventTagList" resultType="com.emgram.kr.dobby.dto.caldav.CaldavEvent">
+        select event_id as eventId
+             , event_tag as eTag
+        from caldav_event_info;
+    </select>
+
+    <delete id="deleteEvent" parameterType="java.util.List">
+        delete
+        from caldav_event_info
+        where event_id in
+        <foreach collection="deleteEventList" item="item" separator="," open="(" close=")">
+            #{item.eventId}
+        </foreach>
+    </delete>
+
+    <update id="updateEvent" parameterType="com.emgram.kr.dobby.dto.caldav.CaldavCalendar">
+        <foreach collection="eventList" item="item">
+            update caldav_event_info
+            set event_name = #{item.eventName}
+            , start_dt = #{item.startTime}
+            , end_dt = #{item.endTime}
+            , event_tag = #{item.eTag}
+            , update_user = #{item.updator}
+            , update_dt = #{item.updateTime}
+            where event_id = #{item.eventId}
+            and calendar_id = #{calendarId};
+        </foreach>
+    </update>
+
+    <insert id="insertEvent" parameterType="com.emgram.kr.dobby.dto.caldav.CaldavCalendar">
+        insert into caldav_event_info
+        (
+        event_id
+        , calendar_id
+        , event_name
+        , start_dt
+        , end_dt
+        , event_tag
+        , create_user
+        , update_user
+        , create_dt
+        , update_dt
+        ) values
+        <foreach collection="eventList" item="item" separator=",">
+            (
+            #{item.eventId}
+            , #{calendarId}
+            , #{item.eventName}
+            , #{item.startTime}
+            , #{item.endTime}
+            , #{item.eTag}
+            , #{item.creator}
+            , #{item.updator}
+            , #{item.createTime}
+            , #{item.updateTime}
+            )
+        </foreach>
+    </insert>
 </mapper>
