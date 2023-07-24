@@ -30,7 +30,8 @@
     <select id="getAllEventTagList" resultType="com.emgram.kr.dobby.dto.caldav.CaldavEvent">
         select event_id as eventId
              , event_tag as eTag
-        from caldav_event_info;
+        from caldav_event_info
+        where delete_dt is null;
     </select>
 
     <update id="deleteEvent" parameterType="java.util.List">

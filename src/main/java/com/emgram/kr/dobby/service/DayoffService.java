@@ -51,6 +51,8 @@ public class DayoffService {
     }
 
     private List<Date> getBetweenDateList(Date start_dt, Date end_dt){
+        start_dt = removeTime(start_dt);
+        end_dt = removeTime(end_dt);
         List<Date> dates = new ArrayList<>();
         Date currentDate = start_dt;
         while (currentDate.compareTo(end_dt) <= 0){
@@ -61,5 +63,15 @@ public class DayoffService {
             currentDate = c.getTime();
         }
         return dates;
+    }
+
+    private Date removeTime(Date date) {
+        Calendar cal = Calendar.getInstance();
+        cal.setTime(date);
+        cal.set(Calendar.HOUR_OF_DAY, 0);
+        cal.set(Calendar.MINUTE, 0);
+        cal.set(Calendar.SECOND, 0);
+        cal.set(Calendar.MILLISECOND, 0);
+        return cal.getTime();
     }
 }

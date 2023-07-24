@@ -183,7 +183,8 @@ public class CaldavService {
                 .filter(o->calendar.getEventList().stream().noneMatch(n->n.getEventId().equals(o.getEventId())))
                 .collect(Collectors.toList());
         if(deleteEventList.size() > 0) {
-            eventStatus.setDelete(caldavDao.deleteEvent(deleteEventList));
+            eventStatus.setDelete(deleteEventList.size());
+            caldavDao.deleteEvent(deleteEventList);
         }
 
         // 수정 대상 : 기존과 신규의 etag가 다른거 , 상세정보 조회 후 업데이트
