@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.emgram.kr.dobby.dao.DayoffDao">
+    <delete id="deleteDayoffHistoryForSync">
+        delete dh
+        from dayoff_history dh
+        left join caldav_event_info cei on dh.event_idx = cei.event_idx
+        where dh.update_dt != cei.update_dt
+           or cei.delete_dt is not null
+    </delete>
+
+    <select id="getEventListForSync" resultType="com.emgram.kr.dobby.dto.caldav.CaldavEvent">
+        with pattern as (
+            select pattern_form
+                 , pcm.code_id as off_type
+                 , code_name   as off_name
+                 , code_val
+            from pattern_type pt
+                     inner join pattern_code_map pcm on pt.pattern_idx = pcm.pattern_idx
+                     inner join syscode s on pcm.code_id = s.code_id
+        )
+        select
+            cei.event_idx as eventIdx
+             , p.off_type as eventName
+             , cei.start_dt as startTime
+             , cei.end_dt as endTime
+             , map1.employee_no as creator
+             , map2.employee_no as updator
+             , cei.create_dt as createTime
+             , cei.update_dt as updateTime
+        from caldav_event_info cei
+                 left join dayoff_history dh on cei.event_idx = dh.event_idx
+                 left join vacation v on cei.event_idx = v.event_idx
+                 left join employee_cal_map ecm on cei.wid = ecm.wid
+                 left join pattern p
+                           on cei.event_name regexp replace(p.pattern_form, '%s', '[가-힣]')
+        inner join employee_cal_map map1 on map1.wid = cei.wid
+            inner join employee_cal_map map2 on map2.wid = cei.update_user
+        where
+            dh.event_idx is null
+          and v.event_idx is null
+          and ecm.wid is not null
+          and cei.delete_dt is null
+          and p.off_type is not null
+    </select>
+
+    <insert id="insertDayoffListForSync" parameterType="list">
+        insert into dayoff_history
+        (employee_no, event_idx, dayoff_type, dayoff_dt,
+         create_dt, creator_id, update_dt, updator_id)
+        values
+        <foreach collection="list" item="item" separator=",">
+        (
+            #{item.employee_no}
+            , #{item.event_idx}
+            , #{item.dayoff_type}
+            , #{item.dayoff_dt}
+            , #{item.create_dt}
+            , #{item.creator_id}
+            , #{item.update_dt}
+            , #{item.updator_id}
+        )
+        </foreach>
+    </insert>
+</mapper>

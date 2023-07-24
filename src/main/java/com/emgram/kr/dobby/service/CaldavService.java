@@ -22,31 +22,35 @@ public class CaldavService {
 
     private CaldavDao caldavDao;
 
+    private CaldavResult caldavResult;
+
     @Autowired
     public CaldavService(CaldavDao caldavDao){
         this.caldavDao = caldavDao;
     }
 
-    public void CaldavSyncRun(CaldavClient client, Date startDate){
-        log.info("-- 캘린더 동기화 시작 --");
+    public CaldavResult CaldavSyncRun(CaldavClient client, Date startDate){
+        caldavResult = new CaldavResult();
+
         Date endDate = this.getEndDate();
         client.setDomainUrl(this.getDomainUrl(client));
         client.setHomeSetUrl(this.getHomeSetUrl(client));
 
         CaldavCalendar calendar = this.getTargetCalendar(client);
         if(calendar == null){
-            log.error("일치하는 캘린더가 없습니다.");
-            return;
+            caldavResult.setCalendar(new CaldavResult.CalendarStatus(CaldavResult.CalendarStatusType.CAL_NOTFOUND));
+            return caldavResult;
         }
         if(this.checkCalendarNotChange(calendar)){
-            log.info("-- 캘린더 동기화 종료 --");
-            return;
+            caldavResult.setCalendar(new CaldavResult.CalendarStatus(CaldavResult.CalendarStatusType.CAL_MAINTAIN));
+            return caldavResult;
         }
 
         calendar.setEventList(this.getEventTagList(client, calendar, startDate, endDate));
         this.reflectEvent(client, calendar);
         caldavDao.updateCalendarInfo(calendar);
-        log.info("-- 캘린더 동기화 종료 --");
+
+        return caldavResult;
     }
 
     private Date getEndDate(){
@@ -111,22 +115,28 @@ public class CaldavService {
     private boolean checkCalendarNotChange(CaldavCalendar linkedCalendar){
         CaldavCalendar calendarInfo = caldavDao.getCalendarInfo(linkedCalendar);
         if(calendarInfo != null && calendarInfo.getCTag().equals(linkedCalendar.getCTag())){
-            log.info("\t캘린더 변동 사항 없음");
             return true;
         }
         if(calendarInfo == null){
-            log.info(String.format("\t신규 캘린더 발생\n%s[%s] : %s"
-                    , linkedCalendar.getCalendarName()
-                    , linkedCalendar.getCalendarId()
-                    , linkedCalendar.getCTag()));
+            caldavResult.setCalendar(
+                    new CaldavResult.CalendarStatus(
+                            CaldavResult.CalendarStatusType.CAL_NEW
+                            , linkedCalendar.getCalendarName()
+                            , linkedCalendar.getCTag()
+                    )
+            );
             caldavDao.insertCalendarInfo(linkedCalendar);
             return false;
         }
-        log.info(String.format("\t캘린더 변동 발생\n%s[%s] : %s > %s"
-                , calendarInfo.getCalendarName()
-                , calendarInfo.getCalendarId()
-                , calendarInfo.getCTag()
-                , linkedCalendar.getCTag()));
+        caldavResult.setCalendar(
+                new CaldavResult.CalendarStatus(
+                        CaldavResult.CalendarStatusType.CAL_UPDATE
+                        , calendarInfo.getCalendarName()
+                        , calendarInfo.getCTag()
+                        , linkedCalendar.getCalendarName()
+                        , linkedCalendar.getCTag()
+                )
+        );
         return false;
     }
 
@@ -165,14 +175,16 @@ public class CaldavService {
     }
 
     private void reflectEvent(CaldavClient client, CaldavCalendar calendar){
+        CaldavResult.EventStatus eventStatus = new CaldavResult.EventStatus();
         List<CaldavEvent> oldEventList = caldavDao.getAllEventTagList();
 
-        // 삭제 대상 : 기존에 있는데 신규에 없는거 , DB 에서 그냥 삭제
+        // 삭제 대상 : 기존에 있는데 신규에 없는거 , delete_dt 추가
         List<CaldavEvent> deleteEventList = oldEventList.stream()
                 .filter(o->calendar.getEventList().stream().noneMatch(n->n.getEventId().equals(o.getEventId())))
                 .collect(Collectors.toList());
-        if(deleteEventList.size() > 0)
-            caldavDao.deleteEvent(deleteEventList);
+        if(deleteEventList.size() > 0) {
+            eventStatus.setDelete(caldavDao.deleteEvent(deleteEventList));
+        }
 
         // 수정 대상 : 기존과 신규의 etag가 다른거 , 상세정보 조회 후 업데이트
         List<CaldavEvent> updateEventList = calendar.getEventList().stream()
@@ -190,14 +202,17 @@ public class CaldavService {
         insertEventList = this.getCalendarData(client, calendar.getCalendarUrl(), insertEventList, 40);
 
         if(updateEventList.size() > 0){
+            eventStatus.setUpdate(updateEventList.size());
             calendar.setEventList(updateEventList);
             caldavDao.updateEvent(calendar);
         }
 
         if(insertEventList.size() > 0){
+            eventStatus.setUpdate(insertEventList.size());
             calendar.setEventList(insertEventList);
             caldavDao.insertEvent(calendar);
         }
+        caldavResult.setEvent(eventStatus);
     }
 
     private List<CaldavEvent> getCalendarData(CaldavClient client, String _calendarUrl,  List<CaldavEvent> eventList, int splitRange){

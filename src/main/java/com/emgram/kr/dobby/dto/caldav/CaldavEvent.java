@@ -14,11 +14,13 @@ import java.util.Map;
 public class CaldavEvent {
     private String eventUrl;
     private String eventId;
+    private int eventIdx;
     private String eTag;
 
     private String eventName;
     private Date startTime;
     private Date endTime;
+    private String wid;
     private String creator;
     private String updator;
     private Date createTime;
@@ -56,12 +58,11 @@ public class CaldavEvent {
         CaldavEventData.Vevent vevent = eventData.getVevent();
 
         this.eventName = vevent.getSummary();
+        this.wid = vevent.getXNaverRegisterer().getXWorksmobileWid();
         this.creator = String.format("%s:%s"
                 , vevent.getXNaverRegisterer().getCn()
                 , vevent.getXNaverRegisterer().getXWorksmobileWid());
-        this.updator = String.format("%s:%s"
-                , vevent.getXNaverLastModifier().getCn()
-                , vevent.getXNaverLastModifier().getXWorksmobileWid());
+        this.updator = vevent.getXNaverLastModifier().getXWorksmobileWid();
 
 
         CaldavEventData.Dtstart dtstart = vevent.getDtstart();
