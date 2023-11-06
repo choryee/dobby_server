@@ -31,3 +31,5 @@ build/
 
 ### VS Code ###
 .vscode/
+/.mvn/wrapper/node_modules/.yarn-integrity
+/.mvn/wrapper/yarn.lock
