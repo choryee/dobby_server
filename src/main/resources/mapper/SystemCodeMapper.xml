@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.emgram.kr.dobby.dao.SystemCodeDao">
+    <resultMap id="systemCodeListItem" type="com.emgram.kr.dobby.dto.syscode.SystemCodeListItem">
+        <id column="code_group" property="codeGroup"/>
+        <id column="code_id" property="codeId"/>
+        <result column="code_name" property="codeName"/>
+        <result column="code_val" property="codeValue"/>
+    </resultMap>
+
+    <select id="getAllSystemCodeList" resultMap="systemCodeListItem">
+        select code_group,
+               code_id,
+               code_name,
+               code_val
+        from syscode;
+    </select>
+
+    <insert id="insertSystemCode" parameterType="com.emgram.kr.dobby.dto.syscode.SystemCodeListItem">
+        insert into syscode(code_group,code_id,code_name,code_val)
+        values (#{codeGroup}, #{codeId}, #{codeName}, #{codeValue});
+    </insert>
+
+    <insert id="deleteSystemCodeByCodeId" parameterType="String">
+        delete from syscode where code_id = #{id}
+    </insert>
+</mapper>
