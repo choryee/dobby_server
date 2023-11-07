@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.emgram.kr.dobby.dao.EmployeeDao">
+
+    <select id="getEmployeeInfo" resultMap="employeeResultMap">
+        SELECT employee_no, rank_no, department_no, name, joining_dt
+        FROM employee
+        WHERE employee_no = #{employeeNo}
+    </select>
+
+    <resultMap id="employeeResultMap" type="com.emgram.kr.dobby.dto.employee.Employee">
+        <result property="employeeNo" column="employee_no"/>
+        <result property="rankNo" column="rank_no"/>
+        <result property="departmentNo" column="department_no"/>
+        <result property="name" column="name"/>
+        <result property="joiningDt" column="joining_dt"/>
+    </resultMap>
+
+</mapper>

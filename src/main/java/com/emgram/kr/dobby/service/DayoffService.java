@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
@@ -50,6 +52,15 @@ public class DayoffService {
         return 0;
     }
 
+    public Double getUsedVacation(String employeeId){
+        return dayoffDao.infoDayOffEmployeeNo(employeeId).stream()
+                .filter(v -> {
+                    LocalDate date = v.getDayoff_dt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+                    return date.getYear() == LocalDate.now().getYear();
+                })
+                .mapToDouble(v -> Double.parseDouble(v.getCode_val()))
+                .sum();
+    }
     private List<Date> getBetweenDateList(Date start_dt, Date end_dt){
         start_dt = removeTime(start_dt);
         end_dt = removeTime(end_dt);
