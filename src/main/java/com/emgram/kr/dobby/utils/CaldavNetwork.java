@@ -15,16 +15,15 @@ import java.io.StringReader;
 
 public class CaldavNetwork {
 
-    public static CaldavDocument request(CaldavAuth auth, String url, CaldavRequestData data){
-        return CaldavNetwork.request(auth, url, data, 0);
+    public static CaldavDocument request(CaldavAuth auth, String url, CaldavRequestData data, OkHttpClient okHttpClient){
+        return CaldavNetwork.request(auth, url, data, 0, okHttpClient);
     }
 
-    public static CaldavDocument request(CaldavAuth auth, String url, CaldavRequestData data, int depth){
-        return CaldavNetwork.request(auth, url, data, depth, "PROPFIND");
+    public static CaldavDocument request(CaldavAuth auth, String url, CaldavRequestData data, int depth, OkHttpClient okHttpClient){
+        return CaldavNetwork.request(auth, url, data, depth, "PROPFIND", okHttpClient);
     }
 
-    public static CaldavDocument request(CaldavAuth auth, String url, CaldavRequestData data, int depth, String method){
-        OkHttpClient client = new OkHttpClient();
+    public static CaldavDocument request(CaldavAuth auth, String url, CaldavRequestData data, int depth, String method, OkHttpClient client){
         String body = data.getRequestData();
         Request req = new Request.Builder()
                 .url(url)
@@ -34,12 +33,9 @@ public class CaldavNetwork {
                 .header("Content-Type", "text/xml")
                 .build();
 
-        Response res = null;
         String xmlString = null;
         Document document = null;
-
-        try{
-            res = client.newCall(req).execute();
+        try (Response res = client.newCall(req).execute()) {
             xmlString = res.body().string();
             document = DocumentBuilderFactory.newInstance()
                     .newDocumentBuilder()

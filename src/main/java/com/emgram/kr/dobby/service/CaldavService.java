@@ -5,7 +5,9 @@ import com.emgram.kr.dobby.dto.caldav.*;
 import com.emgram.kr.dobby.utils.CaldavDataConverter;
 import com.emgram.kr.dobby.utils.CaldavDocument;
 import com.emgram.kr.dobby.utils.CaldavNetwork;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import okhttp3.OkHttpClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,16 +20,14 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
+@RequiredArgsConstructor
 public class CaldavService {
 
-    private CaldavDao caldavDao;
+    private final CaldavDao caldavDao;
+
+    private final OkHttpClient okHttpClient;
 
     private CaldavResult caldavResult;
-
-    @Autowired
-    public CaldavService(CaldavDao caldavDao){
-        this.caldavDao = caldavDao;
-    }
 
     public CaldavResult CaldavSyncRun(CaldavClient client, Date startDate){
         caldavResult = new CaldavResult();
@@ -61,7 +61,7 @@ public class CaldavService {
 
     private String getDomainUrl(CaldavClient client){
         CaldavRequestData requestData = new CaldavRequestData(CaldavRequestType.XML_REQ_PRINCIPAL);
-        CaldavDocument document = CaldavNetwork.request(client.getAuth(), client.getHostname(), requestData);
+        CaldavDocument document = CaldavNetwork.request(client.getAuth(), client.getHostname(), requestData, okHttpClient);
         String principalUrl = document
                 .find("response")
                 .find("propstat")
@@ -74,7 +74,7 @@ public class CaldavService {
 
     private String getHomeSetUrl(CaldavClient client){
         CaldavRequestData requestData = new CaldavRequestData(CaldavRequestType.XML_REQ_HOMESET);
-        CaldavDocument document = CaldavNetwork.request(client.getAuth(), client.getDomainUrl(), requestData);
+        CaldavDocument document = CaldavNetwork.request(client.getAuth(), client.getDomainUrl(), requestData, okHttpClient);
         String homeSetUrl = document
                 .find("response")
                 .find("propstat")
@@ -88,7 +88,7 @@ public class CaldavService {
     private CaldavCalendar getTargetCalendar(CaldavClient client){
         String homeSetUrl = client.getHostname() + client.getHomeSetUrl();
         CaldavRequestData requestData = new CaldavRequestData(CaldavRequestType.XML_REQ_CALENDARINFO);
-        CaldavDocument document = CaldavNetwork.request(client.getAuth(), homeSetUrl, requestData, 1);
+        CaldavDocument document = CaldavNetwork.request(client.getAuth(), homeSetUrl, requestData, 1, okHttpClient);
 
         List<CaldavDocument> nodeList = document.list("response");
         for(CaldavDocument node : nodeList){
@@ -155,6 +155,7 @@ public class CaldavService {
                 , requestData
                 , 1
                 , "REPORT"
+                , okHttpClient
         );
 
         List<CaldavEvent> result = new ArrayList<>();
@@ -230,7 +231,8 @@ public class CaldavService {
                     , calendarUrl
                     , requestData
                     , 1
-                    , "REPORT");
+                    , "REPORT"
+                    , okHttpClient);
 
             List<CaldavDocument> nodeList = document.list("response");
             for(CaldavDocument node : nodeList){
