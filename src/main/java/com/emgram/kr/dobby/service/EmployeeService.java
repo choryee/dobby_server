@@ -17,7 +17,7 @@ public class EmployeeService {
       return employeeDao.getEmployeeInfo(employeeNo);
     }
 
-    public int leftVacation(String employeeNo) {
+    public int totalVacation(String employeeNo) {
         Date joiningDate = employeeDao.getEmployeeInfo(employeeNo).getJoiningDt();
         Calendar now = Calendar.getInstance();
         Calendar joiningCalendar = Calendar.getInstance();

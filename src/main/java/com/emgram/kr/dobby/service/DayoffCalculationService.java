@@ -12,7 +12,7 @@ public class DayoffCalculationService {
     private final DayoffService dayoffService;
 
     public DayoffResult getDayoffResult(String employeeNo){
-        double totalDayoff = employeeService.leftVacation(employeeNo);
+        double totalDayoff = employeeService.totalVacation(employeeNo);
         double usedDayoff = dayoffService.getUsedVacation(employeeNo);
         final double leftDayOff = totalDayoff - usedDayoff;
         return DayoffResult.builder()
