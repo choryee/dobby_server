@@ -28,18 +28,29 @@ public class EmployeeService {
         Calendar oneYearAfterJoining = (Calendar) joiningCalendar.clone();
         oneYearAfterJoining.add(Calendar.YEAR, 1);
 
-        if (now.before(oneYearAfterJoining)) return calculateLeavesForFirstYear(now, joiningCalendar);
-        else return calculateLeavesAfterFirstYear(baseVacation,now, oneYearAfterJoining);
+        // 입사 후 첫 해가 끝나는 경우, 기본적으로 15일의 휴가를 부여합니다.
+        if (now.get(Calendar.YEAR) > joiningCalendar.get(Calendar.YEAR)) {
+            return calculateLeavesAfterFirstYear(baseVacation, now, oneYearAfterJoining);
+        } else {
+            return calculateLeavesForFirstYear(now, joiningCalendar);
+        }
     }
 
     private int calculateLeavesForFirstYear(Calendar now, Calendar joiningCalendar) {
-        return Math.max(0, now.get(Calendar.MONTH) - joiningCalendar.get(Calendar.MONTH)
-                + ((now.get(Calendar.YEAR) - joiningCalendar.get(Calendar.YEAR)) * 12));
+        int joiningYear = joiningCalendar.get(Calendar.YEAR);
+        int currentYear = now.get(Calendar.YEAR);
+        int joiningMonth = joiningCalendar.get(Calendar.MONTH);
+        int currentMonth = now.get(Calendar.MONTH);
+
+
+        if (joiningYear == currentYear) return Math.max(0, currentMonth - joiningMonth);
+        else return 15;
     }
 
-    private int calculateLeavesAfterFirstYear(int baseVacation,Calendar now, Calendar oneYearAfterJoining) {
-        return baseVacation
-                + (now.get(Calendar.YEAR) - oneYearAfterJoining.get(Calendar.YEAR) + 1) / 2;
+    private int calculateLeavesAfterFirstYear(int baseVacation, Calendar now, Calendar oneYearAfterJoining) {
+        int yearsAfterJoining = now.get(Calendar.YEAR) - oneYearAfterJoining.get(Calendar.YEAR);
+        if (now.before(oneYearAfterJoining)) yearsAfterJoining--;
+        return baseVacation + yearsAfterJoining / 2;
     }
 
 }
