@@ -21,9 +21,5 @@ public class TestDayOffController {
     public DayoffResult getdata2(@PathVariable String empolyeeNo){
         return dayoffCalculationService.getDayoffResult(empolyeeNo);
     }
-
-
-
-
 }
 
