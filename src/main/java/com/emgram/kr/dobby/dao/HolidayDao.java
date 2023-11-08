@@ -9,7 +9,7 @@ import org.apache.ibatis.annotations.Param;
 @Mapper
 public interface HolidayDao {
 
-    List<HolidayDto> getHolidayBetweenDate(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
+    List<HolidayDto> findAllHolidayBetweenDate(@Param("startDate") LocalDate startDate, @Param("endDate") LocalDate endDate);
 
     void insertHolidays(List<HolidayDto> holidayDtos);
 

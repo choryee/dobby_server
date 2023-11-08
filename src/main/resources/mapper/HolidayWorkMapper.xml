@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.emgram.kr.dobby.dao.HolidayWorkDao">
+
+  <select id="countWorkDayByYearAndEmployeeNo" parameterType="java.util.Map" resultType="long">
+    select count(*)
+    from holiday_work
+    where holiday_work_id = #{holidayWorkId} and work_date between #{startDate} and #{endDate} and delete_dt is null;
+  </select>
+
+  <select id="findAllHolidayWorkBySearchCondition" parameterType="com.emgram.kr.dobby.dto.SearchCondition"
+  resultType="com.emgram.kr.dobby.dto.holiday.work.HolidayWorkDto">
+    select holiday_work_id as holidayWorkId,
+           employee_no as employeeNo,
+           work_date as workDate,
+           memo
+    from holiday_work
+    <where>
+      <if test="query == null">
+        and delete_dt is null
+      </if>
+      <if test="query != null and startDate != null and endDate != null">
+        or (work_date between #{startDate} and #{endDate}) and delete_dt is null
+      </if>
+      <if test="query != null">
+        or (employee_no like CONCAT('%',#{query},'%') or memo like CONCAT('%',#{query},'%'))
+      </if>
+    </where>
+    limit #{pageSize} offset #{pageOffset};
+  </select>
+  
+  <insert id="saveHolidayWork" parameterType="com.emgram.kr.dobby.dto.holiday.HolidayDto">
+    insert into holiday_work (employee_no, work_date, memo) value
+    (#{employeeNo}, #{workDate}, #{memo});
+  </insert>
+  
+  <update id="updateHolidayWork" parameterType="java.util.Map" >
+    update holiday_work set
+        employee_no = #{holidayWorkDto.employeeNo},
+        work_date = #{holidayWorkDto.workDate},
+        memo = #{holidayWorkDto}
+    where holiday_work_id = #{holidayWorkId};
+  </update>
+  <update id="deleteHolidayWork" parameterType="Long">
+    update holiday_work set delete_dt = now()
+    where holiday_work_id = #{holidayWorkId};
+  </update>
+</mapper>

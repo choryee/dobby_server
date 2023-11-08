@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -49,12 +48,12 @@ public class HolidayService {
     }
 
     public List<VerifyHolidayDto> getHolidays(LocalDate startDate, LocalDate endDate) {
-        return holidayDao.getHolidayBetweenDate(startDate, endDate)
+        return holidayDao.findAllHolidayBetweenDate(startDate, endDate)
             .stream().map(VerifyHolidayDto::of).collect(Collectors.toList());
     }
 
     public boolean isDayHoliday(LocalDate date) {
-        return holidayDao.getHolidayBetweenDate(date, date).size() > 0;
+        return holidayDao.findAllHolidayBetweenDate(date, date).size() > 0;
     }
 
     public void reRegisterHolidays(int year) throws Exception {
