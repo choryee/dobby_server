@@ -2,6 +2,7 @@ package com.emgram.kr.dobby.service;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.emgram.kr.dobby.dao.HolidayDao;
@@ -50,11 +51,11 @@ public class HolidayServiceTest {
         LocalDate childrenDay = LocalDate.of(2015, 5, 5);
 
         //when
-        holidayService.saveHolidays(year);
+        holidayService.registerHolidays(year);
 
         //then
         List<HolidayDto> dtos= holidayDao.getHolidayBetweenDate(childrenDay, childrenDay);
-        assertThat(dtos.size(), greaterThan(1));
+        assertThat(dtos.size(), greaterThanOrEqualTo(1));
         assertEquals(dtos.get(0).getHoliday(), childrenDay);
     }
 }

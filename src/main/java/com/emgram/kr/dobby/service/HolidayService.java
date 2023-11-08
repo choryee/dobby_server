@@ -112,32 +112,11 @@ public class HolidayService {
             return holidayAPIResponse.getResponse().getBody().getItems().getItem().stream().map(
                 HolidayAPIItem::toHolidayDto)
                 .collect(Collectors.toList());
-//            JsonNode rootNode = holidayApiObjectMapper.readTree(body);
-////
-//            JsonNode responseNode = rootNode.get("response");
-//            if (responseNode == null) return holidayDtos;
-//
-//            JsonNode bodyNode = responseNode.get("body");
-//            if (bodyNode == null) return holidayDtos;
-//
-//            JsonNode itemsNode = bodyNode.get("items");
-//            if (itemsNode == null) return holidayDtos;
-//
-//            JsonNode itemNode = itemsNode.get("item");
-//            if (itemNode == null) return holidayDtos;
-//            if (!itemNode.isArray()) return holidayDtos;
-//
-//            for (JsonNode item : itemNode) {
-//                HolidayDto dto = holidayApiObjectMapper.treeToValue(item, HolidayDto.class);
-//                holidayDtos.add(dto);
-//            }
 
         } catch (JsonProcessingException e) {
             log.warn(String.format("holiday 추출 실패 : %s", body));
             return holidayDtos;
         }
-//
-//        return holidayDtos;
     }
 
     private HttpUrl getHolidayRequestURL(int year) {
