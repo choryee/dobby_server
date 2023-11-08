@@ -1,9 +1,13 @@
 package com.emgram.kr.dobby.config;
 
+import com.emgram.kr.dobby.handler.LocalDateTypeHandler;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import javax.sql.DataSource;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.ibatis.session.SqlSessionFactory;
+import org.apache.ibatis.type.LocalDateTimeTypeHandler;
+import org.apache.ibatis.type.TypeHandler;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.mybatis.spring.annotation.MapperScan;
@@ -17,8 +21,6 @@ import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
-import javax.sql.DataSource;
-
 @Slf4j
 @Configuration
 @EnableTransactionManagement
@@ -27,18 +29,34 @@ import javax.sql.DataSource;
 public class DatabaseConfiguration {
 
     private ApplicationContext applicationContext;
+
     @Autowired
-    public DatabaseConfiguration(ApplicationContext applicationContext){
+    public DatabaseConfiguration(ApplicationContext applicationContext) {
         this.applicationContext = applicationContext;
     }
 
     @Bean
-    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception{
+    public org.apache.ibatis.type.LocalDateTypeHandler localDateTypeHandler() {
+        return new org.apache.ibatis.type.LocalDateTypeHandler();
+    }
+
+    @Bean
+    public LocalDateTimeTypeHandler localDateTimeTypeHandler() {
+        return new LocalDateTimeTypeHandler();
+    }
+
+    @Bean
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean sqlSessionFactoryBean = new SqlSessionFactoryBean();
         sqlSessionFactoryBean.setDataSource(dataSource);
-        sqlSessionFactoryBean.setMapperLocations(applicationContext.getResources("classpath:/mapper/**/*.xml"));
+        sqlSessionFactoryBean.setMapperLocations(
+            applicationContext.getResources("classpath:/mapper/**/*.xml"));
+
+        sqlSessionFactoryBean.setTypeHandlers(new TypeHandler[]{new LocalDateTypeHandler()});
+
         return sqlSessionFactoryBean.getObject();
     }
+
     @Bean
     public SqlSessionTemplate sqlSessionTemplate(SqlSessionFactory sqlSessionFactory) {
         return new SqlSessionTemplate(sqlSessionFactory);
@@ -58,7 +76,7 @@ public class DatabaseConfiguration {
     }
 
     @Bean
-    public PlatformTransactionManager transactionManager(){
+    public PlatformTransactionManager transactionManager() {
         return new DataSourceTransactionManager(dataSource());
     }
 }

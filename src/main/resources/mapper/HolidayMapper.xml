@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.emgram.kr.dobby.dao.HolidayDao">
+  <select id="getHolidayBetweenDate" parameterType="java.time.LocalDate"
+    resultType="com.emgram.kr.dobby.dto.holiday.HolidayDto">
+    select holiday_name, holiday, is_rest_institutions, date_kind_num from holiday_info where holiday between #{startDate} and #{endDate};
+  </select>
+
+  <delete id="deleteBetweenDate" parameterType="java.time.LocalDate">
+    delete from holiday_info where holiday between #{startDate} and #{endDate};
+  </delete>
+
+  <insert id="insertHolidays" parameterType="java.util.List">
+    insert into holiday_info
+    (holiday_name, holiday, is_rest_institutions, date_kind_num)
+    values
+    <foreach collection="list" item="item" separator=",">
+      (
+      #{item.holidayName}
+      , #{item.holiday}
+      , #{item.isRestInstitutions}
+      , #{item.dateKindNum})
+    </foreach>
+  </insert>
+</mapper>
