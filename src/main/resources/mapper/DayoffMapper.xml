@@ -66,12 +66,12 @@
 
     <select id="infoDayOffEmployeeNo" parameterType="string" resultType="com.emgram.kr.dobby.dto.dayoff.DayoffVacation">
         SELECT
-            dh.employee_no,
-            dh.event_idx,
-            dh.dayoff_type,
-            dh.dayoff_dt,
-            sc.code_name,
-            sc.code_val
+            dh.employee_no AS employeeNo,
+            dh.event_idx AS eventIdx,
+            dh.dayoff_type AS dayoffType,
+            dh.dayoff_dt AS dayoffDt,
+            sc.code_name AS codeName,
+            sc.code_val AS codeVal
         FROM dayoff_history dh
                  LEFT JOIN syscode sc ON dh.dayoff_type = sc.code_id
         WHERE dh.employee_no = #{employeeNo}
