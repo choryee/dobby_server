@@ -24,9 +24,9 @@
         insert
         into
             employee_test
-            (employee_no, name, password)
+            (employee_no, name, password, roles)
         values
-            (#{employee_no}, #{name}, #{password})
+            (#{employee_no}, #{name}, #{password}, #{roles})
     </insert>
 
 

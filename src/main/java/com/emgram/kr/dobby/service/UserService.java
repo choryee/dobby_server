@@ -35,6 +35,7 @@ public class UserService {
         String encPassword = encoder.encode(rawPassword);
         user.setName(name);
         user.setPassword(encPassword);
+        user.setRoles("ROLE_USER");
 
         int result = employeeDao.joinUser(user);
         System.out.println("result>>> "+ result);

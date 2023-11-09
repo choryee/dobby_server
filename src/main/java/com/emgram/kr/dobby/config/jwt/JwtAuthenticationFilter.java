@@ -77,6 +77,8 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .withClaim("username", principalDetail.getUser().getName())
                 .sign(Algorithm.HMAC512("cos")); // screctkey
 
-        response.addHeader("Authorization", "Bearer "+jwtToken);
+        System.out.println("response로 토큰 보내기 token>> "+jwtToken);
+        //response.addHeader("Authorization", "Bearer "+ jwtToken);
+        response.setHeader("Authorization", "Bearer "+ jwtToken);
     }
 }

@@ -17,8 +17,9 @@ public class CorsConfig { //20강 jwt
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        source.registerCorsConfiguration("/api/**", config);
+        //source.registerCorsConfiguration("/api/*", config);
+        config.addExposedHeader("Authorization");
+        source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }
-
 }

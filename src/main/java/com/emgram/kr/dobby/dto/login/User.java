@@ -24,11 +24,11 @@ public class User {
 //    private RoleType role; // Enum을 쓰면, ADMIN,USER로 형이 강제가 된다.
 
     //25-1강, 01:14. 위 enum안 쓰고.
-    private String role;
+    private String roles;
 
     public List<String> getRoleList(){
-        if(this.role.length() > 0){
-            return Arrays.asList(this.role.split(","));
+        if(this.roles.length() > 0){
+            return Arrays.asList(this.roles.split(","));
         }
         return new ArrayList<>();
     }

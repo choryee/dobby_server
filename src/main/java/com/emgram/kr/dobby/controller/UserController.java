@@ -42,4 +42,22 @@ public class UserController {
         String token = userService.login(user);
         return ResponseEntity.ok().body(token);
     }
+
+    @PostMapping("/user")
+    public String user(){
+        return "user";
+    }
+
+    @PostMapping("/manager")
+    public String manager(){
+        System.out.println("manager만 접근 가능!!");
+        return "manager";
+    }
+
+    @PostMapping("/admin")
+    public String admin(){
+        System.out.println("admin 접근 가능!!");
+        return "admin";
+    }
+
 }

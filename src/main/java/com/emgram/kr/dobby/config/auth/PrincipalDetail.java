@@ -59,10 +59,18 @@ public class PrincipalDetail implements UserDetails {
     // 계정의 권한을 리턴 (권한이 여러개 있을 수 있어서 루프를 돌 수도 있음)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        Collection<GrantedAuthority> collectors = new ArrayList<>();
-        collectors.add(() -> {
-            return "ROLE_" + user.getRole();
+        //Collection<GrantedAuthority> collectors = new ArrayList<>();
+        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
+
+//        collectors.add(() -> {
+//            return "ROLE_" + user.getRole();
+//        });
+//        return collectors;
+
+        user.getRoleList().forEach(r->{
+            System.out.println("PrincipalDetail에서 r: "+r);
+            authorities.add(()->r);
         });
-        return collectors;
+        return authorities;
     }
 }
