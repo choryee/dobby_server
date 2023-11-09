@@ -3,21 +3,33 @@
 
 <mapper namespace="com.emgram.kr.dobby.dao.EmployeeDao">
 
-    <select id="getUserInfo" parameterType="hashmap" resultType="com.emgram.kr.dobby.dto.login.UserLoginRequest">
-        select name, password
-        from employee
+    <select id="getUserInfo" parameterType="com.emgram.kr.dobby.dto.login.User"  resultType="com.emgram.kr.dobby.dto.login.User">
+        select *
+        from employee_test
         where
-            name = #{userName}
+            name = #{name}
         and
             password = #{password}
     </select>
 
-    <insert id="insertCalendarInfo" parameterType="hashmap">
-        insert into caldav_calendar_info
-            (calendar_id, calendar_name, calendar_tag)
+    <select id="getUser" parameterType="com.emgram.kr.dobby.dto.login.User"  resultType="com.emgram.kr.dobby.dto.login.User">
+        select *
+        from employee_test
+        where
+            name = #{name}
+
+    </select>
+
+    <insert id="joinUser" parameterType="com.emgram.kr.dobby.dto.login.User">
+        insert
+        into
+            employee_test
+            (employee_no, name, password)
         values
-            (#{calendarId}, #{calendarName}, #{cTag})
+            (#{employee_no}, #{name}, #{password})
     </insert>
+
+
 
     <update id="updateCalendarInfo" parameterType="hashmap">
         update caldav_calendar_info

@@ -1,20 +1,25 @@
 package com.emgram.kr.dobby.service;
 
+import com.emgram.kr.dobby.config.auth.PrincipalDetail;
 import com.emgram.kr.dobby.dao.EmployeeDao;
-import com.emgram.kr.dobby.dto.login.UserLoginRequest;
+import com.emgram.kr.dobby.dto.login.User;
 import com.emgram.kr.dobby.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RestControllerAdvice;
+
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
-    // private final BCryptPasswordEncoder encoder;
 
+    @Autowired
+    private BCryptPasswordEncoder encoder;
+
+    @Autowired
     private EmployeeDao employeeDao;
 
     @Value("${jwt.token.secret}") // application.properties에 정의됨.
@@ -22,12 +27,38 @@ public class UserService {
     private Long expireTimeMs = 1000*60*3l;
 
 
-    public String  login(String userName, String password){
-        UserLoginRequest user = employeeDao.getUserInfo(userName, password);
-        String name = user.getUserName();
-        String pwd = user.getPassword();
+    public void join(User user){
 
-        String token= JwtTokenUtil.createToken(name, key, expireTimeMs);
+        String name = user.getName();
+        System.out.println("name>>> "+ name);
+        String rawPassword = user.getPassword();
+        String encPassword = encoder.encode(rawPassword);
+        user.setName(name);
+        user.setPassword(encPassword);
+
+        int result = employeeDao.joinUser(user);
+        System.out.println("result>>> "+ result);
+
+    }
+
+    public String  login(User user){
+        System.out.println("UserService 탐... " + user);
+        User userDao = employeeDao.getUserInfo(user);
+        System.out.println("userDao>> "+ userDao);
+        PrincipalDetail principalDetail =new PrincipalDetail(user);
+        System.out.println("principalDetail.getPassword()>> "+principalDetail.getPassword());
+
+
+        String name = user.getName();
+        String rawPassword = user.getPassword();
+        String makeEncPassoword = encoder.encode(rawPassword);
+        String encPassword = encoder.encode(rawPassword);
+
+        String token = null;
+        if(principalDetail.getPassword().equals(rawPassword)){
+            token = JwtTokenUtil.createToken(name, key, expireTimeMs);
+        }
+        System.out.println("token>> "+ token);
         return token;
     }
 
