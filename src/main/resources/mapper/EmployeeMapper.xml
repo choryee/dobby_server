@@ -17,4 +17,15 @@
         <result property="joiningDt" column="joining_dt"/>
     </resultMap>
 
+    <select id="findAllSimpleEmployeeList" resultMap="simpleEmployeeResultMap">
+        SELECT e.employee_no, r.rank_name, e.name
+        FROM employee e
+        join `rank` r on e.rank_no = r.rank_no;
+    </select>
+
+    <resultMap id="simpleEmployeeResultMap" type="com.emgram.kr.dobby.dto.employee.Employee$SimpleEmployeeDTO">
+        <result property="employeeNo" column="employee_no"/>
+        <result property="rankName" column="rank_name"/>
+        <result property="name" column="name"/>
+    </resultMap>
 </mapper>
