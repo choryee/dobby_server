@@ -26,4 +26,13 @@ public class Employee {
         this.joiningDt = joiningDt;
     }
 
+    @Getter
+    @NoArgsConstructor
+    public static class SimpleEmployeeDTO {
+        private String employeeNo;
+
+        private String rankName;
+
+        private String name;
+    }
 }

@@ -13,7 +13,6 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import javax.annotation.PostConstruct;
@@ -49,12 +48,12 @@ public class HolidayService {
     }
 
     public List<VerifyHolidayDto> getHolidays(LocalDate startDate, LocalDate endDate) {
-        return holidayDao.getHolidayBetweenDate(startDate, endDate)
+        return holidayDao.findAllHolidayBetweenDate(startDate, endDate)
             .stream().map(VerifyHolidayDto::of).collect(Collectors.toList());
     }
 
     public boolean isDayHoliday(LocalDate date) {
-        return holidayDao.getHolidayBetweenDate(date, date).size() > 0;
+        return holidayDao.findAllHolidayBetweenDate(date, date).size() > 0;
     }
 
     public void reRegisterHolidays(int year) throws Exception {
@@ -112,32 +111,11 @@ public class HolidayService {
             return holidayAPIResponse.getResponse().getBody().getItems().getItem().stream().map(
                 HolidayAPIItem::toHolidayDto)
                 .collect(Collectors.toList());
-//            JsonNode rootNode = holidayApiObjectMapper.readTree(body);
-////
-//            JsonNode responseNode = rootNode.get("response");
-//            if (responseNode == null) return holidayDtos;
-//
-//            JsonNode bodyNode = responseNode.get("body");
-//            if (bodyNode == null) return holidayDtos;
-//
-//            JsonNode itemsNode = bodyNode.get("items");
-//            if (itemsNode == null) return holidayDtos;
-//
-//            JsonNode itemNode = itemsNode.get("item");
-//            if (itemNode == null) return holidayDtos;
-//            if (!itemNode.isArray()) return holidayDtos;
-//
-//            for (JsonNode item : itemNode) {
-//                HolidayDto dto = holidayApiObjectMapper.treeToValue(item, HolidayDto.class);
-//                holidayDtos.add(dto);
-//            }
 
         } catch (JsonProcessingException e) {
             log.warn(String.format("holiday 추출 실패 : %s", body));
             return holidayDtos;
         }
-//
-//        return holidayDtos;
     }
 
     private HttpUrl getHolidayRequestURL(int year) {

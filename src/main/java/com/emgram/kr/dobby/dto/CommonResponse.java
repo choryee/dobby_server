@@ -7,6 +7,17 @@ import lombok.Getter;
 @AllArgsConstructor
 public class CommonResponse <T> {
 
-    private T data;
+    private Integer resultCode;
 
+    private String message;
+
+    private T result;
+
+    public CommonResponse (T result) {
+        this(0,"성공", result);
+    }
+
+    public CommonResponse (String message, T result) {
+        this(0, message, result);
+    }
 }

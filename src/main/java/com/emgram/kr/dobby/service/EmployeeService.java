@@ -2,6 +2,8 @@ package com.emgram.kr.dobby.service;
 
 import com.emgram.kr.dobby.dao.EmployeeDao;
 import com.emgram.kr.dobby.dto.employee.Employee;
+import com.emgram.kr.dobby.dto.employee.Employee.SimpleEmployeeDTO;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +17,10 @@ public class EmployeeService {
 
     public Employee getEmployeeInfo(String employeeNo){
       return employeeDao.getEmployeeInfo(employeeNo);
+    }
+
+   public List<SimpleEmployeeDTO> getSimpleEmployeeList() {
+        return employeeDao.findAllSimpleEmployeeList();
     }
 
     public int totalVacation(String employeeNo, int year) {
