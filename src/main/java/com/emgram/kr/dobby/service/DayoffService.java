@@ -3,10 +3,12 @@ package com.emgram.kr.dobby.service;
 import com.emgram.kr.dobby.dao.DayoffDao;
 import com.emgram.kr.dobby.dto.caldav.CaldavEvent;
 import com.emgram.kr.dobby.dto.dayoff.DayoffItem;
+import com.emgram.kr.dobby.dto.dayoff.DayoffVacation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -52,15 +54,35 @@ public class DayoffService {
         return 0;
     }
 
-    public Double getUsedVacation(String employeeId){
-        return dayoffDao.infoDayOffEmployeeNo(employeeId).stream()
-                .filter(v -> {
-                    LocalDate date = v.getDayoff_dt().toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
-                    return date.getYear() == LocalDate.now().getYear();
-                })
-                .mapToDouble(v -> Double.parseDouble(v.getCode_val()))
-                .sum();
+    public List<DayoffVacation> getUsed(String employeeId){
+        return new ArrayList<>(dayoffDao.infoDayOffEmployeeNo(employeeId));
     }
+
+    public List<DayoffVacation> getUsedVacation(String employeeId, int year) {
+        return dayoffDao.infoDayOffEmployeeNo(employeeId).stream()
+                .filter(v -> yearCheck(v, year))
+                .filter(this::dayOffCheck)
+                .collect(Collectors.toList());
+    }
+
+    private boolean isWeekend(LocalDate localDate) {
+        DayOfWeek dayOfWeek = localDate.getDayOfWeek();
+        return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
+    }
+
+    private boolean yearCheck(DayoffVacation dayoffVacation, int year) {
+        LocalDate date = convertToLocalDate(dayoffVacation.getDayoffDt());
+        return date.getYear() == year && !isWeekend(date);
+    }
+    private boolean dayOffCheck(DayoffVacation dayoffVacation) {
+        int dayoffType = Integer.parseInt(dayoffVacation.getDayoffType());
+        return dayoffType >= 1000 && dayoffType < 2000;
+    }
+
+    protected LocalDate convertToLocalDate(Date dateToConvert) {
+        return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
+    }
+
     private List<Date> getBetweenDateList(Date start_dt, Date end_dt){
         start_dt = removeTime(start_dt);
         end_dt = removeTime(end_dt);

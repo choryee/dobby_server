@@ -19,27 +19,39 @@ public class EmployeeService {
       return employeeDao.getEmployeeInfo(employeeNo);
     }
 
-    public List<SimpleEmployeeDTO> getSimpleEmployeeList() {
+   public List<SimpleEmployeeDTO> getSimpleEmployeeList() {
         return employeeDao.findAllSimpleEmployeeList();
     }
 
+    public int totalVacation(String employeeNo, int year) {
+        Calendar joiningDate = toCalendar(employeeDao.getEmployeeInfo(employeeNo).getJoiningDt());
+        Calendar endYear = getEndYear(year);
+        Calendar oneYearLater = getOneYearLater(joiningDate);
 
-    public int totalVacation(String employeeNo) {
-        Date joiningDate = employeeDao.getEmployeeInfo(employeeNo).getJoiningDt();
-        Calendar now = Calendar.getInstance();
-        Calendar joiningCalendar = Calendar.getInstance();
-        joiningCalendar.setTime(joiningDate);
+        if (!endYear.after(joiningDate)) return 0;
 
-        int baseVacation = 15;
-        Calendar oneYearAfterJoining = (Calendar) joiningCalendar.clone();
-        oneYearAfterJoining.add(Calendar.YEAR, 1);
+        if (endYear.after(oneYearLater)) return calculateLeavesAfterFirstYear(15, endYear, oneYearLater);
+        else return calculateLeavesForFirstYear(endYear, joiningDate);
+    }
 
-        // 입사 후 첫 해가 끝나는 경우, 기본적으로 15일의 휴가를 부여합니다.
-        if (now.get(Calendar.YEAR) > joiningCalendar.get(Calendar.YEAR)) {
-            return calculateLeavesAfterFirstYear(baseVacation, now, oneYearAfterJoining);
-        } else {
-            return calculateLeavesForFirstYear(now, joiningCalendar);
-        }
+    private Calendar toCalendar(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        return calendar;
+    }
+
+    private Calendar getEndYear(int year) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.YEAR, year);
+        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
+        calendar.set(Calendar.DAY_OF_MONTH, 31);
+        return calendar;
+    }
+
+    private Calendar getOneYearLater(Calendar joiningCalendar) {
+        Calendar oneYearAfter = (Calendar) joiningCalendar.clone();
+        oneYearAfter.add(Calendar.YEAR, 1);
+        return oneYearAfter;
     }
 
     private int calculateLeavesForFirstYear(Calendar now, Calendar joiningCalendar) {
@@ -47,7 +59,6 @@ public class EmployeeService {
         int currentYear = now.get(Calendar.YEAR);
         int joiningMonth = joiningCalendar.get(Calendar.MONTH);
         int currentMonth = now.get(Calendar.MONTH);
-
 
         if (joiningYear == currentYear) return Math.max(0, currentMonth - joiningMonth);
         else return 15;
