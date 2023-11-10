@@ -2,6 +2,7 @@ package com.emgram.kr.dobby.controller;
 
 import com.emgram.kr.dobby.dto.CommonResponse;
 import com.emgram.kr.dobby.dto.SearchCondition;
+import com.emgram.kr.dobby.dto.holiday.work.HolidayWork;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWorkDto;
 import com.emgram.kr.dobby.service.HolidayWorkService;
 import java.time.LocalDate;
@@ -32,18 +33,14 @@ public class HolidayWorkController {
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
     public CommonResponse<List<HolidayWorkDto>> getHolidayWorksList(@ModelAttribute SearchCondition searchCondition) {
-        List<HolidayWorkDto> list = Arrays.asList(
-            new HolidayWorkDto(1L, "M007", LocalDate.of(2015, 4, 2), "memo1"),
-            new HolidayWorkDto(2L, "M007", LocalDate.of(2015, 4, 3), "memo2")
-            );
-        return new CommonResponse<>(list);
+        return new CommonResponse<>(holidayWorkService.getWorkDays(searchCondition));
    }
 
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
     @CrossOrigin
-    public void saveHolidayWork(@RequestBody HolidayWorkDto holidayWorkDto) {
-        holidayWorkService.saveWorkDays(holidayWorkDto);
+    public void saveHolidayWork(@RequestBody HolidayWork holidayWork) {
+        holidayWorkService.saveWorkDays(holidayWork);
     }
 
     @PutMapping("/modify/{holidayId}")

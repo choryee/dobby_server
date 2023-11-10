@@ -2,6 +2,7 @@ package com.emgram.kr.dobby.service;
 
 import com.emgram.kr.dobby.dao.HolidayWorkDao;
 import com.emgram.kr.dobby.dto.SearchCondition;
+import com.emgram.kr.dobby.dto.holiday.work.HolidayWork;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWorkDto;
 import com.emgram.kr.dobby.utils.DateUtil;
 import java.util.ArrayList;
@@ -27,10 +28,10 @@ public class HolidayWorkService {
         return holidayWorkDao.findAllHolidayWorkBySearchCondition(searchCondition);
     }
 
-    public void saveWorkDays (HolidayWorkDto holidayWorkDto) {
-        if (holidayWorkDto == null) throw new RuntimeException("휴일 출근 저장정보가 들어오지 않앗습니다.");
+    public void saveWorkDays (HolidayWork holidayWork) {
+        if (holidayWork == null) throw new RuntimeException("휴일 출근 저장정보가 들어오지 않앗습니다.");
 
-        int result = holidayWorkDao.saveHolidayWork(holidayWorkDto);
+        int result = holidayWorkDao.saveHolidayWork(holidayWork);
 
         if (result == 0) throw new RuntimeException("휴일 출근이 입력되지 않았습니다.");
 

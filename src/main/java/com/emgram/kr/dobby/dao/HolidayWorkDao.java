@@ -1,6 +1,7 @@
 package com.emgram.kr.dobby.dao;
 
 import com.emgram.kr.dobby.dto.SearchCondition;
+import com.emgram.kr.dobby.dto.holiday.work.HolidayWork;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWorkDto;
 import java.time.LocalDate;
 import java.util.List;
@@ -15,7 +16,7 @@ public interface HolidayWorkDao {
 
     List<HolidayWorkDto> findAllHolidayWorkBySearchCondition(SearchCondition condition);
 
-    int saveHolidayWork(HolidayWorkDto holidayWorkDto);
+    int saveHolidayWork(HolidayWork holidayWork);
 
     int updateHolidayWork(@Param("holidayWorkId") Long holidayWorkId,
         @Param("holidayWorkDto") HolidayWorkDto holidayDto);
