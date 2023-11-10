@@ -33,4 +33,6 @@ public class DayoffItem {
         this.update_dt = update_dt;
         this.updator_id = updator_id;
     }
+
+
 }

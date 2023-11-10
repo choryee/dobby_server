@@ -54,10 +54,6 @@ public class DayoffService {
         return 0;
     }
 
-    public List<DayoffVacation> getUsed(String employeeId){
-        return new ArrayList<>(dayoffDao.infoDayOffEmployeeNo(employeeId));
-    }
-
     public List<DayoffVacation> getUsedVacation(String employeeId, int year) {
         return dayoffDao.infoDayOffEmployeeNo(employeeId).stream()
                 .filter(v -> yearCheck(v, year))
