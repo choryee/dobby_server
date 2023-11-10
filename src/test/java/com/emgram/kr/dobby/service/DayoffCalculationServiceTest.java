@@ -1,15 +1,16 @@
 import com.emgram.kr.dobby.dto.dayoff.DayoffResult;
 import com.emgram.kr.dobby.dto.dayoff.DayoffVacation;
-import com.emgram.kr.dobby.dto.holiday.HolidayDto;
 import com.emgram.kr.dobby.dto.holiday.VerifyHolidayDto;
 import com.emgram.kr.dobby.service.DayoffCalculationService;
 import com.emgram.kr.dobby.service.DayoffService;
 import com.emgram.kr.dobby.service.EmployeeService;
 import com.emgram.kr.dobby.service.HolidayService;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDate;
@@ -41,13 +42,14 @@ public class DayoffCalculationServiceTest {
     }
 
     @Test
+    @DisplayName("결과 테스트")
     public void testGetDayoffResult() {
         // Arrange
-        String employeeNo = "E001";
-        int year = 2023;
+        String employeeNo = "M001";
+        int year = 2020;
 
-        double totalDayoff = 0.0;
-        double usedDayoff = 0.0;
+        double totalDayoff =15.0;
+        double usedDayoff = 2.5;
 
         List<DayoffVacation> dayoffVacations = new ArrayList<>();
         dayoffVacations.add(createDayoffVacation("2023-02-15", "1001","연차","1"));
@@ -61,6 +63,8 @@ public class DayoffCalculationServiceTest {
         holidayDtos.add(new VerifyHolidayDto("새해", LocalDate.parse("2023-01-01"), true, "1", true));
         holidayDtos.add(new VerifyHolidayDto("무엇인가", LocalDate.parse("2023-05-01"), true, "1", true));
 
+        Mockito.when(dayoffService.getUsedVacation(employeeNo, year)).thenReturn(dayoffVacations);
+        Mockito.when(holidayService.getHolidays(any(LocalDate.class), any(LocalDate.class))).thenReturn(holidayDtos);
 
 
         // Act

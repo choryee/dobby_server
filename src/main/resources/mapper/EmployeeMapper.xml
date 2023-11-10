@@ -4,14 +4,15 @@
 <mapper namespace="com.emgram.kr.dobby.dao.EmployeeDao">
 
     <select id="getEmployeeInfo" resultMap="employeeResultMap">
-        SELECT employee_no, rank_no, department_no, name, joining_dt
-        FROM employee
-        WHERE employee_no = #{employeeNo}
+        SELECT e.employee_no, r.rank_name, e.department_no, e.name, e.joining_dt
+        FROM employee e
+                 JOIN `rank` r ON e.rank_no = r.rank_no
+        WHERE e.employee_no = #{employeeNo}
     </select>
 
     <resultMap id="employeeResultMap" type="com.emgram.kr.dobby.dto.employee.Employee">
         <result property="employeeNo" column="employee_no"/>
-        <result property="rankNo" column="rank_no"/>
+        <result property="rankName" column="rank_name"/>
         <result property="departmentNo" column="department_no"/>
         <result property="name" column="name"/>
         <result property="joiningDt" column="joining_dt"/>

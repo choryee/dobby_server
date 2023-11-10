@@ -2,6 +2,7 @@ package com.emgram.kr.dobby.service;
 
 import com.emgram.kr.dobby.dto.dayoff.DayoffResult;
 import com.emgram.kr.dobby.dto.dayoff.DayoffVacation;
+import com.emgram.kr.dobby.dto.employee.Employee;
 import com.emgram.kr.dobby.dto.holiday.HolidayDto;
 import com.emgram.kr.dobby.dto.holiday.VerifyHolidayDto;
 import lombok.RequiredArgsConstructor;
@@ -21,25 +22,23 @@ public class DayoffCalculationService {
     private final HolidayService holidayService;
 
     public DayoffResult getDayoffResult(String employeeNo, int year) {
-        LocalDate startDate = LocalDate.parse("2023-01-01");
-        LocalDate endDate = LocalDate.parse("2023-12-31");
+        LocalDate startDate = LocalDate.parse("2023-01-01"); // 추후 searchCondition 에서 받아 와야됨
+        LocalDate endDate = LocalDate.parse("2023-12-31"); // 추후 searchCondition 에서 받아 와야됨
 
-        double totalDayoff = employeeService.totalVacation(employeeNo, year);
-        List<DayoffVacation> dayoffVacations = dayoffService.getUsedVacation(employeeNo, year);
+        DayoffResult employee = employeeService.totalVacation(employeeNo, year);
 
-        List<VerifyHolidayDto> holidayDtos = holidayService.getHolidays(startDate, endDate)
+        double totalDayoff = employee.getTotalDayoff();
+
+        double usedDayoff = getUsedDayoff(
+                dayoffService.getUsedVacation(employeeNo, year), // 사용한 연차 List<DayoffVacation>
+                holidayService.getHolidays(startDate, endDate) // 공휴일 List<VerifyHolidayDto>
                 .stream()
                 .filter(dto -> !dto.isWeekend())
-                .collect(Collectors.toList());
-
-        double usedDayoff = getUsedDayoff(dayoffVacations, holidayDtos);
+                .collect(Collectors.toList()));
 
         final double leftDayOff = totalDayoff - usedDayoff;
-        return DayoffResult.builder()
-                .totalDayoff(totalDayoff)
-                .leftDayOff(leftDayOff)
-                .usedDayoff(usedDayoff)
-                .build();
+
+        return DayoffResult.buildDayoffResult(employee,totalDayoff,leftDayOff,usedDayoff);
     }
 
     private double getUsedDayoff(List<DayoffVacation> dayoffVacations, List<VerifyHolidayDto> holidayDtos) {

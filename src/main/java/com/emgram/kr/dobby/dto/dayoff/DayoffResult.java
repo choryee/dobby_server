@@ -1,21 +1,44 @@
 package com.emgram.kr.dobby.dto.dayoff;
 
+import com.emgram.kr.dobby.dto.employee.Employee;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.SuperBuilder;
+
+import java.util.Date;
 
 @Getter
 @RequiredArgsConstructor
-public class DayoffResult {
+@SuperBuilder
+public class DayoffResult extends Employee{
 
     private double totalDayoff;
     private double leftDayOff;
     private double usedDayoff;
 
-    @Builder
-    public DayoffResult(double totalDayoff, double leftDayOff, double usedDayoff){
+    public DayoffResult(double totalDayoff, double leftDayOff, double usedDayoff,
+                        String employeeNo, String rankName, int departmentNo, String name, Date joiningDt) {
+        super(employeeNo, rankName, departmentNo, name, joiningDt);
         this.totalDayoff = totalDayoff;
         this.leftDayOff = leftDayOff;
         this.usedDayoff = usedDayoff;
+    }
+
+    public static DayoffResult buildDayoffResult(Employee employee, double totalDayoff, double leftDayOff, double usedDayoff) {
+        return DayoffResult.builder()
+                .employeeNo(employee.getEmployeeNo())
+                .rankName(employee.getRankName())
+                .name(employee.getName())
+                .departmentNo(employee.getDepartmentNo())
+                .joiningDt(employee.getJoiningDt())
+                .totalDayoff(totalDayoff)
+                .leftDayOff(leftDayOff)
+                .usedDayoff(usedDayoff)
+                .build();
+    }
+
+    public static DayoffResult buildTotalDayoffResult(Employee employee, double totalDayoff) {
+        return buildDayoffResult(employee, totalDayoff, 0, 0);
     }
 }
