@@ -18,14 +18,6 @@ public class Employee {
     private String name;
     private Date joiningDt;
 
-    public Employee(String employeeNo, String rankName, int departmentNo, String name, Date joiningDt) {
-        this.employeeNo = employeeNo;
-        this.rankName = rankName;
-        this.departmentNo = departmentNo;
-        this.name = name;
-        this.joiningDt = joiningDt;
-    }
-
     @Getter
     @NoArgsConstructor
     public static class SimpleEmployeeDTO {

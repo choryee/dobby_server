@@ -17,14 +17,6 @@ public class DayoffResult extends Employee{
     private double leftDayOff;
     private double usedDayoff;
 
-    public DayoffResult(double totalDayoff, double leftDayOff, double usedDayoff,
-                        String employeeNo, String rankName, int departmentNo, String name, Date joiningDt) {
-        super(employeeNo, rankName, departmentNo, name, joiningDt);
-        this.totalDayoff = totalDayoff;
-        this.leftDayOff = leftDayOff;
-        this.usedDayoff = usedDayoff;
-    }
-
     public static DayoffResult buildDayoffResult(Employee employee, double totalDayoff, double leftDayOff, double usedDayoff) {
         return DayoffResult.builder()
                 .employeeNo(employee.getEmployeeNo())
