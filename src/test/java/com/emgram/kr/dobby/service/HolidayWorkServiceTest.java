@@ -5,6 +5,7 @@ import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import com.emgram.kr.dobby.dto.SearchCondition;
+import com.emgram.kr.dobby.dto.holiday.work.HolidayWork;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWorkDto;
 import java.time.LocalDate;
 import java.util.List;
@@ -24,15 +25,15 @@ public class HolidayWorkServiceTest {
     @BeforeEach
     public void dataSetup() {
         holidayWorkService.saveWorkDays(
-            new HolidayWorkDto(null, "M002", LocalDate.of(2015, 1, 1), "특수"));
+            new HolidayWork(null, "M002", LocalDate.of(2015, 1, 1), "특수"));
         holidayWorkService.saveWorkDays(
-            new HolidayWorkDto(null, "M002", LocalDate.of(2015, 1, 2), "특수2"));
+            new HolidayWork(null, "M002", LocalDate.of(2015, 1, 2), "특수2"));
         holidayWorkService.saveWorkDays(
-            new HolidayWorkDto(null, "M002", LocalDate.of(2015, 1, 3), "특수3"));
+            new HolidayWork(null, "M002", LocalDate.of(2015, 1, 3), "특수3"));
         holidayWorkService.saveWorkDays(
-            new HolidayWorkDto(null, "M002", LocalDate.of(2015, 1, 3), "특수3"));
+            new HolidayWork(null, "M002", LocalDate.of(2015, 1, 3), "특수3"));
         holidayWorkService.saveWorkDays(
-            new HolidayWorkDto(null, "M001", LocalDate.of(2015, 1, 5), "특수5"));
+            new HolidayWork(null, "M001", LocalDate.of(2015, 1, 5), "특수5"));
     }
 
     @Test
@@ -41,7 +42,6 @@ public class HolidayWorkServiceTest {
     public void getWorksDayTest() {
         //given
         SearchCondition searchCondition = new SearchCondition(0, 10, "date", "2015-01");
-        System.out.println("d");
         //when
         List<HolidayWorkDto> list = holidayWorkService.getWorkDays(searchCondition);
         //then

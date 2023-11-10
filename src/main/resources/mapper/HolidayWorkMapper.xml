@@ -6,31 +6,35 @@
   <select id="countWorkDayByYearAndEmployeeNo" parameterType="java.util.Map" resultType="long">
     select count(*)
     from holiday_work
-    where holiday_work_id = #{holidayWorkId} and work_date between #{startDate} and #{endDate} and delete_dt is null;
+    where employee_no = #{employeeNo} and work_date between #{startDate} and #{endDate} and delete_dt is null;
   </select>
 
   <select id="findAllHolidayWorkBySearchCondition" parameterType="com.emgram.kr.dobby.dto.SearchCondition"
   resultType="com.emgram.kr.dobby.dto.holiday.work.HolidayWorkDto">
-    select holiday_work_id as holidayWorkId,
-           employee_no as employeeNo,
-           work_date as workDate,
-           memo
-    from holiday_work
+    select h.holiday_work_id as holidayWorkId,
+           h.employee_no as employeeNo,
+            e.name,
+           r.rank_name as rankName,
+           h.work_date as workDate,
+           h.memo
+    from holiday_work h
+    join employee e on h.employee_no = e.employee_no
+    left join `rank` r on e.rank_no = r.rank_no
     <where>
       <if test="query == null">
-        and delete_dt is null
+        and h.delete_dt is null
       </if>
       <if test="query != null and startDate != null and endDate != null">
-        or (work_date between #{startDate} and #{endDate}) and delete_dt is null
+        or (h.work_date between #{startDate} and #{endDate}) and h.delete_dt is null
       </if>
       <if test="query != null">
-        or (employee_no like CONCAT('%',#{query},'%') or memo like CONCAT('%',#{query},'%'))
+        or (h.employee_no like CONCAT('%',#{query},'%') or h.memo like CONCAT('%',#{query},'%')) and h.delete_dt is null
       </if>
     </where>
     limit #{pageSize} offset #{pageOffset};
   </select>
   
-  <insert id="saveHolidayWork" parameterType="com.emgram.kr.dobby.dto.holiday.HolidayDto">
+  <insert id="saveHolidayWork" parameterType="com.emgram.kr.dobby.dto.holiday.work.HolidayWork">
     insert into holiday_work (employee_no, work_date, memo) value
     (#{employeeNo}, #{workDate}, #{memo});
   </insert>
