@@ -26,7 +26,7 @@ public class SearchCondition {
         this.pageNum = pageNum == null ? 0 : pageNum;
         this.pageSize = pageSize == null ? 10 : pageSize;
         this.pageOffset = this.pageSize * this.pageNum;
-        if (searchType.equals("date")) {
+        if (searchType != null && searchType.equals("date")) {
             LocalDateContainer container = DateUtil.parseDate(query);
             if (container != null) {
                 this.startDate = DateUtil.getStartDayOfDetail(container);

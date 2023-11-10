@@ -1,8 +1,11 @@
 package com.emgram.kr.dobby.controller;
 
+import com.emgram.kr.dobby.dto.CommonResponse;
 import com.emgram.kr.dobby.dto.SearchCondition;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWorkDto;
 import com.emgram.kr.dobby.service.HolidayWorkService;
+import java.time.LocalDate;
+import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -28,9 +31,13 @@ public class HolidayWorkController {
     @GetMapping("/list")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
-    public List<HolidayWorkDto> getHolidayWorksList(@ModelAttribute SearchCondition searchCondition) {
-        return holidayWorkService.getWorkDays(searchCondition);
-    }
+    public CommonResponse<List<HolidayWorkDto>> getHolidayWorksList(@ModelAttribute SearchCondition searchCondition) {
+        List<HolidayWorkDto> list = Arrays.asList(
+            new HolidayWorkDto(1L, "M007", LocalDate.of(2015, 4, 2), "memo1"),
+            new HolidayWorkDto(2L, "M007", LocalDate.of(2015, 4, 3), "memo2")
+            );
+        return new CommonResponse<>(list);
+   }
 
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)

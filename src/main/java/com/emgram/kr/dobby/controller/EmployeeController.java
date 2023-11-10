@@ -1,5 +1,6 @@
 package com.emgram.kr.dobby.controller;
 
+import com.emgram.kr.dobby.dto.CommonResponse;
 import com.emgram.kr.dobby.dto.employee.Employee.SimpleEmployeeDTO;
 import com.emgram.kr.dobby.service.EmployeeService;
 import java.util.List;
@@ -11,14 +12,14 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/employee")
+@CrossOrigin
 @RequiredArgsConstructor
 public class EmployeeController {
 
     private final EmployeeService employeeService;
 
     @GetMapping("/simple-info")
-    @CrossOrigin
-    public List<SimpleEmployeeDTO> getSimpleEmployeeList() {
-        return employeeService.getSimpleEmployeeList();
+    public CommonResponse<List<SimpleEmployeeDTO>> getSimpleEmployeeList() {
+        return new CommonResponse<>(employeeService.getSimpleEmployeeList());
     }
 }
