@@ -14,6 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 public class EmployeeDayoff extends Employee {
 
+    private String wid;
     private String dayoffType;
     private String codeName;
     private Date startDayoffDt;
@@ -22,6 +23,7 @@ public class EmployeeDayoff extends Employee {
     public static EmployeeDayoff buildEmployeeDayoff(Employee employee, DayoffVacation vacation, Date startDayoffDt,
                                                      Date endDayoffDt, double usedDayoff) {
         return EmployeeDayoff.builder()
+                .wid(employee.getWid())
                 .employeeNo(employee.getEmployeeNo())
                 .rankName(employee.getRankName())
                 .name(employee.getName())
