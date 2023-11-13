@@ -3,6 +3,7 @@ package com.emgram.kr.dobby.controller;
 import com.emgram.kr.dobby.dto.CommonResponse;
 import com.emgram.kr.dobby.dto.SearchCondition;
 import com.emgram.kr.dobby.dto.dayoff.DayoffResult;
+import com.emgram.kr.dobby.dto.employee.EmployeeDayoff;
 import com.emgram.kr.dobby.service.DayoffCalculationService;
 import lombok.RequiredArgsConstructor;
 import lombok.val;
@@ -30,7 +31,10 @@ public class DayOffController {
 
     @GetMapping("/employee/remaining")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<List<DayoffResult>> dayoffRemaining(@ModelAttribute SearchCondition searchCondition){
-        return new CommonResponse<>(new ArrayList<>());
+    public CommonResponse<List<EmployeeDayoff>> dayoffRemaining(@RequestParam String employeeNo,
+                                                                @RequestParam int year){
+        return new CommonResponse<>(dayoffCalculationService.getDayoffDetails(employeeNo,year));
     }
+
+
 }

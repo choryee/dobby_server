@@ -17,6 +17,7 @@ public class DayoffResult extends Employee{
     private double leftDayOff;
     private double usedDayoff;
 
+
     public static DayoffResult buildDayoffResult(Employee employee, double totalDayoff, double leftDayOff, double usedDayoff) {
         return DayoffResult.builder()
                 .employeeNo(employee.getEmployeeNo())
