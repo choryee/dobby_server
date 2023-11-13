@@ -4,7 +4,6 @@ import com.emgram.kr.dobby.dto.dayoff.DayoffResult;
 import com.emgram.kr.dobby.dto.dayoff.DayoffVacation;
 import com.emgram.kr.dobby.dto.employee.Employee;
 import com.emgram.kr.dobby.dto.employee.EmployeeDayoff;
-import com.emgram.kr.dobby.dto.holiday.HolidayDto;
 import com.emgram.kr.dobby.dto.holiday.VerifyHolidayDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -57,7 +56,7 @@ public class DayoffCalculationService {
         Date startDate = null;
         double usedDays = 0.0;
 
-        //stream 으로도 처리할 수 있다 하는 데 잘 모르 겠음 
+        //stream 으로도 처리할 수 있다 하는 데 잘 모르 겠음
         for (DayoffVacation vacation : dayoffVacations) {
             if (previousVacation == null) {
                 startDate = vacation.getDayoffDt();
