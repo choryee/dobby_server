@@ -121,6 +121,16 @@ public class DateUtil {
         return LocalDate.of(year, month, 1);
     }
 
+
+    public static LocalDate getStartOfMonth(int year, int month) {
+        return LocalDate.of(year, month, 1);
+    }
+
+    public static LocalDate getEndOfMonth(int year, int month) {
+        LocalDate localDate = LocalDate.of(year, month, 1);
+        return LocalDate.of(year, month, localDate.lengthOfMonth());
+    }
+
     public static LocalDate getEndOfMonth(LocalDate date) {
         int year = date.getYear();
         int month = date.getMonthValue();

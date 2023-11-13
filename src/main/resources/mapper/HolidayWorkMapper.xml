@@ -6,7 +6,9 @@
   <select id="countWorkDayByYearAndEmployeeNo" parameterType="java.util.Map" resultType="long">
     select count(*)
     from holiday_work
-    where employee_no = #{employeeNo} and work_date between #{startDate} and #{endDate} and delete_dt is null;
+    where employee_no = #{employeeNo}
+      and work_date between #{startDate} and #{endDate}
+      and delete_dt is null;
   </select>
 
   <select id="findAllHolidayWorkBySearchCondition" parameterType="com.emgram.kr.dobby.dto.SearchCondition"
@@ -21,15 +23,20 @@
     join employee e on h.employee_no = e.employee_no
     left join `rank` r on e.rank_no = r.rank_no
     <where>
-      <if test="query == null">
-        and h.delete_dt is null
-      </if>
-      <if test="query != null and startDate != null and endDate != null">
-        or (h.work_date between #{startDate} and #{endDate}) and h.delete_dt is null
+      <if test="startDate != null and endDate != null">
+        and (h.work_date between #{startDate} and #{endDate})
       </if>
       <if test="query != null">
-        or (h.employee_no like CONCAT('%',#{query},'%') or h.memo like CONCAT('%',#{query},'%')) and h.delete_dt is null
+        and
+        (h.employee_no like CONCAT('%',#{query},'%')
+                or h.memo like CONCAT('%',#{query},'%')
+                or e.name like CONCAT('%',#{query},'%')
+                or r.rank_name like CONCAT('%',#{query},'%'))
+
       </if>
+        <if test="true">
+        and h.delete_dt is null
+        </if>
     </where>
     limit #{pageSize} offset #{pageOffset};
   </select>
@@ -43,7 +50,7 @@
     update holiday_work set
         employee_no = #{holidayWorkDto.employeeNo},
         work_date = #{holidayWorkDto.workDate},
-        memo = #{holidayWorkDto}
+        memo = #{holidayWorkDto.memo}
     where holiday_work_id = #{holidayWorkId};
   </update>
   <update id="deleteHolidayWork" parameterType="Long">

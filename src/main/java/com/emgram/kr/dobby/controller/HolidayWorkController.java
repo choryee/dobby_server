@@ -9,6 +9,7 @@ import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -51,21 +52,24 @@ public class HolidayWorkController {
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
     @CrossOrigin
-    public void saveHolidayWork(@RequestBody HolidayWork holidayWork) {
+    public CommonResponse saveHolidayWork(@RequestBody HolidayWork holidayWork) {
         holidayWorkService.saveWorkDays(holidayWork);
+        return new CommonResponse(null);
     }
 
     @PutMapping("/modify/{holidayId}")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
-    public void updateHolidayWork(@PathVariable Long holidayId, @RequestBody HolidayWorkDto holidayWorkDto) {
+    public CommonResponse updateHolidayWork(@PathVariable Long holidayId, @RequestBody HolidayWorkDto holidayWorkDto) {
         holidayWorkService.updateWorkDay(holidayId, holidayWorkDto);
+        return new CommonResponse(null);
     }
 
     @DeleteMapping("/delete/{holidayId}")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
-    public void deleteHolidayWork(@PathVariable Long holidayId) {
+    public CommonResponse deleteHolidayWork(@PathVariable Long holidayId) {
         holidayWorkService.deleteWorkDay(holidayId);
+        return new CommonResponse(null);
     }
 }

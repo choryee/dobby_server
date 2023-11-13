@@ -18,21 +18,25 @@ public class SearchCondition {
 
     private LocalDate endDate;
 
-    private String searchType;
+    private Integer year;
+
+    private Integer month;
 
     private String query;
 
-    public SearchCondition(Integer pageNum, Integer pageSize, String searchType, String query) {
+    public SearchCondition(Integer pageNum, Integer pageSize, Integer year, Integer month, String query) {
         this.pageNum = pageNum == null ? 0 : pageNum;
         this.pageSize = pageSize == null ? 10 : pageSize;
         this.pageOffset = this.pageSize * this.pageNum;
-        if (searchType != null && searchType.equals("date")) {
-            LocalDateContainer container = DateUtil.parseDate(query);
-            if (container != null) {
-                this.startDate = DateUtil.getStartDayOfDetail(container);
-                this.endDate = DateUtil.getEndDayOfDetail(container);
-            }
+
+        if (year != null && month == null) {
+            startDate = DateUtil.getStartDayOfYear(year);
+            endDate = DateUtil.getEndDayOfYear(year);
+        } else if (year != null && month != null) {
+            startDate = DateUtil.getStartOfMonth(year, month);
+            endDate = DateUtil.getEndOfMonth(year, month);
         }
+
         this.query = query;
     }
 }
