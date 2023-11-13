@@ -12,6 +12,7 @@ import java.util.Date;
 @SuperBuilder
 public class Employee {
 
+    private String wid;
     private String employeeNo;
     private String rankName;
     private int departmentNo;
