@@ -26,6 +26,8 @@ public class User {
     //25-1강, 01:14. 위 enum안 쓰고.
     private String roles;
 
+    private String token;
+
     public List<String> getRoleList(){
         if(this.roles.length() > 0){
             return Arrays.asList(this.roles.split(","));

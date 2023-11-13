@@ -10,6 +10,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -21,6 +22,7 @@ import java.io.IOException;
 //시큐리티가 filter를 가지고 있는데, 그 필터중 BasicAuthenticationFilter라는 것이 있음.
 // 권한이나 인증이 필요한 특정 주소를 요청했을 때, 위 필터를 무조건 타게 되어있음.
 // 만약에 권한이 인증이 필요한 주소가 아니라면, 이 필터를 안 탐.
+
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private EmployeeDao employeeDao;
@@ -37,7 +39,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         System.out.println("인증이나 권한이 필요한 주소가 요청이 됨.");
 
         String jwtHeader=request.getHeader("Authorization");
-        System.out.println("jwtHeader>> "+ jwtHeader);
+        System.out.println("JwtAuthorizationFilter jwtHeader>> "+ jwtHeader);
 
         //header가 있는지 확인.
         if(jwtHeader == null || !jwtHeader.startsWith("Bearer")){
@@ -52,7 +54,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         if(username !=null){
             User userEntity = employeeDao.getUser(username);
-
             PrincipalDetail principalDetail=new PrincipalDetail(userEntity);
 
             //jwt토큰 서명을 통해서, 서명이 정상이면, Authentication를 만든 것.

@@ -4,6 +4,7 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.emgram.kr.dobby.config.auth.PrincipalDetail;
 import com.emgram.kr.dobby.dto.login.User;
+import com.emgram.kr.dobby.utils.JwtTokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,7 +17,6 @@ import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.util.Date;
 
@@ -61,24 +61,30 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
+    } // attemptAuthentication
 
     // attemptAuthentication실행후 인증이 정상적으로 되었으면, 밑 함수가 실행됨
     // 여기서 jwt토큰을 만들어서 request요청한 사용자에게 그 토큰을 response해주면 됨.
     @Override
-    protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
+   // protected void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
+    public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
                                             throws IOException, ServletException {
         System.out.println("successfulAuthentication 실행됨 : 인증이 완료됐다는 의미임.");
         PrincipalDetail principalDetail = (PrincipalDetail) authResult.getPrincipal();
 
-        String jwtToken = JWT.create()
-                .withSubject("cos토큰")
-                .withExpiresAt(new Date(System.currentTimeMillis()+(60000*10)))
-                .withClaim("username", principalDetail.getUser().getName())
-                .sign(Algorithm.HMAC512("cos")); // screctkey
+//        String jwtToken = JWT.create()
+//                .withSubject("cos토큰")
+//                .withExpiresAt(new Date(System.currentTimeMillis()+(60000*10)))
+//                .withClaim("username", principalDetail.getUser().getName())
+//                .sign(Algorithm.HMAC512("cos")); // screctkey
 
-        System.out.println("response로 토큰 보내기 token>> "+jwtToken);
+
+
+        System.out.println("response로 토큰 보내기 token>> "+JwtTokenUtil.createToken(principalDetail.getUsername()));
         //response.addHeader("Authorization", "Bearer "+ jwtToken);
-        response.setHeader("Authorization", "Bearer "+ jwtToken);
+        //response.setHeader("Authorization", "Bearer "+ jwtToken);
+        response.setHeader("Authorization", "Bearer "+ JwtTokenUtil.createToken(principalDetail.getUsername()));
+
     }
+
 }

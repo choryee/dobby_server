@@ -20,7 +20,6 @@ import org.springframework.web.filter.CorsFilter;
 
 @Configuration
 @EnableWebSecurity
-
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -60,7 +59,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                     //.authorizeRequests() //URL 패턴에 대한 접근 권한을 설정하는 메서드입니다
                     //.antMatchers("/api/v1/users/**").authenticated();
-                        .authorizeRequests(authroize -> authroize.antMatchers("/api/v1/users/user/**")
+                        .authorizeRequests(authorize -> authorize.antMatchers("/api/v1/users/user/**")
                         .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 
                         .antMatchers("/api/v1/users/manager/**")

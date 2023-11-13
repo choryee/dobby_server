@@ -11,7 +11,10 @@ import java.util.List;
 public interface EmployeeDao {
 
     User getUserInfo(User user);
-    User getUser(String userName);
+    User getUser(String username);
     int joinUser(User user);
+    int insertToken(User user);
+
+    int updateUser(User user);
 
 }
