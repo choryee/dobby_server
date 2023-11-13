@@ -6,6 +6,7 @@ import java.time.LocalDate;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.jetbrains.annotations.NotNull;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -14,10 +15,13 @@ public class HolidayWork {
 
     private Long holidayWorkId;
 
+    @NotNull
     private String employeeNo;
 
+    @NotNull
     private LocalDate workDate;
 
+    @NotNull
     private String memo;
 
 }
