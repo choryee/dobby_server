@@ -39,13 +39,13 @@ public class DayoffServiceTest {
         mockDayoffVacations.add(createDayoffVacation("2023-05-01", "1003")); // 평일
         mockDayoffVacations.add(createDayoffVacation("2023-12-25", "2001")); // 주말
         mockDayoffVacations.add(createDayoffVacation("2023-12-26","5000"));//5000번
-        when(dayoffDao.infoDayOffEmployeeNo(employeeId)).thenReturn(mockDayoffVacations);
+        when(dayoffDao.infoDayOffEmployeeNo(employeeId,year)).thenReturn(mockDayoffVacations);
 
         List<DayoffVacation> result = dayoffService.getUsedVacation(employeeId, year);
 
         assertEquals(2, result.size());
 
-        verify(dayoffDao, times(1)).infoDayOffEmployeeNo(employeeId);
+        verify(dayoffDao, times(1)).infoDayOffEmployeeNo(employeeId,year);
     }
 
     private DayoffVacation createDayoffVacation(String date, String dayoffType) {

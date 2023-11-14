@@ -16,7 +16,7 @@ import java.util.Date;
 public class EmployeeService {
     private final EmployeeDao employeeDao;
     private static final int BASE_VACATION_DAYS = 15;
-    private static final int VACATION_ACCRUAL_RATE = 2; // 매 2년마다 증가하는 휴가일수
+    private static final int VACATION_ACCRUAL_RATE = 2;
 
     public Employee getEmployeeInfo(String employeeNo){
       return employeeDao.getEmployeeInfo(employeeNo);
@@ -27,7 +27,7 @@ public class EmployeeService {
     }
 
     public DayoffResult totalVacation(String employeeNo, int year) {
-        Employee employee =employeeDao.getEmployeeInfo(employeeNo);
+        Employee employee = employeeDao.getEmployeeInfo(employeeNo);
         Calendar joiningDate = toCalendar(employee.getJoiningDt());
         Calendar endYear = getEndYear(year);
         Calendar oneYearLater = getOneYearLater(joiningDate);

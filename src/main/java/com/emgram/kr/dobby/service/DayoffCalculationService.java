@@ -29,7 +29,7 @@ public class DayoffCalculationService {
         double totalDayoff = employee.getTotalDayoff();
 
         double usedDayoff = getUsedDayoff(
-                dayoffService.getUsedVacation(employeeNo, year), // 사용한 연차 List<DayoffVacation>
+                dayoffService.getUsedDayoff(employeeNo, year), // 사용한 연차 List<DayoffVacation>
                 holidayService.getHolidays(startDate, endDate) // 공휴일 List<VerifyHolidayDto>
                 .stream()
                 .filter(dto -> !dto.isWeekend())

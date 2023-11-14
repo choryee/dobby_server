@@ -64,7 +64,7 @@
         </foreach>
     </insert>
 
-    <select id="infoDayOffEmployeeNo" parameterType="string" resultType="com.emgram.kr.dobby.dto.dayoff.DayoffVacation">
+    <select id="infoDayOffEmployeeNo" resultType="com.emgram.kr.dobby.dto.dayoff.DayoffVacation">
         SELECT
             dh.employee_no AS employeeNo,
             dh.event_idx AS eventIdx,
@@ -75,6 +75,10 @@
         FROM dayoff_history dh
                  LEFT JOIN syscode sc ON dh.dayoff_type = sc.code_id
         WHERE dh.employee_no = #{employeeNo}
+                  AND YEAR(dh.dayoff_dt) = #{year}
         ORDER BY dh.dayoff_dt DESC
     </select>
+
+
+
 </mapper>
