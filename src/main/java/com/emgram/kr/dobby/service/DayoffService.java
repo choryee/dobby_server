@@ -5,6 +5,7 @@ import com.emgram.kr.dobby.dto.caldav.CaldavEvent;
 import com.emgram.kr.dobby.dto.dayoff.DayoffItem;
 import com.emgram.kr.dobby.dto.dayoff.DayoffVacation;
 import com.emgram.kr.dobby.utils.DayoffType;
+
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -59,7 +60,8 @@ public class DayoffService {
     ////LocalDate 사용 자바 버전에 따라 바꿔야 한다면 Calendar 로 변경 해야됨
     public List<DayoffVacation> getUsedVacation(String employeeId, int year) {
         return dayoffDao.infoDayOffEmployeeNo(employeeId,year).stream()
-                .filter(v -> !isWeekend(convertToLocalDate(v.getDayoffDt())))
+                .filter(v -> !isWeekend(v.getDayoffDt()))
+                .filter(this::dayOffCheck)
                 .collect(Collectors.toList());
     }
 
@@ -75,14 +77,6 @@ public class DayoffService {
     private boolean dayOffCheck(DayoffVacation dayoffVacation) {
         int dayoffType = Integer.parseInt(dayoffVacation.getDayoffType());
         return DayoffType.DAY_OFF.inRange(dayoffType);
-    }
-    /* 추후 휴가 관련만 보여 주게 될시 필터 적용
-    private boolean vacationCheck(DayoffVacation dayoffVacation) {
-        int dayoffType = Integer.parseInt(dayoffVacation.getDayoffType());
-        return DayoffType.VACATION.inRange(dayoffType);
-    }*/
-    protected LocalDate convertToLocalDate(Date dateToConvert) {
-        return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
 
     private List<Date> getBetweenDateList(Date start_dt, Date end_dt){

@@ -3,6 +3,7 @@ package com.emgram.kr.dobby.dto.employee;
 
 import com.emgram.kr.dobby.dto.dayoff.DayoffResult;
 import com.emgram.kr.dobby.dto.dayoff.DayoffVacation;
+import java.time.LocalDate;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -17,11 +18,11 @@ public class EmployeeDayoff extends Employee {
     private String wid;
     private String dayoffType;
     private String codeName;
-    private Date startDayoffDt;
-    private Date endDayoffDt;
+    private LocalDate startDayoffDt;
+    private LocalDate endDayoffDt;
     private double usedDayoff;
-    public static EmployeeDayoff buildEmployeeDayoff(Employee employee, DayoffVacation vacation, Date startDayoffDt,
-                                                     Date endDayoffDt, double usedDayoff) {
+    public static EmployeeDayoff buildEmployeeDayoff(Employee employee, DayoffVacation vacation, LocalDate startDayoffDt,
+                                                     LocalDate endDayoffDt, double usedDayoff) {
         return EmployeeDayoff.builder()
                 .wid(employee.getWid())
                 .employeeNo(employee.getEmployeeNo())

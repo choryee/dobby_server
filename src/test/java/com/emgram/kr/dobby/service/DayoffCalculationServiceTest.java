@@ -1,5 +1,6 @@
 import com.emgram.kr.dobby.dto.dayoff.DayoffResult;
 import com.emgram.kr.dobby.dto.dayoff.DayoffVacation;
+import com.emgram.kr.dobby.dto.employee.Employee;
 import com.emgram.kr.dobby.dto.holiday.VerifyHolidayDto;
 import com.emgram.kr.dobby.service.DayoffCalculationService;
 import com.emgram.kr.dobby.service.DayoffService;
@@ -47,25 +48,26 @@ public class DayoffCalculationServiceTest {
         // Arrange
         String employeeNo = "M001";
         int year = 2020;
-
+        Employee employee = new Employee("2", employeeNo, "매니저", 1, "누군가", LocalDate.now());
         double totalDayoff =15.0;
         double usedDayoff = 2.5;
 
         List<DayoffVacation> dayoffVacations = new ArrayList<>();
-        dayoffVacations.add(createDayoffVacation("2023-02-15", "1001","연차","1"));
-        dayoffVacations.add(createDayoffVacation("2023-05-01", "1002","오전반차","0.5"));
-        dayoffVacations.add(createDayoffVacation("2023-01-01", "1002","오전반차","0.5"));
-        dayoffVacations.add(createDayoffVacation("2023-11-01", "1003","오후반차","0.5"));
-        dayoffVacations.add(createDayoffVacation("2023-05-01", "1001","연차","1"));
-        dayoffVacations.add(createDayoffVacation("2023-06-01", "1001","연차","1"));
+        dayoffVacations.add(createDayoffVacation("2023-02-15", "1001","연차","1")); // 평일
+        dayoffVacations.add(createDayoffVacation("2023-05-01", "1002","오전반차","0.5")); // 무엇인가
+        dayoffVacations.add(createDayoffVacation("2023-01-01", "1002","오전반차","0.5")); // 새해
+        dayoffVacations.add(createDayoffVacation("2023-11-01", "1003","오후반차","0.5")); // 평일
+        dayoffVacations.add(createDayoffVacation("2023-05-01", "1001","연차","1")); // 무엇인가
+        dayoffVacations.add(createDayoffVacation("2023-06-01", "1001","연차","1")); // 평일
 
         List<VerifyHolidayDto> holidayDtos = new ArrayList<>();
-        holidayDtos.add(new VerifyHolidayDto("새해", LocalDate.parse("2023-01-01"), true, "1", true));
-        holidayDtos.add(new VerifyHolidayDto("무엇인가", LocalDate.parse("2023-05-01"), true, "1", true));
+        holidayDtos.add(new VerifyHolidayDto("새해", LocalDate.parse("2023-01-01"), true, "1", false));
+        holidayDtos.add(new VerifyHolidayDto("무엇인가", LocalDate.parse("2023-05-01"), true, "1", false));
 
-        Mockito.when(dayoffService.getUsedVacation(employeeNo, year)).thenReturn(dayoffVacations);
+        Mockito.when(employeeService.getEmployeeByEmployeeNo(employeeNo)).thenReturn(employee);
+        Mockito.when(dayoffService.getUsedDayoff(employeeNo, year)).thenReturn(dayoffVacations);
+        Mockito.when(employeeService.calculateTotalVacation(employee, year)).thenReturn(totalDayoff);
         Mockito.when(holidayService.getHolidays(any(LocalDate.class), any(LocalDate.class))).thenReturn(holidayDtos);
-
 
         // Act
         DayoffResult dayoffResult = dayoffCalculationService.getDayoffResult(employeeNo, year);
@@ -77,7 +79,7 @@ public class DayoffCalculationServiceTest {
     }
 
     private DayoffVacation createDayoffVacation(String date, String dayoffType,String codeName,String codeVal) {
-        Date dayoffDt = Date.from(LocalDate.parse(date).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        LocalDate dayoffDt = LocalDate.parse(date);
         return new DayoffVacation("employeeNoValue", dayoffType, dayoffDt, codeName, codeVal);
     }
 

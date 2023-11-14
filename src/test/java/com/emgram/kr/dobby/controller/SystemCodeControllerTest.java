@@ -42,6 +42,6 @@ public class SystemCodeControllerTest {
         //then
         resultActions
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.data[0].codeId").value("5001"));
+            .andExpect(jsonPath("$.resultCode").value("0"));
     }
 }

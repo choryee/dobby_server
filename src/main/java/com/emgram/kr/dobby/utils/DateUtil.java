@@ -1,10 +1,12 @@
 package com.emgram.kr.dobby.utils;
 
+import com.emgram.kr.dobby.dto.holiday.HolidayDto;
 import java.text.SimpleDateFormat;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 import java.util.TimeZone;
 import lombok.AllArgsConstructor;
@@ -136,6 +138,10 @@ public class DateUtil {
         int month = date.getMonthValue();
         int lastDay = date.lengthOfMonth(); // 해당 월의 마지막 날짜를 가져옵니다.
         return LocalDate.of(year, month, lastDay);
+    }
+
+    public static boolean isHoliday(LocalDate date, List<? extends HolidayDto> list) {
+        return list.stream().anyMatch((item) -> item.getHoliday().isEqual(date));
     }
 
     public static boolean isWeekend(LocalDate date) {
