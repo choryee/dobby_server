@@ -1,5 +1,6 @@
 package com.emgram.kr.dobby.dao;
 import com.emgram.kr.dobby.dto.employee.Employee;
+import java.time.LocalDate;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +34,7 @@ public class EmployeeDaoTest {
                 .rankName(rankName)
                 .departmentNo(departmentNo)
                 .name(name)
-                .joiningDt(new java.util.Date())
+                .joiningDt(LocalDate.now())
                 .build();
 
         // Then

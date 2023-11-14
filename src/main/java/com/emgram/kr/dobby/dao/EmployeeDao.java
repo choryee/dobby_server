@@ -10,4 +10,7 @@ public interface EmployeeDao {
    Employee getEmployeeInfo(String employeeNo);
 
    List<SimpleEmployeeDTO> findAllSimpleEmployeeList();
+
+   List<Employee> findAllEmployee();
+
 }

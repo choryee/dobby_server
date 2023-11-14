@@ -37,7 +37,7 @@ public class DayoffServiceTest {
         mockDayoffVacations.add(createDayoffVacation("2023-01-01", "1001")); // 주말
         mockDayoffVacations.add(createDayoffVacation("2023-02-15", "1002")); // 평일
         mockDayoffVacations.add(createDayoffVacation("2023-05-01", "1003")); // 평일
-        mockDayoffVacations.add(createDayoffVacation("2023-12-25", "2001")); // 주말
+        mockDayoffVacations.add(createDayoffVacation("2023-12-25", "2001")); // 2000번
         mockDayoffVacations.add(createDayoffVacation("2023-12-26","5000"));//5000번
         when(dayoffDao.infoDayOffEmployeeNo(employeeId,year)).thenReturn(mockDayoffVacations);
 
@@ -49,7 +49,7 @@ public class DayoffServiceTest {
     }
 
     private DayoffVacation createDayoffVacation(String date, String dayoffType) {
-        Date dayoffDt = Date.from(LocalDate.parse(date).atStartOfDay().atZone(ZoneId.systemDefault()).toInstant());
+        LocalDate dayoffDt = LocalDate.parse(date);
         return new DayoffVacation("employeeNoValue", dayoffType, dayoffDt, "codeNameValue", "codeValValue");
     }
 }
