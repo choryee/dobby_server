@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.emgram.kr.dobby.dao.CalendarDao">
+    
+    <resultMap id="CalendarResultMap" type="com.emgram.kr.dobby.dto.calendar.Calendar">
+        <result property="eventIdx" column="event_idx" />
+        <result property="eventId" column="event_id" />
+        <result property="calendarId" column="calendar_id" />
+        <result property="eventName" column="event_name" />
+        <result property="startDt" column="start_dt" />
+        <result property="endDt" column="end_dt" />
+        <result property="eventTag" column="event_tag" />
+        <result property="wid" column="wid" />
+        <result property="createUser" column="create_user" />
+        <result property="updateUser" column="update_user" />
+        <result property="createDt" column="create_dt" />
+        <result property="updateDt" column="update_dt" />
+        <result property="deleteDt" column="delete_dt" />
+    </resultMap>
+    
+    <select id="getList" resultMap="CalendarResultMap">
+        SELECT event_idx,
+               event_id,
+               calendar_id,
+               event_name,
+               start_dt,
+               end_dt,
+               event_tag,
+               wid,
+               create_user,
+               update_user,
+               create_dt,
+               update_dt,
+               delete_dt
+        FROM caldav_event_info
+    </select>
+
+</mapper>
