@@ -15,5 +15,5 @@ public interface DayoffDao {
 
     int insertDayoffListForSync(List<DayoffItem> dayoffItems);
 
-    List<DayoffVacation> infoDayOffEmployeeNo(String employeeNo);
+    List<DayoffVacation> infoDayOffEmployeeNo(String employeeNo,int year);
 }

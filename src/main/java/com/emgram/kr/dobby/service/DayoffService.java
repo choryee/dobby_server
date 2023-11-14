@@ -4,6 +4,7 @@ import com.emgram.kr.dobby.dao.DayoffDao;
 import com.emgram.kr.dobby.dto.caldav.CaldavEvent;
 import com.emgram.kr.dobby.dto.dayoff.DayoffItem;
 import com.emgram.kr.dobby.dto.dayoff.DayoffVacation;
+import com.emgram.kr.dobby.utils.DayoffType;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -22,6 +23,7 @@ import java.util.stream.Collectors;
 public class DayoffService {
 
     private DayoffDao dayoffDao;
+
     @Autowired
     public DayoffService(DayoffDao dayoffDao){
         this.dayoffDao = dayoffDao;
@@ -56,10 +58,13 @@ public class DayoffService {
 
     ////LocalDate 사용 자바 버전에 따라 바꿔야 한다면 Calendar 로 변경 해야됨
     public List<DayoffVacation> getUsedVacation(String employeeId, int year) {
-        return dayoffDao.infoDayOffEmployeeNo(employeeId).stream()
-                .filter(v -> yearCheck(v, year))
-                .filter(this::dayOffCheck)
+        return dayoffDao.infoDayOffEmployeeNo(employeeId,year).stream()
+                .filter(v -> !isWeekend(convertToLocalDate(v.getDayoffDt())))
                 .collect(Collectors.toList());
+    }
+
+    public List<DayoffVacation> getUsedDayoff(String employeeId, int year){
+        return getUsedVacation(employeeId,year).stream().filter(this::dayOffCheck).collect(Collectors.toList());
     }
 
     private boolean isWeekend(LocalDate localDate) {
@@ -67,15 +72,15 @@ public class DayoffService {
         return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
     }
 
-    private boolean yearCheck(DayoffVacation dayoffVacation, int year) {
-        LocalDate date = convertToLocalDate(dayoffVacation.getDayoffDt());
-        return date.getYear() == year && !isWeekend(date);
-    }
     private boolean dayOffCheck(DayoffVacation dayoffVacation) {
         int dayoffType = Integer.parseInt(dayoffVacation.getDayoffType());
-        return dayoffType >= 1000 && dayoffType < 2000;
+        return DayoffType.DAY_OFF.inRange(dayoffType);
     }
-
+    /* 추후 휴가 관련만 보여 주게 될시 필터 적용
+    private boolean vacationCheck(DayoffVacation dayoffVacation) {
+        int dayoffType = Integer.parseInt(dayoffVacation.getDayoffType());
+        return DayoffType.VACATION.inRange(dayoffType);
+    }*/
     protected LocalDate convertToLocalDate(Date dateToConvert) {
         return dateToConvert.toInstant().atZone(ZoneId.systemDefault()).toLocalDate();
     }
