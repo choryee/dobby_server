@@ -4,7 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.emgram.kr.dobby.dao.DayoffDao;
-import com.emgram.kr.dobby.dto.dashboard.DashBoardDayoffItem;
+import com.emgram.kr.dobby.dto.dashboard.DayoffDashBoardDTO;
 import com.emgram.kr.dobby.dto.employee.Employee;
 import com.emgram.kr.dobby.dto.holiday.VerifyHolidayDto;
 import java.sql.Date;
@@ -53,15 +53,15 @@ public class DashBoardServiceTest {
         holidayDtos.add(
             new VerifyHolidayDto("어린이날", LocalDate.parse("2015-05-05"), true, "1", false));
 
-        List<DashBoardDayoffItem> dayoffItems = Arrays.asList(
-            new DashBoardDayoffItem(employee1.getEmployeeNo(), Date.valueOf("2012-05-05"),
-                "매니저", "1001", Date.valueOf("2015-05-05"), "연차", 1),
-            new DashBoardDayoffItem(employee1.getEmployeeNo(), Date.valueOf("2012-05-05"),
-                "매니저", "1001", Date.valueOf("2015-05-06"), "연차", 1),
-            new DashBoardDayoffItem(employee2.getEmployeeNo(), Date.valueOf("2012-05-05"),
-                "매니저", "1001", Date.valueOf("2015-05-07"), "연차", 1),
-            new DashBoardDayoffItem(employee2.getEmployeeNo(), Date.valueOf("2012-05-05"),
-                "매니저", "1001", Date.valueOf("2015-05-08"), "연차", 1)
+        List<DayoffDashBoardDTO> dayoffItems = Arrays.asList(
+            new DayoffDashBoardDTO(employee1.getEmployeeNo(), Date.valueOf("2012-05-05"),
+                "매니저", "1001", Date.valueOf("2015-05-05"), "연차", 1, Date.valueOf("2012-05-05")),
+            new DayoffDashBoardDTO(employee1.getEmployeeNo(), Date.valueOf("2012-05-05"),
+                "매니저", "1001", Date.valueOf("2015-05-06"), "연차", 1, Date.valueOf("2012-05-05")),
+            new DayoffDashBoardDTO(employee2.getEmployeeNo(), Date.valueOf("2012-05-05"),
+                "매니저", "1001", Date.valueOf("2015-05-07"), "연차", 1, Date.valueOf("2012-05-05")),
+            new DayoffDashBoardDTO(employee2.getEmployeeNo(), Date.valueOf("2012-05-05"),
+                "매니저", "1001", Date.valueOf("2015-05-08"), "연차", 1, Date.valueOf("2012-05-05"))
         );
 
         List<Employee> employees = Arrays.asList(
@@ -78,7 +78,7 @@ public class DashBoardServiceTest {
         given(employeeService.calculateTotalVacation(employee2, year)).willReturn(5.0);
 
         //when
-        Map<String, Double> result = dashBoardService.countAllEmployeeDayoff(year);
+        Map<String, Object> result = dashBoardService.getDashBoardInfo(year);
 
         //then
         Assertions.assertEquals(expectTotalDayoffRemain, result.get("totalRemaining"));

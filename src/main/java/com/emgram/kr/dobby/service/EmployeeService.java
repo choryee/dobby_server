@@ -45,7 +45,7 @@ public class EmployeeService {
     }
 
     private LocalDate getOneYearLater(LocalDate joiningDate) {
-        return LocalDate.of(joiningDate.getYear() + 1, joiningDate.getDayOfMonth(), joiningDate.getDayOfMonth());
+        return LocalDate.of(joiningDate.getYear() + 1, joiningDate.getMonth(), joiningDate.getDayOfMonth());
     }
 
     private int calculateLeavesForFirstYear(LocalDate now, LocalDate joiningCalendar) {

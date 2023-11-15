@@ -17,11 +17,11 @@ public class DashBoardController {
 
     private final DashBoardService dashBoardService;
 
-    @GetMapping("/dayoff/remaing")
-    public CommonResponse<Map<String, Double>> getRemaingDayoffCount(@RequestParam(value = "year", required = false) int year) {
+    @GetMapping("/info")
+    public CommonResponse<Map<String, Double>> getDashBoardInfo(@RequestParam(value = "year", required = false) int year) {
         if (year < 2015) {
             year = LocalDate.now().getYear();
         }
-        return new CommonResponse(dashBoardService.countAllEmployeeDayoff(year));
+        return new CommonResponse(dashBoardService.getDashBoardInfo(year));
     }
 }

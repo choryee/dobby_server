@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class DashBoardDayoffItem {
+public class DayoffDashBoardDTO {
 
     private String employeeNo;
 
@@ -28,10 +28,15 @@ public class DashBoardDayoffItem {
 
     private double codeVal;
 
+    private Date createDt;
+
     public LocalDate getJoiningDt() {
         return joiningDt.toLocalDate();
     }
 
+    public LocalDate getCreateDt() {
+        return createDt.toLocalDate();
+    }
     public LocalDate getDayoffDt() {
         return dayoffDt.toLocalDate();
     }

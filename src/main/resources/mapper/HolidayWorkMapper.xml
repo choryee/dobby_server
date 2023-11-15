@@ -57,4 +57,24 @@
     update holiday_work set delete_dt = now()
     where holiday_work_id = #{holidayWorkId};
   </update>
+
+  <select id="findMuchHolidayWorker" parameterType="int" resultType="com.emgram.kr.dobby.dto.dashboard.HolidayDashBoardDTO">
+    select f1.name, max(f1.workdateCount) as holidayWorkDateCount
+    from (SELECT
+      e.name AS name,
+      count(hw.work_date) as workdateCount
+    FROM holiday_work hw
+           JOIN employee e on hw.employee_no = e.employee_no
+    WHERE year(hw.work_date) = #{year} and hw.delete_dt is null and e.delete_dt is null
+    group by e.name) f1;
+  </select>
+
+
+  <select id="countAllHolidayWorkByYear" parameterType="int" resultType="Integer">
+    SELECT count(*)
+    FROM holiday_work hw
+    JOIN employee e on hw.employee_no = e.employee_no
+    WHERE year(hw.work_date) = #{year} and hw.delete_dt is null and e.delete_dt is null
+    group by hw.work_date;
+  </select>
 </mapper>

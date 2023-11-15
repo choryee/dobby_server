@@ -1,6 +1,7 @@
 package com.emgram.kr.dobby.dao;
 
 import com.emgram.kr.dobby.dto.SearchCondition;
+import com.emgram.kr.dobby.dto.dashboard.HolidayDashBoardDTO;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWork;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWorkDto;
 import java.time.LocalDate;
@@ -22,4 +23,8 @@ public interface HolidayWorkDao {
         @Param("holidayWorkDto") HolidayWorkDto holidayDto);
 
     int deleteHolidayWork(Long holidayWorkId);
+
+    HolidayDashBoardDTO findMuchHolidayWorker(@Param("year") int year);
+
+    Integer countAllHolidayWorkByYear(@Param("year") int year);
 }

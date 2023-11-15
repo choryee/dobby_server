@@ -148,4 +148,8 @@ public class DateUtil {
         DayOfWeek dayOfWeek = date.getDayOfWeek();
         return dayOfWeek == DayOfWeek.SATURDAY || dayOfWeek == DayOfWeek.SUNDAY;
     }
+
+    public static int dateToInt(LocalDate localDate) {
+        return (localDate.getYear() * 365) + localDate.getDayOfYear();
+    }
 }
