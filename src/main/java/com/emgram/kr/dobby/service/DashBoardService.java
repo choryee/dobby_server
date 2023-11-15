@@ -42,8 +42,8 @@ public class DashBoardService {
             .stream()
             .filter(this::dayOffCheck)
             .filter(this::isEmployee)
-            .filter((item) -> DateUtil.isHoliday(item.getDayoffDt(), holidayDtoList))
-            .filter((item) -> DateUtil.isWeekend(item.getDayoffDt()));
+            .filter((item) -> !DateUtil.isHoliday(item.getDayoffDt(), holidayDtoList))
+            .filter((item) -> !DateUtil.isWeekend(item.getDayoffDt()));
 
         //사용한 총 연차 값
         double totalUseDayOffCount = filteredDayoffItemStream.map(DashBoardDayoffItem::getCodeVal)
