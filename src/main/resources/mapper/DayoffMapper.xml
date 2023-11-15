@@ -79,7 +79,7 @@
         ORDER BY dh.dayoff_dt DESC
     </select>
 
-    <select id="findAllDayOffByYear" parameterType="java.util.Map" resultType="com.emgram.kr.dobby.dto.dashboard.DashBoardDayoffItem">
+    <select id="findAllDayOffByYear" parameterType="java.util.Map" resultType="com.emgram.kr.dobby.dto.dashboard.DayoffDashBoardDTO">
       SELECT
         e.employee_no AS employeeNo,
         e.joining_dt AS joiningDt,
@@ -87,7 +87,8 @@
         dh.dayoff_type AS dayoffType,
         dh.dayoff_dt AS dayoffDt,
         sc.code_name AS codeName,
-        sc.code_val AS codeVal
+        sc.code_val AS codeVal,
+        dh.create_dt AS createDt
       FROM dayoff_history dh
       JOIN employee e on dh.employee_no = e.employee_no
       JOIN `rank` r on r.rank_no = e.rank_no
@@ -95,4 +96,5 @@
       WHERE dayoff_dt between #{startDate} and #{endDate}
       ORDER BY dh.dayoff_dt DESC
     </select>
+
 </mapper>
