@@ -77,7 +77,7 @@ public class DashBoardService {
     private void registerMuchHolidayWorker(Map<String, Object> info, int year) {
         HolidayDashBoardDTO dashBoardDTO = holidayWorkService.getMuchHolidayWorker(year);
         if (dashBoardDTO == null) {
-            info.put("muchHolidayWorkerName", "없음");
+            info.put("muchHolidayWorkerName", "");
             info.put("muchHolidayWorkerWorkDateCount", 0);
             return;
         }
@@ -110,7 +110,7 @@ public class DashBoardService {
         }
 
         info.put("mostRemainingDayoffCount", max);
-        info.put("mostRemainingDayoffName", maxDayoffRemainingEmployee.getName() == null ? "" : maxDayoffRemainingEmployee.getName());
+        info.put("mostRemainingDayoffName", maxDayoffRemainingEmployee == null || maxDayoffRemainingEmployee.getName() == null ? "" : maxDayoffRemainingEmployee.getName());
     }
 
     private Map<String, Double> getAllEmployeePaidDayoffMap(List<Employee> employees, int year) {
@@ -156,7 +156,7 @@ public class DashBoardService {
             .min((item1, item2) -> DateUtil.dateToInt(item2.getCreateDt()) - DateUtil.dateToInt(item1.getCreateDt()))
             .orElseGet(DayoffDashBoardDTO::new);
 
-        info.put("recentUseDayOff", dayoffDashBoardDTO);
+        info.put("recentUseDayoff", dayoffDashBoardDTO);
     }
 
     private void registerAllEmployeeDayoffCount2Map(Map<String, Object> info,
@@ -175,8 +175,8 @@ public class DashBoardService {
             totalDayOffCount += item.getValue();
         }
 
-        info.put("totalRemaining", totalDayOffCount - totalUseDayOffCount);
-        info.put("totalUseDayOffCount", totalUseDayOffCount);
+        info.put("totalRemainingDayoffCount", totalDayOffCount - totalUseDayOffCount);
+        info.put("totalUseDayoffCount", totalUseDayOffCount);
     }
 
     private boolean dayOffCheck(DayoffDashBoardDTO item) {

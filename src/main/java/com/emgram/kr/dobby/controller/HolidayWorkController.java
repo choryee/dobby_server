@@ -30,18 +30,6 @@ public class HolidayWorkController {
 
     private final HolidayWorkService holidayWorkService;
 
-    @GetMapping("/list/test")
-    @ResponseStatus(HttpStatus.OK)
-    @CrossOrigin
-    public CommonResponse<List<HolidayWorkDto>> getHolidayWorksListTest(@ModelAttribute SearchCondition searchCondition) {
-        List<HolidayWorkDto> list = Arrays.asList(
-            new HolidayWorkDto(1L, "M007", "강이름", "매니저", LocalDate.of(2015,3,2), "특수1"),
-            new HolidayWorkDto(1L, "M008", "고이름", "매니저", LocalDate.of(2015,3,3), "특수2")
-        );
-
-        return new CommonResponse<>(list);
-    }
-
     @GetMapping("/list")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin

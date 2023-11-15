@@ -5,6 +5,7 @@ import static org.mockito.BDDMockito.given;
 
 import com.emgram.kr.dobby.dao.DayoffDao;
 import com.emgram.kr.dobby.dto.dashboard.DayoffDashBoardDTO;
+import com.emgram.kr.dobby.dto.dashboard.HolidayDashBoardDTO;
 import com.emgram.kr.dobby.dto.employee.Employee;
 import com.emgram.kr.dobby.dto.holiday.VerifyHolidayDto;
 import java.sql.Date;
@@ -36,6 +37,9 @@ public class DashBoardServiceTest {
 
     @Mock
     private EmployeeService employeeService;
+
+    @Mock
+    private HolidayWorkService holidayWorkService;
 
     @Test
     @DisplayName("총 사원 남은 연차 조회가 정상적으로 이루어 져야 한다.")
@@ -76,12 +80,14 @@ public class DashBoardServiceTest {
         given(employeeService.getAllEmployeeList()).willReturn(employees);
         given(employeeService.calculateTotalVacation(employee1, year)).willReturn(10.0);
         given(employeeService.calculateTotalVacation(employee2, year)).willReturn(5.0);
+        given(holidayWorkService.getMuchHolidayWorker(year)).willReturn(new HolidayDashBoardDTO("M004", 3));
+        given(holidayWorkService.countAllHolidayWorkByYear(2015)).willReturn(20);
 
         //when
         Map<String, Object> result = dashBoardService.getDashBoardInfo(year);
 
         //then
-        Assertions.assertEquals(expectTotalDayoffRemain, result.get("totalRemaining"));
-        Assertions.assertEquals(expectTotalDayUse, result.get("totalUseDayOffCount"));
+        Assertions.assertEquals(expectTotalDayoffRemain, result.get("totalRemainingDayoffCount"));
+        Assertions.assertEquals(expectTotalDayUse, result.get("totalUseDayoffCount"));
     }
 }
