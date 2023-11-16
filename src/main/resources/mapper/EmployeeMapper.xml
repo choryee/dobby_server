@@ -1,157 +1,133 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.emgram.kr.dobby.dao.EmployeeDao">
 
-    <select id="getEmployeeInfo" resultMap="employeeResultMap">
-        SELECT e.employee_no, r.rank_name, e.department_no, e.name, e.joining_dt,m.wid
-        FROM employee e
-            JOIN `rank` r ON e.rank_no = r.rank_no
-            JOIN `employee_cal_map` m ON e.employee_no = m.employee_no
-        WHERE e.employee_no = #{employeeNo}
-    </select>
+<mapper namespace="com.emgram.kr.dobby.dao.Employee_adminDao">
 
-    <select id="findAllEmployee" resultMap="employeeResultMap">
-        SELECT e.employee_no, r.rank_name, e.department_no, e.name, e.joining_dt,m.wid
-        FROM employee e
-                 JOIN `rank` r ON e.rank_no = r.rank_no
-                 JOIN `employee_cal_map` m ON e.employee_no = m.employee_no;
-    </select>
-
-    <resultMap id="employeeResultMap" type="com.emgram.kr.dobby.dto.employee.Employee">
-        <result property="employeeNo" column="employee_no"/>
-        <result property="rankName" column="rank_name"/>
-        <result property="wid" column="wid"/>
-        <result property="departmentNo" column="department_no"/>
-        <result property="name" column="name"/>
-        <result property="joiningDt" column="joining_dt"/>
-    </resultMap>
-
-    <select id="findAllSimpleEmployeeList" resultMap="simpleEmployeeResultMap">
-        SELECT e.employee_no, r.rank_name, e.name
-        FROM employee e
-        join `rank` r on e.rank_no = r.rank_no;
-    </select>
-
-    <resultMap id="simpleEmployeeResultMap" type="com.emgram.kr.dobby.dto.employee.Employee$SimpleEmployeeDTO">
-        <result property="employeeNo" column="employee_no"/>
-        <result property="rankName" column="rank_name"/>
-        <result property="name" column="name"/>
-    </resultMap>
-
-    <select id="getListEmployee" resultMap="employeeListMap">
-        SELECT e.employee_no,
-               e.rank_no,
-               e.department_no,
-               e.name,
-               e.joining_dt,
-               e.leaving_dt,
-               e.auth,
-               e.create_dt,
-               e.creator_id,
-               e.update_dt,
-               e.updator_id,
-               e.delete_dt,
-               e.deletor_id,
-               ecm.wid
-        FROM employee e
-        join employee_cal_map ecm ON e.employee_no = ecm.employee_no;
+    <select id="getAllUsers" parameterType="com.emgram.kr.dobby.dto.login.User"  resultType="com.emgram.kr.dobby.dto.login.User">
+        select *
+        from employee_admin
 
     </select>
 
-    <select id="getEmployee" resultMap="employeeListMap">
-        SELECT e.employee_no,
-               e.rank_no,
-               e.department_no,
-               e.name,
-               e.joining_dt,
-               e.leaving_dt,
-               e.auth,
-               e.create_dt,
-               e.creator_id,
-               e.update_dt,
-               e.updator_id,
-               e.delete_dt,
-               e.deletor_id,
-               ecm.wid
-        FROM employee e
-        join employee_cal_map ecm ON e.employee_no = ecm.employee_no
-        where e.employee_no = #{employeeNo}
+
+    <select id="getUserInfo" parameterType="com.emgram.kr.dobby.dto.login.User"  resultType="com.emgram.kr.dobby.dto.login.User">
+        select *
+        from employee_admin
+        where
+            name = #{name}
+        and
+            password = #{password}
     </select>
 
+    <select id="getUser" parameterType="com.emgram.kr.dobby.dto.login.User"  resultType="com.emgram.kr.dobby.dto.login.User">
+        select *
+        from employee_admin
+        where
+            name = #{name}
+    </select>
 
-    <insert id="insertEmployee" parameterType="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
-        insert into employee
-        (
-         employee_no,
-         rank_no,
-         department_no,
-         password,
-         name,
-         joining_dt,
-         auth,
-         create_dt,
-         creator_id
-         ) values
-        (
-         #{employeeNo},
-         #{rankNo},
-         #{departmentNo},
-         #{password},
-         #{name},
-         #{joiningDt},
-         #{auth},
-         now(),
-         #{creatorId});
-        insert into employee_cal_map
-        (
-         wid,
-         employee_no
-        ) values
-        (
-        #{wid},
-        #{employeeNo}
-        )
+    <insert id="joinUser" parameterType="com.emgram.kr.dobby.dto.login.User">
+        insert
+        into
+            employee_admin
+            (employee_no, name, password, roles)
+        values
+            (#{employee_no}, #{name}, #{password}, #{roles})
     </insert>
 
-    <update id="updateEmployee" parameterType="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
-        UPDATE employee
-        SET rank_no = #{rankNo},
-            department_no = #{departmentNo},
-            name = #{name},
-            joining_dt = #{joiningDt},
-            auth = #{auth},
-            update_dt = now(),
-            updator_id = #{updatorId}
-        WHERE employee_no = #{employeeNo}
+    <update id="insertToken" parameterType="com.emgram.kr.dobby.dto.login.User">
+        update
+            employee_admin
+        set token= #{token}
+        where name=#{name}
     </update>
 
-    <delete id="deleteEmployee">
-        DELETE
-        FROM employee_cal_map
-        WHERE employee_no = #{employeeNo};
-        DELETE
-        FROM employee
-        WHERE employee_no = #{employeeNo};
-    </delete>
+    <update id="insertMemo" parameterType="com.emgram.kr.dobby.dto.login.User">
+        update
+            employee_admin
+        set memo= #{memo}
+        where employee_no = #{employee_no}
+    </update>
 
 
-    <resultMap id="employeeListMap" type="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
-        <result property="employeeNo" column="employee_no"/>
-        <result property="rankNo" column="rank_no"/>
-        <result property="departmentNo" column="department_no"/>
-        <result property="name" column="name"/>
-        <result property="joiningDt" column="joining_dt"/>
-        <result property="leavingDt" column="leaving_dt"/>
-        <result property="auth" column="auth"/>
-        <result property="createDt" column="create_dt"/>
-        <result property="creatorId" column="creator_id"/>
-        <result property="updateDt" column="update_dt"/>
-        <result property="updatorId" column="updator_id"/>
-        <result property="deleteDt" column="delete_dt"/>
-        <result property="deletorId" column="deletor_id"/>
-        <result property="wid" column="wid"/>
-    </resultMap>
+    <update id="updateUser" parameterType="com.emgram.kr.dobby.dto.login.User">
+        update employee_admin
+        set password = #{password}
+        where name = #{name}
+    </update>
 
 
+
+    <update id="updateCalendarInfo" parameterType="hashmap">
+        update caldav_calendar_info
+        set calendar_name = #{calendarName}
+          , calendar_tag = #{cTag}
+          , update_dt = now()
+        where
+            calendar_id = #{calendarId};
+    </update>
+
+    <select id="getAllEventTagList" resultType="com.emgram.kr.dobby.dto.caldav.CaldavEvent">
+        select event_id as eventId
+             , event_tag as eTag
+        from caldav_event_info
+        where delete_dt is null;
+    </select>
+
+    <update id="deleteEvent" parameterType="java.util.List">
+        update caldav_event_info
+        set delete_dt = now()
+        where event_id in
+        <foreach collection="list" item="item" separator="," open="(" close=")">
+            #{item.eventId}
+        </foreach>
+    </update>
+
+    <update id="updateEvent" parameterType="com.emgram.kr.dobby.dto.caldav.CaldavCalendar">
+        <foreach collection="eventList" item="item">
+            update caldav_event_info
+            set event_name = #{item.eventName}
+            , start_dt = #{item.startTime}
+            , end_dt = #{item.endTime}
+            , event_tag = #{item.eTag}
+            , update_user = #{item.updator}
+            , update_dt = #{item.updateTime}
+            where event_id = #{item.eventId}
+            and calendar_id = #{calendarId};
+        </foreach>
+    </update>
+
+    <insert id="insertEvent" parameterType="com.emgram.kr.dobby.dto.caldav.CaldavCalendar">
+        insert into caldav_event_info
+        (
+        event_id
+        , calendar_id
+        , event_name
+        , start_dt
+        , end_dt
+        , event_tag
+        , wid
+        , create_user
+        , update_user
+        , create_dt
+        , update_dt
+        ) values
+        <foreach collection="eventList" item="item" separator=",">
+            (
+            #{item.eventId}
+            , #{calendarId}
+            , #{item.eventName}
+            , #{item.startTime}
+            , #{item.endTime}
+            , #{item.eTag}
+            , #{item.wid}
+            , #{item.creator}
+            , #{item.updator}
+            , #{item.createTime}
+            , #{item.updateTime}
+            )
+        </foreach>
+    </insert>
+>>>>>>> feature/#4_this
 </mapper>
