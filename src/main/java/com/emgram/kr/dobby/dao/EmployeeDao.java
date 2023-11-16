@@ -11,6 +11,8 @@ import org.apache.ibatis.annotations.Mapper;
 public interface EmployeeDao {
    Employee getEmployeeInfo(String employeeNo);
 
+   List<Employee> findAllEmployee();
+
    List<SimpleEmployeeDTO> findAllSimpleEmployeeList();
 
    List<EmployeeInfo> getListEmployee();
