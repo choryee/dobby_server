@@ -17,6 +17,8 @@ public interface HolidayWorkDao {
 
     List<HolidayWorkDto> findAllHolidayWorkBySearchCondition(SearchCondition condition);
 
+    Integer countFindAllHolidayWorkBySearchCondition(SearchCondition condition);
+
     int saveHolidayWork(HolidayWork holidayWork);
 
     int updateHolidayWork(@Param("holidayWorkId") Long holidayWorkId,
