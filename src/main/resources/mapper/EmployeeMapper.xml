@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
-<mapper namespace="com.emgram.kr.dobby.dao.EmployeeDao">
+<mapper namespace="com.emgram.kr.dobby.dao.Employee_adminDao">
 
     <select id="getAllUsers" parameterType="com.emgram.kr.dobby.dto.login.User"  resultType="com.emgram.kr.dobby.dto.login.User">
         select *
-        from employee_test
+        from employee_admin
 
     </select>
 
 
     <select id="getUserInfo" parameterType="com.emgram.kr.dobby.dto.login.User"  resultType="com.emgram.kr.dobby.dto.login.User">
         select *
-        from employee_test
+        from employee_admin
         where
             name = #{name}
         and
@@ -21,7 +21,7 @@
 
     <select id="getUser" parameterType="com.emgram.kr.dobby.dto.login.User"  resultType="com.emgram.kr.dobby.dto.login.User">
         select *
-        from employee_test
+        from employee_admin
         where
             name = #{name}
     </select>
@@ -29,7 +29,7 @@
     <insert id="joinUser" parameterType="com.emgram.kr.dobby.dto.login.User">
         insert
         into
-            employee_test
+            employee_admin
             (employee_no, name, password, roles)
         values
             (#{employee_no}, #{name}, #{password}, #{roles})
@@ -37,21 +37,21 @@
 
     <update id="insertToken" parameterType="com.emgram.kr.dobby.dto.login.User">
         update
-            employee_test
+            employee_admin
         set token= #{token}
         where name=#{name}
     </update>
 
     <update id="insertMemo" parameterType="com.emgram.kr.dobby.dto.login.User">
         update
-            employee_test
+            employee_admin
         set memo= #{memo}
         where employee_no = #{employee_no}
     </update>
 
 
     <update id="updateUser" parameterType="com.emgram.kr.dobby.dto.login.User">
-        update employee_test
+        update employee_admin
         set password = #{password}
         where name = #{name}
     </update>

@@ -4,7 +4,7 @@ package com.emgram.kr.dobby.config;
 import com.emgram.kr.dobby.config.auth.PrincipalDetailService;
 import com.emgram.kr.dobby.config.jwt.JwtAuthenticationFilter;
 import com.emgram.kr.dobby.config.jwt.JwtAuthorizationFilter;
-import com.emgram.kr.dobby.dao.EmployeeDao;
+import com.emgram.kr.dobby.dao.Employee_adminDao;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -26,7 +26,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     CorsConfig corsConfig;
 
     @Autowired
-    EmployeeDao employeeDao;
+    Employee_adminDao Employee_adminDao;
 
     @Autowired
     PrincipalDetailService principalDetailService;
@@ -55,7 +55,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .formLogin().disable() //로그인폼 사용 안 함 의미
                     .httpBasic().disable() // id,pwd를 헤더에 넣어서 보내는 것.21강. <-> Bearer방식(토큰방식)
                     .addFilter(new JwtAuthenticationFilter(authenticationManager())) //Authentication : 인증. 첨 로그인 할때, 토큰생성함.
-                    .addFilter(new JwtAuthorizationFilter(authenticationManager(), employeeDao)) // Authorization :인가. 인증필요한 페이지에 도큰들고, 다시 요청들어올때.
+                    .addFilter(new JwtAuthorizationFilter(authenticationManager(), Employee_adminDao)) // Authorization :인가. 인증필요한 페이지에 도큰들고, 다시 요청들어올때.
+
 
                     //.authorizeRequests() //URL 패턴에 대한 접근 권한을 설정하는 메서드입니다
                     //.antMatchers("/api/v1/users/**").authenticated();
@@ -67,24 +68,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                         .antMatchers("/api/v1/users/admin/**")
                         .access("hasRole('ROLE_ADMIN')")
+
                         .anyRequest().permitAll());
 
-
-//                    .anyRequest() //다른 모든 요청은 인증이 필요합니다. 즉, 로그인한 사용자만 접근할 수 있습니다.
-//                    .authenticated("/api/v1/users/**");
-                    //.antMatchers("/api/v1/users/**"); //특정 URL 패턴에 대한 접근 권한을 설정합니다.
-
-                    //.anyRequest().authenticated();
-//                .and()
-//                    .formLogin()
-//                    .loginPage("/login")
-//                    .defaultSuccessUrl("/")
-//                    .permitAll()
-//                .and()
-//                    .logout()
-//                    .logoutUrl("/logout")
-//                    .logoutSuccessUrl("/login")
-//                    .permitAll();
     }
 }
 

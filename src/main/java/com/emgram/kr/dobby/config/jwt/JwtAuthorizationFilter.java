@@ -3,7 +3,7 @@ package com.emgram.kr.dobby.config.jwt;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.emgram.kr.dobby.config.auth.PrincipalDetail;
-import com.emgram.kr.dobby.dao.EmployeeDao;
+import com.emgram.kr.dobby.dao.Employee_adminDao;
 import com.emgram.kr.dobby.dto.login.User;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -25,11 +25,11 @@ import java.io.IOException;
 
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
-    private EmployeeDao employeeDao;
+    private Employee_adminDao Employee_adminDao;
 
-    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, EmployeeDao employeeDao) {
+    public JwtAuthorizationFilter(AuthenticationManager authenticationManager, Employee_adminDao Employee_adminDao) {
         super(authenticationManager);
-        this.employeeDao=employeeDao;
+        this.Employee_adminDao=Employee_adminDao;
     }
 
     //인증이나 권한이 필요한 주소 요청이 있을때, 해당 필터를 타게 됨.
@@ -54,7 +54,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                 JWT.require(Algorithm.HMAC512("cos")).build().verify(jwtToken).getClaim("username").asString();
 
         if(username !=null){
-            User userEntity = employeeDao.getUser(username);
+            User userEntity = Employee_adminDao.getUser(username);
             PrincipalDetail principalDetail=new PrincipalDetail(userEntity);
 
             //jwt토큰 서명을 통해서, 서명이 정상이면, Authentication를 만든 것.

@@ -3,7 +3,7 @@ package com.emgram.kr.dobby.service;
 import com.emgram.kr.dobby.config.auth.PrincipalDetail;
 import com.emgram.kr.dobby.config.jwt.JwtAuthenticationFilter;
 import com.emgram.kr.dobby.config.jwt.JwtAuthorizationFilter;
-import com.emgram.kr.dobby.dao.EmployeeDao;
+import com.emgram.kr.dobby.dao.Employee_adminDao;
 import com.emgram.kr.dobby.dto.login.User;
 import com.emgram.kr.dobby.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
@@ -25,7 +25,7 @@ public class UserService {
     private BCryptPasswordEncoder encoder;
 
     @Autowired
-    private EmployeeDao employeeDao;
+    private Employee_adminDao Employee_adminDao;
 
     @Value("${jwt.token.secret}") // application.properties에 정의됨.
     private String key;
@@ -42,14 +42,14 @@ public class UserService {
         user.setPassword(encPassword);
         user.setRoles("ROLE_USER");
 
-        int result = employeeDao.joinUser(user);
+        int result = Employee_adminDao.joinUser(user);
         System.out.println("result>>> "+ result);
 
     }
 
     public String  login(User user){
         System.out.println("UserService 탐... " + user);
-//        User userDao = employeeDao.getUserInfo(user);
+//        User userDao = Employee_adminDao.getUserInfo(user);
 //        System.out.println("userDao>> "+ userDao);
 //        PrincipalDetail principalDetail =new PrincipalDetail(user);
 //        System.out.println("principalDetail.getPassword()>> "+principalDetail.getPassword());
@@ -64,18 +64,18 @@ public class UserService {
             token = JwtTokenUtil.createToken(name); //
             user.setName(name);
             user.setToken(token);
-            // employeeDao.insertToken(user);
+            // Employee_adminDao.insertToken(user);
 //        }
 //        System.out.println("token>> "+ token);
         return token;
     }
 
     public List<User> getAllUsers(){
-       return employeeDao.getAllUsers();
+       return Employee_adminDao.getAllUsers();
     }
 
     public User getUser(String username){
-       return employeeDao.getUser(username);
+       return Employee_adminDao.getUser(username);
     }
 
     public int update(User user){
@@ -87,7 +87,7 @@ public class UserService {
 
         int result=0;
         if(user.getPassword() !=null){
-            result = employeeDao.updateUser(user1);
+            result = Employee_adminDao.updateUser(user1);
         }
         if(result == 1){
             return 1;
@@ -97,11 +97,11 @@ public class UserService {
 
     public void insertMemo(User user){
         System.out.println("UserService 탐..showNotePad user.getMemo()>>  "+ user.getMemo());
-        employeeDao.insertMemo(user);
+        Employee_adminDao.insertMemo(user);
     }
 
     public void getMemo(String userName){
-        employeeDao.getUser(userName);
+        Employee_adminDao.getUser(userName);
 
     }
 

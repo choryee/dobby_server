@@ -3,7 +3,7 @@
 //
 //import com.emgram.kr.dobby.config.jwt.JwtAuthenticationFilter;
 //import com.emgram.kr.dobby.config.jwt.JwtAuthorizationFilter;
-//import com.emgram.kr.dobby.dao.EmployeeDao;
+//import com.emgram.kr.dobby.dao.Employee_adminDao;
 //import lombok.RequiredArgsConstructor;
 //import org.springframework.beans.factory.annotation.Autowired;
 //import org.springframework.context.annotation.Bean;
@@ -28,7 +28,7 @@
 //    private final CorsFilter corsFilter;
 //
 //    @Autowired
-//    EmployeeDao employeeDao;
+//    Employee_adminDao Employee_adminDao;
 //
 //    @Autowired
 //    PrincipalDetailService principalDetailService;
@@ -56,7 +56,7 @@
 //                .formLogin().disable()
 //                .httpBasic().disable()
 //                .addFilter(new JwtAuthenticationFilter(authenticationManager()))
-//                .addFilter(new JwtAuthorizationFilter(authenticationManager(), employeeDao))
+//                .addFilter(new JwtAuthorizationFilter(authenticationManager(), Employee_adminDao))
 //
 //                .authorizeRequests(authroize -> authroize.antMatchers("/api/v1/users/**")
 //                        .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")

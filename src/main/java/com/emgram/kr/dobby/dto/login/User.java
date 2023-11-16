@@ -18,6 +18,7 @@ public class User {
 
     private String employee_no;
     private String name;
+    private String employee_name;
     private String password;
 
 //    @Enumerated(EnumType.STRING)

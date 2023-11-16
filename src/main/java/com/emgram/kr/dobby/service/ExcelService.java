@@ -1,6 +1,6 @@
 package com.emgram.kr.dobby.service;
 
-import com.emgram.kr.dobby.dao.EmployeeDao;
+import com.emgram.kr.dobby.dao.Employee_adminDao;
 import com.emgram.kr.dobby.dto.login.User;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
@@ -18,12 +18,12 @@ import java.util.List;
 public class ExcelService {
 
     @Autowired
-    private EmployeeDao employeeDao;
+    private Employee_adminDao Employee_adminDao;
 
     public void excelDownload(User user, HttpServletResponse response) throws IOException {
         System.out.println("ExcelService 탐..excel/download >>  " + user);
 
-        List<User> list = employeeDao.getAllUsers();
+        List<User> list = Employee_adminDao.getAllUsers();
         System.out.println("ExcelService.. >>"+ list);
 
         try {
