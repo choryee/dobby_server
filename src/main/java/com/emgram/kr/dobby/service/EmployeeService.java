@@ -5,8 +5,11 @@ import com.emgram.kr.dobby.dto.dayoff.DayoffResult;
 import com.emgram.kr.dobby.dto.employee.Employee;
 import com.emgram.kr.dobby.dto.employee.Employee.SimpleEmployeeDTO;
 import java.util.List;
+
+import com.emgram.kr.dobby.dto.employee.EmployeeInfo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Calendar;
 import java.util.Date;
@@ -71,4 +74,25 @@ public class EmployeeService {
         return baseVacation + yearsAfterJoining / VACATION_ACCRUAL_RATE;
     }
 
+    public List<EmployeeInfo> getListEmployee() {
+        return employeeDao.getListEmployee();
+    }
+
+    public EmployeeInfo getList(String employeeNo) {
+        return employeeDao.getEmployee(employeeNo);
+    }
+
+    public void insertEmployee(EmployeeInfo employeeInfo){
+
+        employeeDao.insertEmployee(employeeInfo);
+    }
+
+    public int updateEmployee(EmployeeInfo employeeInfo) {
+
+        return employeeDao.updateEmployee(employeeInfo);
+    }
+
+    public int deleteEmployee(String employeeNo) {
+        return employeeDao.deleteEmployee(employeeNo);
+    }
 }
