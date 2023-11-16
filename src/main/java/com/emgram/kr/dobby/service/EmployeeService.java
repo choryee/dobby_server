@@ -4,6 +4,8 @@ import com.emgram.kr.dobby.dao.EmployeeDao;
 import com.emgram.kr.dobby.dto.dayoff.DayoffResult;
 import com.emgram.kr.dobby.dto.employee.Employee;
 import com.emgram.kr.dobby.dto.employee.Employee.SimpleEmployeeDTO;
+import com.emgram.kr.dobby.utils.DateUtil;
+import java.time.LocalDate;
 import java.util.List;
 
 import com.emgram.kr.dobby.dto.employee.EmployeeInfo;
@@ -25,52 +27,39 @@ public class EmployeeService {
       return employeeDao.getEmployeeInfo(employeeNo);
     }
 
-   public List<SimpleEmployeeDTO> getSimpleEmployeeList() {
+    public List<Employee> getAllEmployeeList() {
+        return employeeDao.findAllEmployee();
+    }
+
+    public List<SimpleEmployeeDTO> getSimpleEmployeeList() {
         return employeeDao.findAllSimpleEmployeeList();
     }
 
-    public DayoffResult totalVacation(String employeeNo, int year) {
-        Employee employee = employeeDao.getEmployeeInfo(employeeNo);
-        Calendar joiningDate = toCalendar(employee.getJoiningDt());
-        Calendar endYear = getEndYear(year);
-        Calendar oneYearLater = getOneYearLater(joiningDate);
+    public Employee getEmployeeByEmployeeNo(String employeeNo) {
+        return employeeDao.getEmployeeInfo(employeeNo);
+    }
 
-        double totalDayoff = endYear.after(oneYearLater) ? calculateLeavesAfterFirstYear(BASE_VACATION_DAYS, endYear, oneYearLater) :
+    public double calculateTotalVacation(Employee employee, int year) {
+        LocalDate joiningDate = employee.getJoiningDt();
+        LocalDate endYear = DateUtil.getEndDayOfYear(year);
+        LocalDate oneYearLater = getOneYearLater(joiningDate);
+        return endYear.isAfter(oneYearLater) ? calculateLeavesAfterFirstYear(BASE_VACATION_DAYS, endYear, oneYearLater) :
                         calculateLeavesForFirstYear(endYear, joiningDate);
-
-        return DayoffResult.buildTotalDayoffResult(employee, totalDayoff);
     }
 
-
-    private Calendar toCalendar(Date date) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(date);
-        return calendar;
+    private LocalDate getOneYearLater(LocalDate joiningDate) {
+        return LocalDate.of(joiningDate.getYear() + 1, joiningDate.getMonth(), joiningDate.getDayOfMonth());
     }
 
-    private Calendar getEndYear(int year) {
-        Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.YEAR, year);
-        calendar.set(Calendar.MONTH, Calendar.DECEMBER);
-        calendar.set(Calendar.DAY_OF_MONTH, 31);
-        return calendar;
-    }
-
-    private Calendar getOneYearLater(Calendar joiningCalendar) {
-        Calendar oneYearAfter = (Calendar) joiningCalendar.clone();
-        oneYearAfter.add(Calendar.YEAR, 1);
-        return oneYearAfter;
-    }
-
-    private int calculateLeavesForFirstYear(Calendar now, Calendar joiningCalendar) {
-        if (joiningCalendar.get(Calendar.YEAR) == now.get(Calendar.YEAR))
-            return Math.max(0, now.get(Calendar.MONTH) -  joiningCalendar.get(Calendar.MONTH));
+    private int calculateLeavesForFirstYear(LocalDate now, LocalDate joiningCalendar) {
+        if (joiningCalendar.getYear() == now.getYear())
+            return Math.max(0, now.getMonthValue() -  joiningCalendar.getMonthValue());
         else return BASE_VACATION_DAYS;
     }
 
-    private int calculateLeavesAfterFirstYear(int baseVacation, Calendar now, Calendar oneYearAfterJoining) {
-        int yearsAfterJoining = now.get(Calendar.YEAR) - oneYearAfterJoining.get(Calendar.YEAR);
-        if (now.before(oneYearAfterJoining)) yearsAfterJoining--;
+    private int calculateLeavesAfterFirstYear(int baseVacation, LocalDate now, LocalDate oneYearAfterJoining) {
+        int yearsAfterJoining = now.getYear() -  oneYearAfterJoining.getYear();
+        if (now.isBefore(oneYearAfterJoining)) yearsAfterJoining--;
         return baseVacation + yearsAfterJoining / VACATION_ACCRUAL_RATE;
     }
 

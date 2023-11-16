@@ -41,7 +41,7 @@ public class HolidayWorkServiceTest {
     @Transactional
     public void getWorksDayTest() {
         //given
-        SearchCondition searchCondition = new SearchCondition(0, 10, "date", "2015-01");
+        SearchCondition searchCondition = new SearchCondition(0, 10, 2015, 1, "");
         //when
         List<HolidayWorkDto> list = holidayWorkService.getWorkDays(searchCondition);
         //then
