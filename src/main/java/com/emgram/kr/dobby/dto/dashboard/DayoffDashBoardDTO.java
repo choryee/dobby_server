@@ -30,6 +30,8 @@ public class DayoffDashBoardDTO {
 
     private Date createDt;
 
+    private String name;
+
     public LocalDate getJoiningDt() {
         return joiningDt.toLocalDate();
     }

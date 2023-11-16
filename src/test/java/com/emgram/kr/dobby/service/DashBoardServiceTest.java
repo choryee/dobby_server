@@ -48,7 +48,7 @@ public class DashBoardServiceTest {
         double expectTotalDayUse = 3;
         double expectTotalDayoffRemain = 15 - expectTotalDayUse;
         int year = 2015;
-        Employee employee1 = new Employee("", "M005", "매니저", 1, "매니저1", Date.valueOf("2012-05-05"));
+        Employee employee1 = new Employee("", "M005", "매니저", 1, "매니저2", Date.valueOf("2012-05-05"));
         Employee employee2 = new Employee("", "M004", "매니저", 1, "매니저1", Date.valueOf("2012-05-05"));
 
         List<VerifyHolidayDto> holidayDtos = new ArrayList<>();
@@ -59,13 +59,13 @@ public class DashBoardServiceTest {
 
         List<DayoffDashBoardDTO> dayoffItems = Arrays.asList(
             new DayoffDashBoardDTO(employee1.getEmployeeNo(), Date.valueOf("2012-05-05"),
-                "매니저", "1001", Date.valueOf("2015-05-05"), "연차", 1, Date.valueOf("2012-05-05")),
+                "매니저", "1001", Date.valueOf("2015-05-05"), "연차", 1, Date.valueOf("2012-05-05"),employee1.getName()),
             new DayoffDashBoardDTO(employee1.getEmployeeNo(), Date.valueOf("2012-05-05"),
-                "매니저", "1001", Date.valueOf("2015-05-06"), "연차", 1, Date.valueOf("2012-05-05")),
+                "매니저", "1001", Date.valueOf("2015-05-06"), "연차", 1, Date.valueOf("2012-05-05"), employee1.getName()),
             new DayoffDashBoardDTO(employee2.getEmployeeNo(), Date.valueOf("2012-05-05"),
-                "매니저", "1001", Date.valueOf("2015-05-07"), "연차", 1, Date.valueOf("2012-05-05")),
+                "매니저", "1001", Date.valueOf("2015-05-07"), "연차", 1, Date.valueOf("2012-05-05"), employee2.getName()),
             new DayoffDashBoardDTO(employee2.getEmployeeNo(), Date.valueOf("2012-05-05"),
-                "매니저", "1001", Date.valueOf("2015-05-08"), "연차", 1, Date.valueOf("2012-05-05"))
+                "매니저", "1001", Date.valueOf("2015-05-08"), "연차", 1, Date.valueOf("2012-05-05"), employee2.getName())
         );
 
         List<Employee> employees = Arrays.asList(

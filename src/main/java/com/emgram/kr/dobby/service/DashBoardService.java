@@ -156,7 +156,9 @@ public class DashBoardService {
             .min((item1, item2) -> DateUtil.dateToInt(item2.getCreateDt()) - DateUtil.dateToInt(item1.getCreateDt()))
             .orElseGet(DayoffDashBoardDTO::new);
 
-        info.put("recentUseDayoff", dayoffDashBoardDTO);
+        info.put("recentUseDayoffCreateDt", dayoffDashBoardDTO.getCreateDt());
+        info.put("recentUseDayoffDate", dayoffDashBoardDTO.getDayoffDt());
+        info.put("recentUseDayoffName", dayoffDashBoardDTO.getName());
     }
 
     private void registerAllEmployeeDayoffCount2Map(Map<String, Object> info,

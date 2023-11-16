@@ -94,11 +94,12 @@
 
 
   <select id="countAllHolidayWorkByYear" parameterType="int" resultType="Integer">
-    SELECT count(*)
-    FROM holiday_work hw
-    JOIN employee e on hw.employee_no = e.employee_no
-    WHERE year(hw.work_date) = #{year} and hw.delete_dt is null and e.delete_dt is null
-    group by hw.work_date;
+    select count(i1.work_date) from
+    (select hw.work_date
+                   from holiday_work hw
+                          join employee e on hw.employee_no = e.employee_no
+                   where year(hw.work_date) = #{year} and hw.delete_dt is null and e.delete_dt is null
+                   group by hw.work_date) i1
   </select>
 
 
