@@ -1,15 +1,12 @@
 package com.emgram.kr.dobby.controller;
 
 import com.emgram.kr.dobby.dto.CommonResponse;
+import com.emgram.kr.dobby.dto.PageInfo;
 import com.emgram.kr.dobby.dto.SearchCondition;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWork;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWorkDto;
 import com.emgram.kr.dobby.service.HolidayWorkService;
-import java.time.LocalDate;
-import java.util.Arrays;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.checkerframework.checker.units.qual.C;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -33,9 +30,10 @@ public class HolidayWorkController {
     @GetMapping("/list")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
-    public CommonResponse<List<HolidayWorkDto>> getHolidayWorksList(@ModelAttribute SearchCondition searchCondition) {
+    public CommonResponse<PageInfo<HolidayWorkDto>> getHolidayWorksList(
+        @ModelAttribute SearchCondition searchCondition) {
         return new CommonResponse<>(holidayWorkService.getWorkDays(searchCondition));
-   }
+    }
 
     @PostMapping("/save")
     @ResponseStatus(HttpStatus.CREATED)
@@ -48,7 +46,8 @@ public class HolidayWorkController {
     @PutMapping("/modify/{holidayId}")
     @ResponseStatus(HttpStatus.OK)
     @CrossOrigin
-    public CommonResponse updateHolidayWork(@PathVariable Long holidayId, @RequestBody HolidayWorkDto holidayWorkDto) {
+    public CommonResponse updateHolidayWork(@PathVariable Long holidayId,
+        @RequestBody HolidayWorkDto holidayWorkDto) {
         holidayWorkService.updateWorkDay(holidayId, holidayWorkDto);
         return new CommonResponse(null);
     }

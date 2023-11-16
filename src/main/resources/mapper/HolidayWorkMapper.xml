@@ -11,6 +11,29 @@
       and delete_dt is null;
   </select>
 
+  <select id="countFindAllHolidayWorkBySearchCondition" parameterType="com.emgram.kr.dobby.dto.SearchCondition"
+  resultType="Integer">
+    select count(i1.holidayWorkId) from (select h.holiday_work_id as holidayWorkId
+    from holiday_work h
+    join employee e on h.employee_no = e.employee_no
+    left join `rank` r on e.rank_no = r.rank_no
+    <where>
+      <if test="startDate != null and endDate != null">
+        and (h.work_date between #{startDate} and #{endDate})
+      </if>
+      <if test="query != null">
+        and
+        (h.employee_no like CONCAT('%',#{query},'%')
+        or h.memo like CONCAT('%',#{query},'%')
+        or e.name like CONCAT('%',#{query},'%')
+        or r.rank_name like CONCAT('%',#{query},'%'))
+      </if>
+      <if test="true">
+        and h.delete_dt is null
+      </if>
+    </where>)
+    as i1
+  </select>
   <select id="findAllHolidayWorkBySearchCondition" parameterType="com.emgram.kr.dobby.dto.SearchCondition"
   resultType="com.emgram.kr.dobby.dto.holiday.work.HolidayWorkDto">
     select h.holiday_work_id as holidayWorkId,
@@ -77,4 +100,6 @@
     WHERE year(hw.work_date) = #{year} and hw.delete_dt is null and e.delete_dt is null
     group by hw.work_date;
   </select>
+
+
 </mapper>

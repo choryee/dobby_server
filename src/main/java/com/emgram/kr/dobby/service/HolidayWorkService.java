@@ -1,12 +1,12 @@
 package com.emgram.kr.dobby.service;
 
 import com.emgram.kr.dobby.dao.HolidayWorkDao;
+import com.emgram.kr.dobby.dto.PageInfo;
 import com.emgram.kr.dobby.dto.SearchCondition;
 import com.emgram.kr.dobby.dto.dashboard.HolidayDashBoardDTO;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWork;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWorkDto;
 import com.emgram.kr.dobby.utils.DateUtil;
-import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,11 +26,19 @@ public class HolidayWorkService {
             DateUtil.getEndDayOfYear(year));
     }
 
-    public List<HolidayWorkDto> getWorkDays(SearchCondition searchCondition) {
+    public PageInfo<HolidayWorkDto> getWorkDays(SearchCondition searchCondition) {
         if (searchCondition == null) {
-            new ArrayList<>();
+            throw new RuntimeException("검색조건이 없습니다.");
         }
-        return holidayWorkDao.findAllHolidayWorkBySearchCondition(searchCondition);
+
+        List<HolidayWorkDto> list = holidayWorkDao.findAllHolidayWorkBySearchCondition(
+            searchCondition);
+        if (list.size() == searchCondition.getPageSize()) {
+            Integer count = holidayWorkDao.countFindAllHolidayWorkBySearchCondition(
+                searchCondition);
+            return new PageInfo<>(count, searchCondition, list);
+        }
+        return new PageInfo<>(searchCondition, list);
     }
 
     public void saveWorkDays(HolidayWork holidayWork) {

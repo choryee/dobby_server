@@ -24,6 +24,7 @@ public class DashBoardController {
         if (year == null) {
             year = LocalDate.now().getYear();
         }
+
         return new CommonResponse(dashBoardService.getDashBoardInfo(year));
     }
 }
