@@ -38,7 +38,7 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         //super.doFilterInternal(request, response, chain);
         System.out.println("인증이나 권한이 필요한 주소가 요청이 됨.");
 
-        String jwtHeader=request.getHeader("Authorization");
+        String jwtHeader = request.getHeader("Authorization");
         System.out.println("JwtAuthorizationFilter jwtHeader>> "+ jwtHeader);
 
         //header가 있는지 확인.
@@ -48,9 +48,10 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
         }
 
         //jwt토큰을 검증을 해서 정상적인 사용자인지 확인. 27강.15:44
-        String jwtToken=request.getHeader("Authorization").replace("Bearer ", "");
+        String jwtToken = request.getHeader("Authorization").replace("Bearer ", "");
 
-        String username= JWT.require(Algorithm.HMAC512("cos")).build().verify(jwtToken).getClaim("username").asString();
+        String username =
+                JWT.require(Algorithm.HMAC512("cos")).build().verify(jwtToken).getClaim("username").asString();
 
         if(username !=null){
             User userEntity = employeeDao.getUser(username);

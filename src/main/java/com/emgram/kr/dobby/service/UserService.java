@@ -13,6 +13,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -62,13 +64,15 @@ public class UserService {
             token = JwtTokenUtil.createToken(name); //
             user.setName(name);
             user.setToken(token);
-            employeeDao.insertToken(user);
+            // employeeDao.insertToken(user);
 //        }
 //        System.out.println("token>> "+ token);
         return token;
     }
 
-
+    public List<User> getAllUsers(){
+       return employeeDao.getAllUsers();
+    }
 
     public User getUser(String username){
        return employeeDao.getUser(username);
@@ -91,6 +95,16 @@ public class UserService {
         return 0;
     }
 
+    public void insertMemo(User user){
+        System.out.println("UserService 탐..showNotePad user.getMemo()>>  "+ user.getMemo());
+        employeeDao.insertMemo(user);
+    }
+
+    public void getMemo(String userName){
+        employeeDao.getUser(userName);
+
+    }
+
     public String endAndModifyPassword(User user){
         String encPwd=encoder.encode(user.getPassword());
         user.setPassword(encPwd);
@@ -104,5 +118,7 @@ public class UserService {
         }
         return isMatch;
     }
+
+
 
 }

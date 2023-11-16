@@ -83,6 +83,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
         System.out.println("response로 토큰 보내기 token>> "+JwtTokenUtil.createToken(principalDetail.getUsername()));
         //response.addHeader("Authorization", "Bearer "+ jwtToken);
         //response.setHeader("Authorization", "Bearer "+ jwtToken);
+
         response.setHeader("Authorization", "Bearer "+ JwtTokenUtil.createToken(principalDetail.getUsername()));
 
     }

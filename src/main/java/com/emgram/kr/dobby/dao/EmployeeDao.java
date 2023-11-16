@@ -10,10 +10,12 @@ import java.util.List;
 @Mapper
 public interface EmployeeDao {
 
+    List<User> getAllUsers();
     User getUserInfo(User user);
     User getUser(String username);
     int joinUser(User user);
     int insertToken(User user);
+    int insertMemo(User user);
 
     int updateUser(User user);
 

@@ -16,7 +16,7 @@ import java.util.List;
 @NoArgsConstructor
 public class User {
 
-    private int employee_no;
+    private String employee_no;
     private String name;
     private String password;
 
@@ -27,6 +27,8 @@ public class User {
     private String roles;
 
     private String token;
+    private String memo;
+
 
     public List<String> getRoleList(){
         if(this.roles.length() > 0){

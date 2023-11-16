@@ -3,6 +3,13 @@
 
 <mapper namespace="com.emgram.kr.dobby.dao.EmployeeDao">
 
+    <select id="getAllUsers" parameterType="com.emgram.kr.dobby.dto.login.User"  resultType="com.emgram.kr.dobby.dto.login.User">
+        select *
+        from employee_test
+
+    </select>
+
+
     <select id="getUserInfo" parameterType="com.emgram.kr.dobby.dto.login.User"  resultType="com.emgram.kr.dobby.dto.login.User">
         select *
         from employee_test
@@ -33,6 +40,13 @@
             employee_test
         set token= #{token}
         where name=#{name}
+    </update>
+
+    <update id="insertMemo" parameterType="com.emgram.kr.dobby.dto.login.User">
+        update
+            employee_test
+        set memo= #{memo}
+        where employee_no = #{employee_no}
     </update>
 
 
