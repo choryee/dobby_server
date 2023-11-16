@@ -4,6 +4,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+import com.emgram.kr.dobby.dto.PageInfo;
 import com.emgram.kr.dobby.dto.SearchCondition;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWork;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWorkDto;
@@ -43,9 +44,9 @@ public class HolidayWorkServiceTest {
         //given
         SearchCondition searchCondition = new SearchCondition(0, 10, 2015, 1, "");
         //when
-        List<HolidayWorkDto> list = holidayWorkService.getWorkDays(searchCondition);
+        PageInfo<HolidayWorkDto> list = holidayWorkService.getWorkDays(searchCondition);
         //then
-        assertThat(list.size(), greaterThanOrEqualTo(4));
+        assertThat(list.getContent().size(), greaterThanOrEqualTo(4));
     }
 
     @Test
