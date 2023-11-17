@@ -7,7 +7,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.springframework.web.filter.CorsFilter;
 
 @Configuration
-public class CorsConfig { //20강 jwt
+public class CorsConfig {
 
     @Bean
     public CorsFilter corsFilter(){
@@ -17,7 +17,6 @@ public class CorsConfig { //20강 jwt
         config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
         config.addAllowedMethod("*");
-        //source.registerCorsConfiguration("/api/*", config);
         config.addExposedHeader("Authorization");
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
