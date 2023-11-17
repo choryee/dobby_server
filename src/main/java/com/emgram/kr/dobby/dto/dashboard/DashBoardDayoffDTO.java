@@ -10,7 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
-public class DayoffDashBoardDTO {
+public class DashBoardDayoffDTO {
 
     private String employeeNo;
 
