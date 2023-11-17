@@ -1,158 +1,164 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.emgram.kr.dobby.dao.EmployeeDao">
 
+  <select id="getEmployeeInfo" resultMap="employeeResultMap">
+    SELECT e.employee_no, r.rank_name, e.department_no, e.name, e.joining_dt, m.wid
+    FROM employee e
+           JOIN `rank` r ON e.rank_no = r.rank_no
+           JOIN `employee_cal_map` m ON e.employee_no = m.employee_no
+    WHERE e.employee_no = #{employeeNo}
+  </select>
 
-    <select id="getEmployeeInfo" resultMap="employeeResultMap">
-        SELECT e.employee_no, r.rank_name, e.department_no, e.name, e.joining_dt,m.wid
-        FROM employee e
-                 JOIN `rank` r ON e.rank_no = r.rank_no
-                 JOIN `employee_cal_map` m ON e.employee_no = m.employee_no
-        WHERE e.employee_no = #{employeeNo}
-    </select>
+  <select id="findAllEmployee" resultMap="employeeResultMap">
+    SELECT e.employee_no, r.rank_name, e.department_no, e.name, e.joining_dt, m.wid
+    FROM employee e
+           JOIN `rank` r ON e.rank_no = r.rank_no
+           JOIN `employee_cal_map` m ON e.employee_no = m.employee_no;
+  </select>
 
-    <select id="findAllEmployee" resultMap="employeeResultMap">
-        SELECT e.employee_no, r.rank_name, e.department_no, e.name, e.joining_dt,m.wid
-        FROM employee e
-                 JOIN `rank` r ON e.rank_no = r.rank_no
-                 JOIN `employee_cal_map` m ON e.employee_no = m.employee_no;
-    </select>
+  <resultMap id="employeeResultMap" type="com.emgram.kr.dobby.dto.employee.Employee">
+    <result property="employeeNo" column="employee_no"/>
+    <result property="rankName" column="rank_name"/>
+    <result property="wid" column="wid"/>
+    <result property="departmentNo" column="department_no"/>
+    <result property="name" column="name"/>
+    <result property="joiningDt" column="joining_dt"/>
+  </resultMap>
 
-    <resultMap id="employeeResultMap" type="com.emgram.kr.dobby.dto.employee.Employee">
-        <result property="employeeNo" column="employee_no"/>
-        <result property="rankName" column="rank_name"/>
-        <result property="wid" column="wid"/>
-        <result property="departmentNo" column="department_no"/>
-        <result property="name" column="name"/>
-        <result property="joiningDt" column="joining_dt"/>
-    </resultMap>
+  <select id="findAllSimpleEmployeeList" resultMap="simpleEmployeeResultMap">
+    SELECT e.employee_no, r.rank_name, e.name
+    FROM employee e
+           join `rank` r on e.rank_no = r.rank_no;
+  </select>
 
-    <select id="findAllSimpleEmployeeList" resultMap="simpleEmployeeResultMap">
-        SELECT e.employee_no, r.rank_name, e.name
-        FROM employee e
-                 join `rank` r on e.rank_no = r.rank_no;
-    </select>
+  <resultMap id="simpleEmployeeResultMap"
+    type="com.emgram.kr.dobby.dto.employee.Employee$SimpleEmployeeDTO">
+    <result property="employeeNo" column="employee_no"/>
+    <result property="rankName" column="rank_name"/>
+    <result property="name" column="name"/>
+  </resultMap>
 
-    <resultMap id="simpleEmployeeResultMap" type="com.emgram.kr.dobby.dto.employee.Employee$SimpleEmployeeDTO">
-        <result property="employeeNo" column="employee_no"/>
-        <result property="rankName" column="rank_name"/>
-        <result property="name" column="name"/>
-    </resultMap>
+  <select id="getListEmployee" resultMap="employeeListMap">
+    SELECT e.employee_no,
+           e.rank_no,
+           e.department_no,
+           e.name,
+           e.joining_dt,
+           e.leaving_dt,
+           e.auth,
+           e.create_dt,
+           e.creator_id,
+           e.update_dt,
+           e.updator_id,
+           e.delete_dt,
+           e.deletor_id,
+           ecm.wid
+    FROM employee e
+           join employee_cal_map ecm ON e.employee_no = ecm.employee_no;
 
-    <select id="getListEmployee" resultMap="employeeListMap">
-        SELECT e.employee_no,
-               e.rank_no,
-               e.department_no,
-               e.name,
-               e.joining_dt,
-               e.leaving_dt,
-               e.auth,
-               e.create_dt,
-               e.creator_id,
-               e.update_dt,
-               e.updator_id,
-               e.delete_dt,
-               e.deletor_id,
-               ecm.wid
-        FROM employee e
-                 join employee_cal_map ecm ON e.employee_no = ecm.employee_no;
+  </select>
 
-    </select>
-
-    <select id="getEmployee" resultMap="employeeListMap">
-        SELECT e.employee_no,
-               e.rank_no,
-               e.department_no,
-               e.name,
-               e.joining_dt,
-               e.leaving_dt,
-               e.auth,
-               e.create_dt,
-               e.creator_id,
-               e.update_dt,
-               e.updator_id,
-               e.delete_dt,
-               e.deletor_id,
-               ecm.wid
-        FROM employee e
-                 join employee_cal_map ecm ON e.employee_no = ecm.employee_no
-        where e.employee_no = #{employeeNo}
-    </select>
-
-
-    <insert id="insertEmployee" parameterType="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
-        insert into employee
-        (
-            employee_no,
-            rank_no,
-            department_no,
-            password,
-            name,
-            joining_dt,
-            auth,
-            create_dt,
-            creator_id
-        ) values
-            (
-                #{employeeNo},
-                #{rankNo},
-                #{departmentNo},
-                #{password},
-                #{name},
-                #{joiningDt},
-                #{auth},
-                now(),
-                #{creatorId});
-        insert into employee_cal_map
-        (
-            wid,
-            employee_no
-        ) values
-            (
-                #{wid},
-                #{employeeNo}
-            )
-    </insert>
+  <select id="getEmployee" resultMap="employeeListMap">
+    SELECT e.employee_no,
+           e.rank_no,
+           e.department_no,
+           e.name,
+           e.joining_dt,
+           e.leaving_dt,
+           e.auth,
+           e.create_dt,
+           e.creator_id,
+           e.update_dt,
+           e.updator_id,
+           e.delete_dt,
+           e.deletor_id,
+           ecm.wid
+    FROM employee e
+           join employee_cal_map ecm ON e.employee_no = ecm.employee_no
+    where e.employee_no = #{employeeNo}
+  </select>
 
 
-    <update id="updateEmployee" parameterType="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
-        UPDATE employee
-        SET rank_no = #{rankNo},
-            department_no = #{departmentNo},
-            name = #{name},
-            joining_dt = #{joiningDt},
-            auth = #{auth},
-            update_dt = now(),
-            updator_id = #{updatorId}
-        WHERE employee_no = #{employeeNo}
-    </update>
+  <insert id="insertEmployee" parameterType="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
+    insert into employee
+    (employee_no,
+     rank_no,
+     department_no,
+     password,
+     name,
+     joining_dt,
+     auth,
+     create_dt,
+     creator_id)
+    values (#{employeeNo},
+            #{rankNo},
+            #{departmentNo},
+            #{password},
+            #{name},
+            #{joiningDt},
+            #{auth},
+            now(),
+            #{creatorId});
+    insert into employee_cal_map
+    (wid,
+     employee_no)
+    values (#{wid},
+            #{employeeNo})
+  </insert>
 
-    <delete id="deleteEmployee">
-        DELETE
-        FROM employee_cal_map
-        WHERE employee_no = #{employeeNo};
-        DELETE
-        FROM employee
-        WHERE employee_no = #{employeeNo};
-    </delete>
+  <update id="updateEmployee" parameterType="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
+    UPDATE employee
+    SET rank_no       = #{rankNo},
+        department_no = #{departmentNo},
+        name          = #{name},
+        joining_dt    = #{joiningDt},
+        auth          = #{auth},
+        update_dt     = now(),
+        updator_id    = #{updatorId}
+    WHERE employee_no = #{employeeNo}
+  </update>
+
+  <delete id="deleteEmployee">
+    DELETE
+    FROM employee_cal_map
+    WHERE employee_no = #{employeeNo};
+    DELETE
+    FROM employee
+    WHERE employee_no = #{employeeNo};
+  </delete>
 
 
-    <resultMap id="employeeListMap" type="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
-        <result property="employeeNo" column="employee_no"/>
-        <result property="rankNo" column="rank_no"/>
-        <result property="departmentNo" column="department_no"/>
-        <result property="name" column="name"/>
-        <result property="joiningDt" column="joining_dt"/>
-        <result property="leavingDt" column="leaving_dt"/>
-        <result property="auth" column="auth"/>
-        <result property="createDt" column="create_dt"/>
-        <result property="creatorId" column="creator_id"/>
-        <result property="updateDt" column="update_dt"/>
-        <result property="updatorId" column="updator_id"/>
-        <result property="deleteDt" column="delete_dt"/>
-        <result property="deletorId" column="deletor_id"/>
-        <result property="wid" column="wid"/>
-    </resultMap>
+  <resultMap id="employeeListMap" type="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
+    <result property="employeeNo" column="employee_no"/>
+    <result property="rankNo" column="rank_no"/>
+    <result property="departmentNo" column="department_no"/>
+    <result property="name" column="name"/>
+    <result property="joiningDt" column="joining_dt"/>
+    <result property="leavingDt" column="leaving_dt"/>
+    <result property="auth" column="auth"/>
+    <result property="createDt" column="create_dt"/>
+    <result property="creatorId" column="creator_id"/>
+    <result property="updateDt" column="update_dt"/>
+    <result property="updatorId" column="updator_id"/>
+    <result property="deleteDt" column="delete_dt"/>
+    <result property="deletorId" column="deletor_id"/>
+    <result property="wid" column="wid"/>
+  </resultMap>
 
+  <select id="findAllEmployeesBySearchCondition"
+    parameterType="com.emgram.kr.dobby.dto.SearchCondition" resultMap="employeeResultMap">
+    SELECT e.employee_no, r.rank_name, e.department_no, e.name, e.joining_dt, m.wid
+    FROM employee e
+           JOIN `rank` r ON e.rank_no = r.rank_no
+           JOIN `employee_cal_map` m ON e.employee_no = m.employee_no
+    limit #{pageSize} offset #{pageOffset};
+  </select>
+
+  <select id="countAllEmployees" resultType="Integer">
+    select count(*)
+    from employee;
+  </select>
 </mapper>

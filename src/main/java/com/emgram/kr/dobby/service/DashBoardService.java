@@ -1,11 +1,13 @@
 package com.emgram.kr.dobby.service;
 
 import com.emgram.kr.dobby.dao.DayoffDao;
-import com.emgram.kr.dobby.dto.dashboard.DayoffDashBoardDTO;
+import com.emgram.kr.dobby.dto.dashboard.DashBoardDayoffDTO;
 import com.emgram.kr.dobby.dto.dashboard.HolidayDashBoardDTO;
 import com.emgram.kr.dobby.dto.employee.Employee;
+import com.emgram.kr.dobby.dto.holiday.HolidayDto;
 import com.emgram.kr.dobby.dto.holiday.VerifyHolidayDto;
 import com.emgram.kr.dobby.utils.DateUtil;
+import com.emgram.kr.dobby.utils.EmployeeUtil;
 import java.time.LocalDate;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,8 +32,6 @@ public class DashBoardService {
 
     private final HolidayWorkService holidayWorkService;
 
-    private static final List<String> EMPLOYEE_RANK_NAMES = Arrays.asList("매니저", "팀장");
-
     @Transactional
     public Map<String, Object> getDashBoardInfo(int year) {
         //정보를 구성할 Map 생성
@@ -44,12 +44,12 @@ public class DashBoardService {
         List<VerifyHolidayDto> holidayDtoList = holidayService.getHolidays(startDate, endDate);
 
         //날짜를 기반으로 모든 연차 목록 호출
-        List<DayoffDashBoardDTO> dayoffItems = dayoffDao.findAllDayOffByYear(startDate, endDate)
-            .stream().filter(this::isEmployee).collect(Collectors.toList());
+        List<DashBoardDayoffDTO> dayoffItems = getDashboardDayoffItem(startDate, endDate)
+            .stream().filter(EmployeeUtil::isEmployee).collect(Collectors.toList());
 
         //전 사원 목록 추출
         List<Employee> employees = employeeService.getAllEmployeeList()
-            .stream().filter(this::isEmployee).collect(Collectors.toList());
+            .stream().filter(EmployeeUtil::isEmployee).collect(Collectors.toList());
 
         //전 사원 지급 연차 맵 추출
         Map<String, Double> employeePaidDayoffMap = getAllEmployeePaidDayoffMap(employees, year);
@@ -72,6 +72,10 @@ public class DashBoardService {
         //해당 년도 총 휴일 출근 일 수 등록
         registerTotalHolidayWorkCount(info, year);
         return info;
+    }
+
+    public List<DashBoardDayoffDTO> getDashboardDayoffItem(LocalDate startDate, LocalDate endDate) {
+        return dayoffDao.findAllDayOffByYear(startDate, endDate);
     }
 
     private void registerMuchHolidayWorker(Map<String, Object> info, int year) {
@@ -113,7 +117,7 @@ public class DashBoardService {
         info.put("mostRemainingDayoffName", maxDayoffRemainingEmployee == null || maxDayoffRemainingEmployee.getName() == null ? "" : maxDayoffRemainingEmployee.getName());
     }
 
-    private Map<String, Double> getAllEmployeePaidDayoffMap(List<Employee> employees, int year) {
+    public Map<String, Double> getAllEmployeePaidDayoffMap(List<Employee> employees, int year) {
         Map<String, Double> map = new HashMap<>();
 
         for (Employee employee : employees) {
@@ -123,9 +127,9 @@ public class DashBoardService {
         return map;
     }
 
-    private Map<String, Double> getAllEmployeeUsedDayoffMap(List<DayoffDashBoardDTO> dayoffItems, List<VerifyHolidayDto> holidayDtoList) {
+    public Map<String, Double> getAllEmployeeUsedDayoffMap(List<DashBoardDayoffDTO> dayoffItems, List<? extends HolidayDto> holidayDtoList) {
         //주말, 공휴일, 연차, 사원인지 필터
-        Stream<DayoffDashBoardDTO> filteredDayoffItemStream = dayoffItems
+        Stream<DashBoardDayoffDTO> filteredDayoffItemStream = dayoffItems
             .stream()
             .filter(this::dayOffCheck)
             .filter((item) -> !DateUtil.isHoliday(item.getDayoffDt(), holidayDtoList))
@@ -150,15 +154,15 @@ public class DashBoardService {
 
     private void registerRecentUseDayoff(
         Map<String, Object> info,
-        List<DayoffDashBoardDTO> dayoffItems) {
+        List<DashBoardDayoffDTO> dayoffItems) {
 
-        DayoffDashBoardDTO dayoffDashBoardDTO = dayoffItems.stream()
+        DashBoardDayoffDTO dashBoardDayoffDTO = dayoffItems.stream()
             .min((item1, item2) -> DateUtil.dateToInt(item2.getCreateDt()) - DateUtil.dateToInt(item1.getCreateDt()))
-            .orElseGet(DayoffDashBoardDTO::new);
+            .orElseGet(DashBoardDayoffDTO::new);
 
-        info.put("recentUseDayoffCreateDt", dayoffDashBoardDTO.getCreateDt());
-        info.put("recentUseDayoffDate", dayoffDashBoardDTO.getDayoffDt());
-        info.put("recentUseDayoffName", dayoffDashBoardDTO.getName());
+        info.put("recentUseDayoffCreateDt", dashBoardDayoffDTO.getCreateDt());
+        info.put("recentUseDayoffDate", dashBoardDayoffDTO.getDayoffDt());
+        info.put("recentUseDayoffName", dashBoardDayoffDTO.getName());
     }
 
     private void registerAllEmployeeDayoffCount2Map(Map<String, Object> info,
@@ -181,16 +185,9 @@ public class DashBoardService {
         info.put("totalUseDayoffCount", totalUseDayOffCount);
     }
 
-    private boolean dayOffCheck(DayoffDashBoardDTO item) {
+    private boolean dayOffCheck(DashBoardDayoffDTO item) {
         int dayoffType = Integer.parseInt(item.getDayoffType());
         return dayoffType >= 1000 && dayoffType < 2000;
     }
 
-    protected boolean isEmployee(Employee employee) {
-        return EMPLOYEE_RANK_NAMES.stream().anyMatch((rankName) -> employee.getRankName().equals(rankName));
-    }
-
-    protected boolean isEmployee(DayoffDashBoardDTO item) {
-        return EMPLOYEE_RANK_NAMES.stream().anyMatch((rankName) -> item.getRankName().equals(rankName));
-    }
 }
