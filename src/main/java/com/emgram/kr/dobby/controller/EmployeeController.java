@@ -1,6 +1,7 @@
 package com.emgram.kr.dobby.controller;
 
 import com.emgram.kr.dobby.dto.CommonResponse;
+import com.emgram.kr.dobby.dto.PageInfo;
 import com.emgram.kr.dobby.dto.SearchCondition;
 import com.emgram.kr.dobby.dto.employee.Employee.SimpleEmployeeDTO;
 import com.emgram.kr.dobby.dto.employee.EmployeeDayoffInfo;
@@ -105,7 +106,7 @@ public class EmployeeController {
     }
 
     @GetMapping("/dayoff/list")
-    public CommonResponse<List<EmployeeDayoffInfo>> getEmployeeDayoffInfos(
+    public CommonResponse<PageInfo<EmployeeDayoffInfo>> getEmployeeDayoffInfos(
         @ModelAttribute SearchCondition searchCondition
     ) {
         return new CommonResponse<>(
