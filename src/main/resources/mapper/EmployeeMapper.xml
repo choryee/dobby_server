@@ -114,9 +114,7 @@
                 #{employeeNo}
             )
     </insert>
-<<<<<<< HEAD
->>>>>>> feature/#4_this
-=======
+
 
     <update id="updateEmployee" parameterType="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
         UPDATE employee
@@ -156,5 +154,5 @@
         <result property="deletorId" column="deletor_id"/>
         <result property="wid" column="wid"/>
     </resultMap>
->>>>>>> feature/#4_this
+
 </mapper>
