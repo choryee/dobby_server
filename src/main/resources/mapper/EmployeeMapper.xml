@@ -82,6 +82,7 @@
   </select>
 
 
+
   <insert id="insertEmployee" parameterType="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
     insert into employee
     (employee_no,
@@ -109,6 +110,7 @@
             #{employeeNo})
   </insert>
 
+
   <update id="updateEmployee" parameterType="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
     UPDATE employee
     SET rank_no       = #{rankNo},
@@ -129,6 +131,7 @@
     FROM employee
     WHERE employee_no = #{employeeNo};
   </delete>
+
 
 
   <resultMap id="employeeListMap" type="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
@@ -161,4 +164,5 @@
     select count(*)
     from employee;
   </select>
+
 </mapper>

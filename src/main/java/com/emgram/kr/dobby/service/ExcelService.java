@@ -2,7 +2,6 @@ package com.emgram.kr.dobby.service;
 
 import com.emgram.kr.dobby.dao.Employee_adminDao;
 import com.emgram.kr.dobby.dto.login.User;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
@@ -48,16 +47,6 @@ public class ExcelService {
             cell.setCellValue("메모");
 
 
-            // Body
-//        for (int i=0; i<3; i++) {
-//            row = sheet.createRow(rowNum++);
-//            cell = row.createCell(0);
-//            cell.setCellValue(i);
-//            cell = row.createCell(1);
-//            cell.setCellValue(i+"_name");
-//            cell = row.createCell(2);
-//            cell.setCellValue(i+"_title");
-//        }
             for(User excelData : list){
                 row=sheet.createRow(rowNum++);
 
@@ -88,7 +77,5 @@ public class ExcelService {
         }catch (Exception e){
             e.printStackTrace();
         }
-
-
     }
 }
