@@ -3,8 +3,10 @@ package com.emgram.kr.dobby.dto;
 import com.emgram.kr.dobby.utils.DateUtil;
 import java.time.LocalDate;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class SearchCondition {
 
     private Integer pageNum;

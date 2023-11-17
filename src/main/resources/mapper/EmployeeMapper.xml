@@ -58,7 +58,6 @@
            ecm.wid
     FROM employee e
            join employee_cal_map ecm ON e.employee_no = ecm.employee_no;
-
   </select>
 
   <select id="getEmployee" resultMap="employeeListMap">
@@ -80,8 +79,6 @@
            join employee_cal_map ecm ON e.employee_no = ecm.employee_no
     where e.employee_no = #{employeeNo}
   </select>
-
-
 
   <insert id="insertEmployee" parameterType="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
     insert into employee
@@ -110,7 +107,6 @@
             #{employeeNo})
   </insert>
 
-
   <update id="updateEmployee" parameterType="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
     UPDATE employee
     SET rank_no       = #{rankNo},
@@ -131,8 +127,6 @@
     FROM employee
     WHERE employee_no = #{employeeNo};
   </delete>
-
-
 
   <resultMap id="employeeListMap" type="com.emgram.kr.dobby.dto.employee.EmployeeInfo">
     <result property="employeeNo" column="employee_no"/>
@@ -157,6 +151,17 @@
     FROM employee e
            JOIN `rank` r ON e.rank_no = r.rank_no
            JOIN `employee_cal_map` m ON e.employee_no = m.employee_no
+    <where>
+      <if test="query != null">
+        and
+        (e.employee_no like CONCAT('%',#{query},'%')
+        or e.name like CONCAT('%',#{query},'%')
+        or r.rank_name like CONCAT('%',#{query},'%'))
+      </if>
+      <if test="true">
+        and e.delete_dt is null
+      </if>
+    </where>
     limit #{pageSize} offset #{pageOffset};
   </select>
 
@@ -164,5 +169,4 @@
     select count(*)
     from employee;
   </select>
-
 </mapper>
