@@ -29,7 +29,6 @@ public class WorkbookToString {
                     sb.append("    Column ").append(colIndex + 1).append(": ").append(cellToString(cell)).append("\n");
                 }
             }
-
             // 추가적인 시트 정보가 필요하면 여기에 추가할 수 있습니다.
         }
 
