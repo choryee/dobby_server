@@ -37,9 +37,9 @@ public class PageInfo<T> {
     public PageInfo(SearchCondition searchCondition, List<T> content) {
         this.pageNum = searchCondition.getPageNum();
         this.pageSize = searchCondition.getPageSize();
-        this.totalCount = content.size();
+        this.totalCount = this.pageNum * this.pageSize + content.size();
         this.hasNextPage = false;
-        this.hasPreviousPage = pageNum != 0;
+        this.hasPreviousPage = this.pageNum != 0;
         this.content = content;
     }
 
