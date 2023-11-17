@@ -1,5 +1,6 @@
 package com.emgram.kr.dobby.service;
 
+import com.emgram.kr.dobby.dto.PageInfo;
 import com.emgram.kr.dobby.dto.SearchCondition;
 import com.emgram.kr.dobby.dto.dashboard.DashBoardDayoffDTO;
 import com.emgram.kr.dobby.dto.employee.Employee;
@@ -22,7 +23,7 @@ public class EmployeeDayoffCalculateService {
 
     private final HolidayService holidayService;
 
-    public List<EmployeeDayoffInfo> getEmployeeDayoffCalculateInfos(
+    public PageInfo<EmployeeDayoffInfo> getEmployeeDayoffCalculateInfos(
         SearchCondition searchCondition) {
 
         //사원목록 페이징 호출
@@ -42,46 +43,59 @@ public class EmployeeDayoffCalculateService {
             dashBoardDayoffDTOS, holidayDtos);
 
         //데이터 가공
-        return employees
+        List<EmployeeDayoffInfo> employeeDayoffInfos = employees
             .stream()
-            .map((employee -> {
+            .map((employee -> createEmployeeDayoffInfo(employee, employeePaidDayoffMap, employeeUsedDayoffMap)))
+            .collect(Collectors.toList());
 
-                Double totalDayoffCount = 0.0;
-                Double usedDayoffCount = 0.0;
-                Double remaingDayoffCount = 0.0;
 
-                boolean isEmployee = EmployeeUtil.isEmployee(employee);
-
-                if (isEmployee) {
-                    if (employeePaidDayoffMap.get(employee.getEmployeeNo()) != null) {
-                        totalDayoffCount = employeePaidDayoffMap.get(employee.getEmployeeNo());
-                    }
-
-                    if (totalDayoffCount != -1.0
-                        && employeeUsedDayoffMap.get(employee.getEmployeeNo()) != null) {
-                        usedDayoffCount = employeeUsedDayoffMap.get(employee.getEmployeeNo());
-                    }
-                    ;
-                    if (totalDayoffCount != -1.0 && usedDayoffCount != -1.0) {
-                        remaingDayoffCount = totalDayoffCount - usedDayoffCount;
-                    }
-
-                } else {
-                    totalDayoffCount = -1.0;
-                    usedDayoffCount = -1.0;
-                    remaingDayoffCount = -1.0;
-                }
-
-                return EmployeeDayoffInfo.builder()
-                    .employeeNo(employee.getEmployeeNo())
-                    .name(employee.getName())
-                    .joiningDt(employee.getJoiningDt())
-                    .rankName(employee.getRankName())
-                    .totalDayoffCount(totalDayoffCount)
-                    .usedDayoffCount(usedDayoffCount)
-                    .remainingDayoffCount(remaingDayoffCount)
-                    .build();
-            })).collect(Collectors.toList());
+        if (employeeDayoffInfos.size() == searchCondition.getPageSize()) {
+            Integer count = employeeService.countAllEmployees();
+            if (count == null) count = 0;
+            return new PageInfo<>(count, searchCondition, employeeDayoffInfos);
+        }
+        return new PageInfo<>(searchCondition, employeeDayoffInfos);
     }
 
+    private EmployeeDayoffInfo createEmployeeDayoffInfo(Employee employee,
+        Map<String, Double> employeePaidDayoffMap,
+        Map<String, Double> employeeUsedDayoffMap
+    ) {
+
+        Double totalDayoffCount = 0.0;
+        Double usedDayoffCount = 0.0;
+        Double remaingDayoffCount = 0.0;
+
+        boolean isEmployee = EmployeeUtil.isEmployee(employee);
+
+        if (isEmployee) {
+            if (employeePaidDayoffMap.get(employee.getEmployeeNo()) != null) {
+                totalDayoffCount = employeePaidDayoffMap.get(employee.getEmployeeNo());
+            }
+
+            if (totalDayoffCount != -1.0
+                && employeeUsedDayoffMap.get(employee.getEmployeeNo()) != null) {
+                usedDayoffCount = employeeUsedDayoffMap.get(employee.getEmployeeNo());
+            }
+            ;
+            if (totalDayoffCount != -1.0 && usedDayoffCount != -1.0) {
+                remaingDayoffCount = totalDayoffCount - usedDayoffCount;
+            }
+
+        } else {
+            totalDayoffCount = -1.0;
+            usedDayoffCount = -1.0;
+            remaingDayoffCount = -1.0;
+        }
+
+        return EmployeeDayoffInfo.builder()
+            .employeeNo(employee.getEmployeeNo())
+            .name(employee.getName())
+            .joiningDt(employee.getJoiningDt())
+            .rankName(employee.getRankName())
+            .totalDayoffCount(totalDayoffCount)
+            .usedDayoffCount(usedDayoffCount)
+            .remainingDayoffCount(remaingDayoffCount)
+            .build();
+    }
 }
