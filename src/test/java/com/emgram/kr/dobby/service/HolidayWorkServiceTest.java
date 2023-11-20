@@ -9,7 +9,6 @@ import com.emgram.kr.dobby.dto.SearchCondition;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWork;
 import com.emgram.kr.dobby.dto.holiday.work.HolidayWorkDto;
 import java.time.LocalDate;
-import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -42,7 +41,7 @@ public class HolidayWorkServiceTest {
     @Transactional
     public void getWorksDayTest() {
         //given
-        SearchCondition searchCondition = new SearchCondition(0, 10, 2015, 1, "");
+        SearchCondition searchCondition = new SearchCondition(0, 10, 2015, 1, "", "employee,desc");
         //when
         PageInfo<HolidayWorkDto> list = holidayWorkService.getWorkDays(searchCondition);
         //then

@@ -25,4 +25,5 @@ public class EmployeeDayoffInfo {
     private Double usedDayoffCount;
 
     private Double remainingDayoffCount;
+
 }
