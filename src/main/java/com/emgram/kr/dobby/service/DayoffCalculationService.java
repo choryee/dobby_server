@@ -4,7 +4,6 @@ import com.emgram.kr.dobby.dto.dayoff.DayoffResult;
 import com.emgram.kr.dobby.dto.dayoff.DayoffVacation;
 import com.emgram.kr.dobby.dto.employee.Employee;
 import com.emgram.kr.dobby.dto.employee.EmployeeDayoff;
-import com.emgram.kr.dobby.dto.holiday.HolidayDto;
 import com.emgram.kr.dobby.dto.holiday.VerifyHolidayDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -107,7 +106,7 @@ public class DayoffCalculationService {
                 .filter(dayoffVacation -> isNotHoliday(dayoffVacation, holidayDtos))
                 .collect(Collectors.toList());
     }
-
+     
     private boolean isNotHoliday(DayoffVacation dayoffVacation, List<VerifyHolidayDto> holidayDtos) {
         return holidayDtos.stream()
                 .noneMatch(dto -> dto.getHoliday().equals(dayoffVacation.getDayoffDt()));
