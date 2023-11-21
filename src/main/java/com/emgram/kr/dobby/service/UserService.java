@@ -1,8 +1,6 @@
 package com.emgram.kr.dobby.service;
 
-import com.emgram.kr.dobby.config.auth.PrincipalDetail;
-import com.emgram.kr.dobby.config.jwt.JwtAuthenticationFilter;
-import com.emgram.kr.dobby.config.jwt.JwtAuthorizationFilter;
+
 import com.emgram.kr.dobby.dao.Employee_adminDao;
 import com.emgram.kr.dobby.dto.login.User;
 import com.emgram.kr.dobby.utils.JwtTokenUtil;
@@ -12,7 +10,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 
 
@@ -33,7 +30,6 @@ public class UserService {
 
 
     public void join(User user){
-
         String name = user.getName();
         System.out.println("name>>> "+ name);
         String rawPassword = user.getPassword();
@@ -48,25 +44,12 @@ public class UserService {
     }
 
     public String  login(User user){
-        System.out.println("UserService 탐... " + user);
-//        User userDao = Employee_adminDao.getUserInfo(user);
-//        System.out.println("userDao>> "+ userDao);
-//        PrincipalDetail principalDetail =new PrincipalDetail(user);
-//        System.out.println("principalDetail.getPassword()>> "+principalDetail.getPassword());
-//
-          String name = user.getName();
-//        String rawPassword = user.getPassword();
-//        String makeEncPassoword = encoder.encode(rawPassword);
-//        String encPassword = encoder.encode(rawPassword);
-//
-          String token = null;
-//        if(principalDetail.getPassword().equals(rawPassword)){
-            token = JwtTokenUtil.createToken(name); //
-            user.setName(name);
-            user.setToken(token);
-            // Employee_adminDao.insertToken(user);
-//        }
-//        System.out.println("token>> "+ token);
+
+      String name = user.getName();
+      String token = null;
+      token = JwtTokenUtil.createToken(name); //
+      user.setName(name);
+      user.setToken(token);
         return token;
     }
 
@@ -79,7 +62,7 @@ public class UserService {
     }
 
     public int update(User user){
-        System.out.println("UserService 탐..update >> "+ user);
+
         String encPassword = encoder.encode(user.getPassword());
         User user1 = new User();
         user1.setName(user.getName());
@@ -96,7 +79,6 @@ public class UserService {
     }
 
     public void insertMemo(User user){
-        System.out.println("UserService 탐..showNotePad user.getMemo()>>  "+ user.getMemo());
         Employee_adminDao.insertMemo(user);
     }
 
@@ -118,7 +100,4 @@ public class UserService {
         }
         return isMatch;
     }
-
-
-
 }

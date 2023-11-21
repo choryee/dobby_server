@@ -4,7 +4,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 import com.emgram.kr.dobby.dao.DayoffDao;
-import com.emgram.kr.dobby.dto.dashboard.DayoffDashBoardDTO;
+import com.emgram.kr.dobby.dto.dashboard.DashBoardDayoffDTO;
 import com.emgram.kr.dobby.dto.dashboard.HolidayDashBoardDTO;
 import com.emgram.kr.dobby.dto.employee.Employee;
 import com.emgram.kr.dobby.dto.holiday.VerifyHolidayDto;
@@ -57,14 +57,14 @@ public class DashBoardServiceTest {
         holidayDtos.add(
             new VerifyHolidayDto("어린이날", LocalDate.parse("2015-05-05"), true, "1", false));
 
-        List<DayoffDashBoardDTO> dayoffItems = Arrays.asList(
-            new DayoffDashBoardDTO(employee1.getEmployeeNo(), Date.valueOf("2012-05-05"),
+        List<DashBoardDayoffDTO> dayoffItems = Arrays.asList(
+            new DashBoardDayoffDTO(employee1.getEmployeeNo(), Date.valueOf("2012-05-05"),
                 "매니저", "1001", Date.valueOf("2015-05-05"), "연차", 1, Date.valueOf("2012-05-05"),employee1.getName()),
-            new DayoffDashBoardDTO(employee1.getEmployeeNo(), Date.valueOf("2012-05-05"),
+            new DashBoardDayoffDTO(employee1.getEmployeeNo(), Date.valueOf("2012-05-05"),
                 "매니저", "1001", Date.valueOf("2015-05-06"), "연차", 1, Date.valueOf("2012-05-05"), employee1.getName()),
-            new DayoffDashBoardDTO(employee2.getEmployeeNo(), Date.valueOf("2012-05-05"),
+            new DashBoardDayoffDTO(employee2.getEmployeeNo(), Date.valueOf("2012-05-05"),
                 "매니저", "1001", Date.valueOf("2015-05-07"), "연차", 1, Date.valueOf("2012-05-05"), employee2.getName()),
-            new DayoffDashBoardDTO(employee2.getEmployeeNo(), Date.valueOf("2012-05-05"),
+            new DashBoardDayoffDTO(employee2.getEmployeeNo(), Date.valueOf("2012-05-05"),
                 "매니저", "1001", Date.valueOf("2015-05-08"), "연차", 1, Date.valueOf("2012-05-05"), employee2.getName())
         );
 
