@@ -123,4 +123,8 @@ public class DayoffService {
     public List<DayoffDefault> getDayoffDefault() {
         return dayoffDao.findAllDefaultDayoff();
     }
+
+    public DayoffDefault getBaseDayoff(int year) {
+        return dayoffDao.getBaseDayoff(year);
+    }
 }

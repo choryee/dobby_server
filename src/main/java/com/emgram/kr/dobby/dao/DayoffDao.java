@@ -28,4 +28,6 @@ public interface DayoffDao {
     int insertDefaultDayoff(List<DayoffDefault> dayoffDefaults);
 
     int updateDefaultDayoff(List<DayoffDefault> dayoffDefaults);
+
+    DayoffDefault getBaseDayoff(int year);
 }

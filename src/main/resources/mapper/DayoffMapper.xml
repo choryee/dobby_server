@@ -101,6 +101,9 @@
     <select id="findAllDefaultDayoff" resultMap="dayOffSettingResultMap">
         SELECT * FROM dayoff_default
     </select>
+    <select id="getBaseDayoff" resultMap="dayOffSettingResultMap">
+        SELECT * FROM dayoff_default WHERE year = #{year}
+    </select>
 
     <insert id="insertDefaultDayoff">
         INSERT INTO dayoff_default (year, default_dayoff)

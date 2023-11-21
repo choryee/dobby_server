@@ -30,6 +30,7 @@ public class DashBoardService {
 
     private final HolidayWorkService holidayWorkService;
 
+    private final DayoffCalculationService dayoffCalculationService;
     private static final List<String> EMPLOYEE_RANK_NAMES = Arrays.asList("매니저", "팀장");
 
     @Transactional
@@ -117,7 +118,7 @@ public class DashBoardService {
         Map<String, Double> map = new HashMap<>();
 
         for (Employee employee : employees) {
-            map.put(employee.getEmployeeNo(), employeeService.calculateTotalVacation(employee, year));
+            map.put(employee.getEmployeeNo(), dayoffCalculationService.calculateTotalVacation(employee, year));
         }
 
         return map;

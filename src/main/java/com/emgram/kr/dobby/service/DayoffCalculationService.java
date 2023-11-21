@@ -1,10 +1,12 @@
 package com.emgram.kr.dobby.service;
 
+import com.emgram.kr.dobby.dto.dayoff.DayoffDefault;
 import com.emgram.kr.dobby.dto.dayoff.DayoffResult;
 import com.emgram.kr.dobby.dto.dayoff.DayoffVacation;
 import com.emgram.kr.dobby.dto.employee.Employee;
 import com.emgram.kr.dobby.dto.employee.EmployeeDayoff;
 import com.emgram.kr.dobby.dto.holiday.VerifyHolidayDto;
+import com.emgram.kr.dobby.utils.DateUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -20,12 +22,14 @@ public class DayoffCalculationService {
     private final DayoffService dayoffService;
     private final HolidayService holidayService;
 
+    private static final int DAY_OFF_DEFAULT = 2;
+
     public DayoffResult getDayoffResult(String employeeNo, int year) {
         LocalDate startDate = LocalDate.of(year, 1, 1);// 추후 searchCondition 에서 받아 와야됨
         LocalDate endDate = LocalDate.of(year, 12, 31);// 추후 searchCondition 에서 받아 와야됨
 
         Employee employee = employeeService.getEmployeeByEmployeeNo(employeeNo);
-        double totalDayoff = employeeService.calculateTotalVacation(employee, year);
+        double totalDayoff = calculateTotalVacation(employee, year);
 
         List<DayoffVacation> dayoffVacations = dayoffService.getUsedDayoff(employeeNo, year);
         List<VerifyHolidayDto> holidayDtos = holidayService.getHolidays(startDate, endDate);
@@ -93,7 +97,6 @@ public class DayoffCalculationService {
        return currentLocalDate.plusDays(1).isEqual(nextLocalDate);
     }
 
-
     private double getUsedDayoff(List<DayoffVacation> dayoffVacations, List<VerifyHolidayDto> holidayDtos) {
         return dayoffVacations.stream()
                 .filter(dayoffVacation -> isNotHoliday(dayoffVacation, holidayDtos))
@@ -110,6 +113,45 @@ public class DayoffCalculationService {
     private boolean isNotHoliday(DayoffVacation dayoffVacation, List<VerifyHolidayDto> holidayDtos) {
         return holidayDtos.stream()
                 .noneMatch(dto -> dto.getHoliday().equals(dayoffVacation.getDayoffDt()));
+    }
+
+    public double calculateTotalVacation(Employee employee, int year) {
+        List<DayoffDefault> dayoffDefaults = dayoffService.getDayoffDefault();
+        int dayoffDefault = getDayoffDefaultByYear(dayoffDefaults, DAY_OFF_DEFAULT);
+        LocalDate joiningDate = employee.getJoiningDt();
+        LocalDate endYear = DateUtil.getEndDayOfYear(year);
+        LocalDate oneYearLater = getOneYearLater(joiningDate);
+
+        return endYear.isAfter(oneYearLater)
+                ? calculateLeavesAfterFirstYear(dayoffDefaults, endYear, oneYearLater)
+                : calculateLeavesForFirstYear(dayoffDefault, endYear, joiningDate);
+    }
+
+    private int calculateLeavesForFirstYear(int dayoffDefault,LocalDate now, LocalDate joiningCalendar) {
+        if (joiningCalendar.getYear() == now.getYear())
+            return Math.max(0, now.getMonthValue() -  joiningCalendar.getMonthValue());
+        else return dayoffDefault;
+    }
+    private int calculateLeavesAfterFirstYear(List<DayoffDefault> dayoffDefaults, LocalDate now, LocalDate oneYearAfterJoining) {
+        int yearsAfterJoining = now.getYear() - oneYearAfterJoining.getYear();
+
+        if (now.isBefore(oneYearAfterJoining)) yearsAfterJoining--;
+
+        int finalYearsAfterJoining = yearsAfterJoining + DAY_OFF_DEFAULT;
+
+        return getDayoffDefaultByYear(dayoffDefaults, finalYearsAfterJoining);
+    }
+
+    private LocalDate getOneYearLater(LocalDate joiningDate) {
+        return LocalDate.of(joiningDate.getYear() + 1, joiningDate.getMonth(), joiningDate.getDayOfMonth());
+    }
+
+    private int getDayoffDefaultByYear(List<DayoffDefault> dayoffDefaults, int year) {
+        return dayoffDefaults.stream()
+                .filter(dayoff -> dayoff.getYear() == year)
+                .mapToInt(DayoffDefault::getDefaultDayoff)
+                .findFirst()
+                .orElse(0);
     }
 
 }

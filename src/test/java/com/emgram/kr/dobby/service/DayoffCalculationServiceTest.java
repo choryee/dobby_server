@@ -66,7 +66,7 @@ public class DayoffCalculationServiceTest {
 
         Mockito.when(employeeService.getEmployeeByEmployeeNo(employeeNo)).thenReturn(employee);
         Mockito.when(dayoffService.getUsedDayoff(employeeNo, year)).thenReturn(dayoffVacations);
-        Mockito.when(employeeService.calculateTotalVacation(employee, year)).thenReturn(totalDayoff);
+        //Mockito.when(employeeService.calculateTotalVacation(employee, year)).thenReturn(totalDayoff);
         Mockito.when(holidayService.getHolidays(any(LocalDate.class), any(LocalDate.class))).thenReturn(holidayDtos);
 
         // Act
