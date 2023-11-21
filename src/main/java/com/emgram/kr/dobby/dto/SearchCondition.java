@@ -45,8 +45,10 @@ public class SearchCondition {
         }
         this.query = query;
 
-        String[] sorts = sort.split(",");
-        this.sortQuery = sorts[0];
-        this.direction = sorts[1];
+        if (sort != null) {
+            String[] sorts = sort.split(",");
+            this.sortQuery = sorts[0];
+            this.direction = sorts[1];
+        }
     }
 }
