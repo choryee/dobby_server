@@ -17,10 +17,6 @@ public class EmployeeService {
 
     private final EmployeeDao employeeDao;
 
-    private static final int BASE_VACATION_DAYS = 15;
-
-    private static final int VACATION_ACCRUAL_RATE = 2;
-
     public Employee getEmployeeInfo(String employeeNo) {
         return employeeDao.getEmployeeInfo(employeeNo);
     }
@@ -43,37 +39,6 @@ public class EmployeeService {
 
     public Employee getEmployeeByEmployeeNo(String employeeNo) {
         return employeeDao.getEmployeeInfo(employeeNo);
-    }
-
-    public double calculateTotalVacation(Employee employee, int year) {
-        LocalDate joiningDate = employee.getJoiningDt();
-        LocalDate endYear = DateUtil.getEndDayOfYear(year);
-        LocalDate oneYearLater = getOneYearLater(joiningDate);
-        return endYear.isAfter(oneYearLater) ? calculateLeavesAfterFirstYear(BASE_VACATION_DAYS,
-            endYear, oneYearLater) :
-            calculateLeavesForFirstYear(endYear, joiningDate);
-    }
-
-    private LocalDate getOneYearLater(LocalDate joiningDate) {
-        return LocalDate.of(joiningDate.getYear() + 1, joiningDate.getMonth(),
-            joiningDate.getDayOfMonth());
-    }
-
-    private int calculateLeavesForFirstYear(LocalDate now, LocalDate joiningCalendar) {
-        if (joiningCalendar.getYear() == now.getYear()) {
-            return Math.max(0, now.getMonthValue() - joiningCalendar.getMonthValue());
-        } else {
-            return BASE_VACATION_DAYS;
-        }
-    }
-
-    private int calculateLeavesAfterFirstYear(int baseVacation, LocalDate now,
-        LocalDate oneYearAfterJoining) {
-        int yearsAfterJoining = now.getYear() - oneYearAfterJoining.getYear();
-        if (now.isBefore(oneYearAfterJoining)) {
-            yearsAfterJoining--;
-        }
-        return baseVacation + yearsAfterJoining / VACATION_ACCRUAL_RATE;
     }
 
     public List<EmployeeInfo> getListEmployee() {

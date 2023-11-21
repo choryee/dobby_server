@@ -98,4 +98,31 @@
       ORDER BY dh.dayoff_dt DESC
     </select>
 
+    <select id="findAllDefaultDayoff" resultMap="dayOffSettingResultMap">
+        SELECT * FROM dayoff_default
+    </select>
+    <select id="getBaseDayoff" resultMap="dayOffSettingResultMap">
+        SELECT * FROM dayoff_default WHERE year = #{year}
+    </select>
+
+    <insert id="insertDefaultDayoff">
+        INSERT INTO dayoff_default (year, default_dayoff)
+        VALUES (#{year}, #{defaultDayoff})
+    </insert>
+
+    <update id="updateDefaultDayoff" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            UPDATE dayoff_default
+            SET default_dayoff = #{item.defaultDayoff}
+            WHERE year = #{item.year}
+        </foreach>
+    </update>
+
+
+
+    <resultMap id="dayOffSettingResultMap" type="com.emgram.kr.dobby.dto.dayoff.DayoffDefault">
+        <result property="year" column="year" />
+        <result property="defaultDayoff" column="default_dayoff" />
+    </resultMap>
+
 </mapper>

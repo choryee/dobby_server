@@ -121,7 +121,7 @@ public class DashBoardService {
         Map<String, Double> map = new HashMap<>();
 
         for (Employee employee : employees) {
-            map.put(employee.getEmployeeNo(), employeeService.calculateTotalVacation(employee, year));
+            map.put(employee.getEmployeeNo(), dayoffCalculationService.calculateTotalVacation(employee, year));
         }
 
         return map;

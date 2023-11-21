@@ -2,6 +2,7 @@ package com.emgram.kr.dobby.service;
 
 import com.emgram.kr.dobby.dao.DayoffDao;
 import com.emgram.kr.dobby.dto.caldav.CaldavEvent;
+import com.emgram.kr.dobby.dto.dayoff.DayoffDefault;
 import com.emgram.kr.dobby.dto.dayoff.DayoffItem;
 import com.emgram.kr.dobby.dto.dayoff.DayoffVacation;
 import com.emgram.kr.dobby.utils.DayoffType;
@@ -102,5 +103,28 @@ public class DayoffService {
         cal.set(Calendar.SECOND, 0);
         cal.set(Calendar.MILLISECOND, 0);
         return cal.getTime();
+    }
+
+    public void setDayoffDefault(List<DayoffDefault> dayoffDefaults) {
+        if(dayoffDefaults == null) throw new RuntimeException("기본 연차 정보가 들어오지 않았습니다.");
+
+        if(dayoffDao.insertDefaultDayoff(dayoffDefaults)==0)
+            throw new RuntimeException("기본 연차정보가 저장되지않았습니다.");
+    }
+
+
+    public void updateDefaultDayoff(List<DayoffDefault> dayoffDefaults) {
+        if(dayoffDefaults == null) throw new RuntimeException("기본 연차 정보가 들어오지 않았습니다.");
+
+        if(dayoffDao.updateDefaultDayoff(dayoffDefaults)==0)
+            throw new RuntimeException("기본 연차정보가 수정되지 않았습니다.");
+    }
+
+    public List<DayoffDefault> getDayoffDefault() {
+        return dayoffDao.findAllDefaultDayoff();
+    }
+
+    public DayoffDefault getBaseDayoff(int year) {
+        return dayoffDao.getBaseDayoff(year);
     }
 }

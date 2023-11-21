@@ -78,8 +78,8 @@ public class DashBoardServiceTest {
         given(dayoffDao.findAllDayOffByYear(any(), any()))
             .willReturn(dayoffItems);
         given(employeeService.getAllEmployeeList()).willReturn(employees);
-        given(employeeService.calculateTotalVacation(employee1, year)).willReturn(10.0);
-        given(employeeService.calculateTotalVacation(employee2, year)).willReturn(5.0);
+     //   given(employeeService.calculateTotalVacation(employee1, year)).willReturn(10.0);
+       // given(employeeService.calculateTotalVacation(employee2, year)).willReturn(5.0);
         given(holidayWorkService.getMuchHolidayWorker(year)).willReturn(new HolidayDashBoardDTO("M004", 3));
         given(holidayWorkService.countAllHolidayWorkByYear(2015)).willReturn(20);
 
