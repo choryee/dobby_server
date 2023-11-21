@@ -175,19 +175,8 @@
             </otherwise>
           </choose>
         </when>
-        <when test='sortQuery.equals("name")'>
-          order by e.name
-          <choose>
-            <when test='direction != null and direction.equals("desc")'>
-              desc
-            </when>
-            <otherwise>
-              asc
-            </otherwise>
-          </choose>
-        </when>
-        <when test='sortQuery.equals("rankName")'>
-          order by r.rank_name
+        <when test='sortQuery.equals("joiningDt")'>
+          order by e.joining_dt
           <choose>
             <when test='direction != null and direction.equals("desc")'>
               desc
