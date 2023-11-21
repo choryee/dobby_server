@@ -32,6 +32,8 @@ public class DashBoardService {
 
     private final HolidayWorkService holidayWorkService;
 
+    private final DayoffCalculationService dayoffCalculationService;
+
     @Transactional
     public Map<String, Object> getDashBoardInfo(int year) {
         //정보를 구성할 Map 생성
