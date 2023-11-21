@@ -1,11 +1,12 @@
 package com.emgram.kr.dobby.dto;
 
 import com.emgram.kr.dobby.utils.DateUtil;
-import com.emgram.kr.dobby.utils.DateUtil.LocalDateContainer;
 import java.time.LocalDate;
 import lombok.Getter;
+import lombok.ToString;
 
 @Getter
+@ToString
 public class SearchCondition {
 
     private Integer pageNum;
@@ -24,19 +25,30 @@ public class SearchCondition {
 
     private String query;
 
-    public SearchCondition(Integer pageNum, Integer pageSize, Integer year, Integer month, String query) {
+    private String sortQuery;
+
+    private String direction;
+
+    public SearchCondition(Integer pageNum, Integer pageSize, Integer year, Integer month,
+        String query, String sort) {
         this.pageNum = pageNum == null ? 0 : pageNum;
         this.pageSize = pageSize == null ? 10 : pageSize;
         this.pageOffset = this.pageSize * this.pageNum;
-
-        if (year != null && month == null) {
-            startDate = DateUtil.getStartDayOfYear(year);
-            endDate = DateUtil.getEndDayOfYear(year);
-        } else if (year != null && month != null) {
-            startDate = DateUtil.getStartOfMonth(year, month);
-            endDate = DateUtil.getEndOfMonth(year, month);
+        this.year = year == null ? LocalDate.now().getYear() : year;
+        this.month = month;
+        if (month == null) {
+            this.startDate = DateUtil.getStartDayOfYear(this.year);
+            this.endDate = DateUtil.getEndDayOfYear(this.year);
+        } else {
+            this.startDate = DateUtil.getStartOfMonth(this.year, month);
+            this.endDate = DateUtil.getEndOfMonth(this.year, month);
         }
-
         this.query = query;
+
+        if (sort != null) {
+            String[] sorts = sort.split(",");
+            this.sortQuery = sorts[0];
+            this.direction = sorts[1];
+        }
     }
 }

@@ -79,7 +79,7 @@
         ORDER BY dh.dayoff_dt DESC
     </select>
 
-    <select id="findAllDayOffByYear" parameterType="java.util.Map" resultType="com.emgram.kr.dobby.dto.dashboard.DayoffDashBoardDTO">
+    <select id="findAllDayOffByYear" parameterType="java.util.Map" resultType="com.emgram.kr.dobby.dto.dashboard.DashBoardDayoffDTO">
       SELECT
         e.employee_no AS employeeNo,
         e.joining_dt AS joiningDt,

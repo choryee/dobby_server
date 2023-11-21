@@ -25,21 +25,20 @@ public class PageInfo<T> {
         this.pageNum = pageNum;
         this.pageSize = pageSize;
 
-        hasNextPage = content.size() == pageSize && totalCount > (pageNum+1) * pageSize;
+        hasNextPage = content.size() == pageSize && totalCount > (pageNum + 1) * pageSize;
         hasPreviousPage = pageNum <= 0;
     }
 
     /**
-     * list size가 pageSize보다 작을때 사용
      * @param searchCondition
      * @param content
      */
     public PageInfo(SearchCondition searchCondition, List<T> content) {
         this.pageNum = searchCondition.getPageNum();
         this.pageSize = searchCondition.getPageSize();
-        this.totalCount = content.size();
-        this.hasNextPage = false;
-        this.hasPreviousPage = pageNum != 0;
+        this.totalCount = this.pageNum * this.pageSize + content.size();
+        this.hasNextPage = content.size() > pageSize;
+        this.hasPreviousPage = this.pageNum != 0;
         this.content = content;
     }
 
@@ -47,8 +46,7 @@ public class PageInfo<T> {
         this.totalCount = totalCount;
         this.pageNum = searchCondition.getPageNum();
         this.pageSize = searchCondition.getPageSize();
-
-        this.hasNextPage = content.size() == pageSize && totalCount > (pageNum+1) * pageSize;
+        this.hasNextPage = content.size() >= pageSize && totalCount > (pageNum + 1) * pageSize;
         this.hasPreviousPage = pageNum != 0;
         this.content = content;
     }

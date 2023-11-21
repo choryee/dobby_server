@@ -3,22 +3,12 @@ package com.emgram.kr.dobby.controller;
 import com.emgram.kr.dobby.config.auth.PrincipalDetail;
 import com.emgram.kr.dobby.dto.login.User;
 import com.emgram.kr.dobby.service.UserService;
-import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-
-import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
@@ -52,8 +42,6 @@ public class UserController {
     @PostMapping("/login") // 8080/login은 아예 컨트럴러 안 탐. 시큐리티가 알아서 처리하는 것.
     @CrossOrigin(origins = "http://localhost:3000")
     public ResponseEntity<String> login(@RequestBody User user){
-        System.out.println("UserController 탐.. "+ user);
-        System.out.println(user.getName() +" " +user.getPassword());
 
         String token = userService.login(user);
         return ResponseEntity.ok().body(token);
@@ -106,7 +94,6 @@ public class UserController {
 
     @PostMapping("/user/memo")
     public void insetMemo(@RequestBody User user){
-        System.out.println("UserController 탐..memo >> "+ user);
         userService.insertMemo(user);
     }
 
@@ -120,7 +107,6 @@ public class UserController {
 
     @PostMapping("/user/showNotePad")
     public void showNotePad(@RequestBody User user) throws IOException, InterruptedException {
-        System.out.println("UserController 탐..showNotePad user.getEmployee_no()>>  "+ user.getEmployee_no());
         Runtime runtime = Runtime.getRuntime();
         Process process = runtime.exec("C:\\windows\\system32\\notepad.exe C:\\Users\\L-JE01\\Desktop\\test\\"+user.getEmployee_no()+".txt");
 
@@ -141,13 +127,9 @@ public class UserController {
             e.printStackTrace();
         }
 
-        System.out.println("memo>> " + memo);
-
-        // Process.waitFor()를 사용하여 메모장 프로세스가 종료될 때까지 대기
         int exitCode = process.waitFor();
         System.out.println("exitCode>>> " + exitCode);
 
-        // 종료 코드가 0이면(정상 종료)에만 메모 저장 작업 수행
         if (exitCode == 0) {
             try {
                 FileReader fileReader = new FileReader("C:\\Users\\L-JE01\\Desktop\\test\\"+user.getEmployee_no()+".txt");
@@ -164,11 +146,10 @@ public class UserController {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            //insert 함.
+
             user.setEmployee_no(user.getEmployee_no());
             user.setMemo(memo);
             userService.insertMemo(user);
-            System.out.println("UserController 탐..insertMemo(user) >>  " + user);
         } else {
             System.out.println("메모장 프로세스가 비정상 종료되었습니다. Exit Code: " + exitCode);
         }
