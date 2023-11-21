@@ -21,7 +21,6 @@ public class DayoffCalculationService {
     private final EmployeeService employeeService;
     private final DayoffService dayoffService;
     private final HolidayService holidayService;
-
     private static final int DAY_OFF_DEFAULT = 2;
 
     public DayoffResult getDayoffResult(String employeeNo, int year) {
