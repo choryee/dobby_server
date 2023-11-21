@@ -29,7 +29,6 @@ public class DashBoardService {
     private final EmployeeService employeeService;
 
     private final HolidayWorkService holidayWorkService;
-    
 
     private final DayoffCalculationService dayoffCalculationService;
 
