@@ -62,18 +62,22 @@ public class ExcelService {
             }
 
             // 컨텐츠 타입과 파일명 지정
-//        response.setHeader("Content-Disposition", "attachment;filename=example.xls");
-            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+
+            response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;");
+            //response.setContentType("ms-vnd/excel");
             response.setHeader("Content-Disposition", "attachment;filename=example.xlsx");
 
 
             // Excel File Output
-            response.getOutputStream().flush();
+            //response.getOutputStream();
             wb.write(response.getOutputStream());
 
             String workbookInfo = WorkbookToString.workbookToString(wb);
             System.out.println("wb >> "+workbookInfo);
+            response.getOutputStream().flush();
+            response.getOutputStream().close();
             wb.close();
+
         }catch (Exception e){
             e.printStackTrace();
         }

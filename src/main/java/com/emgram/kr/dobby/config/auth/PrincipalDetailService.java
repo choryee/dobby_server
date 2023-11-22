@@ -20,7 +20,7 @@ public class PrincipalDetailService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         System.out.println("PrincipalDetailService의 loadUserByUsername 실행됨...");
         User principal = Employee_adminDao.getUser(username);
-        System.out.println("PrincipalDetailService의 User : " + principal);
+        System.out.println("PrincipalDetailService의 principal : " + principal);
         return new PrincipalDetail(principal);
     }
 }
