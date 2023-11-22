@@ -1,13 +1,18 @@
 package com.emgram.kr.dobby.service;
 
 
+import com.emgram.kr.dobby.config.auth.PrincipalDetail;
+import com.emgram.kr.dobby.controller.ExcelController;
 import com.emgram.kr.dobby.dao.Employee_adminDao;
 import com.emgram.kr.dobby.dto.login.User;
 import com.emgram.kr.dobby.utils.JwtTokenUtil;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -17,6 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     @Autowired
     private BCryptPasswordEncoder encoder;
@@ -24,8 +30,8 @@ public class UserService {
     @Autowired
     private Employee_adminDao Employee_adminDao;
 
-    @Value("${jwt.token.secret}") // application.properties에 정의됨.
-    private String key;
+//    @Value("${jwt.token.secret}") // application.properties에 정의됨.
+//    private String key;
     private Long expireTimeMs = 1000*60*3l;
 
 
@@ -44,13 +50,17 @@ public class UserService {
     }
 
     public String  login(User user){
-
+      logger.info("/login userService..", user);
       String name = user.getName();
       String token = null;
-      token = JwtTokenUtil.createToken(name); //
-      user.setName(name);
-      user.setToken(token);
-        return token;
+      if(token == null){
+          token = JwtTokenUtil.createToken(name);
+          user.setName(name);
+          user.setToken(token);
+          Employee_adminDao.insertToken(user);
+          return token;
+      }
+      return null;
     }
 
     public List<User> getAllUsers(){
@@ -64,13 +74,12 @@ public class UserService {
     public int update(User user){
 
         String encPassword = encoder.encode(user.getPassword());
-        User user1 = new User();
-        user1.setName(user.getName());
-        user1.setPassword(encPassword);
+        user.setName(user.getName());
+        user.setPassword(encPassword);
 
         int result=0;
         if(user.getPassword() !=null){
-            result = Employee_adminDao.updateUser(user1);
+            result = Employee_adminDao.updateUser(user);
         }
         if(result == 1){
             return 1;
@@ -84,20 +93,30 @@ public class UserService {
 
     public void getMemo(String userName){
         Employee_adminDao.getUser(userName);
-
     }
 
-    public String endAndModifyPassword(User user){
-        String encPwd=encoder.encode(user.getPassword());
+    public int insertToken(User user){
+        System.out.println("userService.insertToken(user) 탐...");
+        if(Employee_adminDao.insertToken(user) == 1){
+            return 1;
+        }else {
+            return 0;
+        }
+    }
+
+    public String encAndModifyPassword(User user){
+        String encPwd = encoder.encode(user.getPassword());
         user.setPassword(encPwd);
         return user.getPassword();
     }
 
     public boolean comparePwd(User user){
         boolean isMatch=false;
-        if(encoder.matches(user.getPassword(), endAndModifyPassword(user))){
+        if(encoder.matches(user.getPassword(), encAndModifyPassword(user))){
             isMatch=true;
         }
         return isMatch;
     }
+
+
 }

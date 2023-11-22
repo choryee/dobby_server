@@ -5,6 +5,7 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.emgram.kr.dobby.config.auth.PrincipalDetail;
 import com.emgram.kr.dobby.dao.Employee_adminDao;
 import com.emgram.kr.dobby.dto.login.User;
+import com.emgram.kr.dobby.utils.JwtTokenUtil;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -41,20 +42,25 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
             return;
         }
 
+        // 쿨에서 받은 헤더의 토큰을 받기
         String jwtToken = request.getHeader("Authorization").replace("Bearer ", "");
 
+        //위 토큰을 검증함.밑.
         String username =
-                JWT.require(Algorithm.HMAC512("cos")).build().verify(jwtToken).getClaim("username").asString();
+                JWT.require(Algorithm.HMAC512(JwtTokenUtil.secretKey)).build().verify(jwtToken).getClaim("username").asString();
 
         if(username !=null){
             User userEntity = Employee_adminDao.getUser(username);
-            PrincipalDetail principalDetail=new PrincipalDetail(userEntity);
+            PrincipalDetail principalDetail = new PrincipalDetail(userEntity);
 
             Authentication authentication=
                     new UsernamePasswordAuthenticationToken(principalDetail, null, principalDetail.getAuthorities());
 
-             SecurityContextHolder.getContext().setAuthentication(authentication);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+
             chain.doFilter(request,response);
-        }
-    }
+        } // if
+
+    }// doFilterInternal
+
 }

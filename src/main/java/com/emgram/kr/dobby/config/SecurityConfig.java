@@ -1,10 +1,16 @@
 package com.emgram.kr.dobby.config;
 
 
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.algorithms.Algorithm;
+import com.emgram.kr.dobby.config.auth.PrincipalDetail;
 import com.emgram.kr.dobby.config.auth.PrincipalDetailService;
 import com.emgram.kr.dobby.config.jwt.JwtAuthenticationFilter;
 import com.emgram.kr.dobby.config.jwt.JwtAuthorizationFilter;
 import com.emgram.kr.dobby.dao.Employee_adminDao;
+import com.emgram.kr.dobby.dto.login.User;
+import com.emgram.kr.dobby.utils.JwtTokenUtil;
+import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,7 +19,13 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.LogoutHandler;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 
 @Configuration
@@ -28,6 +40,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     PrincipalDetailService principalDetailService;
+
 
     @Bean
     public BCryptPasswordEncoder encoderPWD(){
@@ -53,7 +66,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                     .addFilter(new JwtAuthorizationFilter(authenticationManager(), Employee_adminDao))
 
-                        .authorizeRequests(authorize -> authorize.antMatchers("/api/v1/users/user/**")
+                    .authorizeRequests(authorize ->
+                        authorize.antMatchers("/api/v1/users/user/**")
                         .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 
                         .antMatchers("/api/v1/users/manager/**")
@@ -61,9 +75,37 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                         .antMatchers("/api/v1/users/admin/**")
                         .access("hasRole('ROLE_ADMIN')")
+                         .anyRequest().permitAll()
+                    );
+//                        .authorizeRequests()
+//                        .antMatchers("/api/v1/users/join","/login", "/logout").permitAll()
+//                        .anyRequest().authenticated();
 
-                        .anyRequest().permitAll());
+
+        http.logout()
+                .logoutUrl("/logout")
+                .addLogoutHandler(new LogoutHandler() {
+                    @Override
+                    public void logout(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Authentication authentication) {
+                        String jwtHeader=httpServletRequest.getHeader("Authorization");
+                        if(jwtHeader != null){
+                        String jwtToken=jwtHeader.replace("Bearer ", "");
+                        String username =
+                                JWT.require(Algorithm.HMAC512(JwtTokenUtil.secretKey)).build().verify(jwtToken).getClaim("username").asString();
+                        User user=new User();
+                        user.setName(username);
+                        System.out.println("addLogoutHandler..호출됨..");
+                        Employee_adminDao.deleteToken(user);
+                        }else {
+                            return;
+                        }
+                    }
+                })
+                .logoutSuccessUrl("/")
+                .deleteCookies("JSESSIONID", "remember-me");
 
     }
+
+
 }
 

@@ -23,16 +23,16 @@
         select *
         from employee_admin
         where
-            name = #{name}
+            name = #{username}
     </select>
 
     <insert id="joinUser" parameterType="com.emgram.kr.dobby.dto.login.User">
         insert
         into
             employee_admin
-            (employee_no, name, password, roles)
+            (employee_no, name, password, roles, employee_name)
         values
-            (#{employee_no}, #{name}, #{password}, #{roles})
+            (#{employee_no}, #{name}, #{password}, #{roles},  #{employee_name})
     </insert>
 
     <update id="insertToken" parameterType="com.emgram.kr.dobby.dto.login.User">
@@ -40,6 +40,13 @@
             employee_admin
         set token= #{token}
         where name=#{name}
+    </update>
+
+    <update id="deleteToken" parameterType="com.emgram.kr.dobby.dto.login.User">
+        update
+            employee_admin
+        set token= ''
+        where name = #{name}
     </update>
 
     <update id="insertMemo" parameterType="com.emgram.kr.dobby.dto.login.User">

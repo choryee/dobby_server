@@ -13,6 +13,7 @@ public interface Employee_adminDao {
     User getUser(String username);
     int joinUser(User user);
     int insertToken(User user);
+    int deleteToken(User user);
     int insertMemo(User user);
 
     int updateUser(User user);
