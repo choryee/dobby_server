@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -57,10 +56,7 @@ public class PrincipalDetail implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        //Collection<GrantedAuthority> collectors = new ArrayList<>();
-
-        Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
-
+       Collection<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
         user.getRoleList().forEach(r->{
             System.out.println("PrincipalDetail에서 r: "+r);
             authorities.add(()->r);

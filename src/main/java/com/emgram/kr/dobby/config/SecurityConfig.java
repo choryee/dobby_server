@@ -75,11 +75,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                         .antMatchers("/api/v1/users/admin/**")
                         .access("hasRole('ROLE_ADMIN')")
-                         .anyRequest().permitAll()
-                    );
-//                        .authorizeRequests()
-//                        .antMatchers("/api/v1/users/join","/login", "/logout").permitAll()
-//                        .anyRequest().authenticated();
+                        // .anyRequest().permitAll() //모두 허용
+                    )
+                        .authorizeRequests()
+                        .antMatchers("/api/v1/users/join","/login", "/logout").permitAll()
+                        .anyRequest().authenticated();
 
 
         http.logout()

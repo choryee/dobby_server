@@ -58,18 +58,13 @@ public class ExcelService {
                 cell.setCellValue(excelData.getName());
                 cell=row.createCell(3);
                 cell.setCellValue(excelData.getMemo());
-
             }
 
             // 컨텐츠 타입과 파일명 지정
-
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;");
-            //response.setContentType("ms-vnd/excel");
             response.setHeader("Content-Disposition", "attachment;filename=example.xlsx");
 
-
             // Excel File Output
-            //response.getOutputStream();
             wb.write(response.getOutputStream());
 
             String workbookInfo = WorkbookToString.workbookToString(wb);
