@@ -3,14 +3,12 @@ package com.emgram.kr.dobby.config;
 
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.algorithms.Algorithm;
-import com.emgram.kr.dobby.config.auth.PrincipalDetail;
 import com.emgram.kr.dobby.config.auth.PrincipalDetailService;
 import com.emgram.kr.dobby.config.jwt.JwtAuthenticationFilter;
 import com.emgram.kr.dobby.config.jwt.JwtAuthorizationFilter;
 import com.emgram.kr.dobby.dao.Employee_adminDao;
 import com.emgram.kr.dobby.dto.login.User;
 import com.emgram.kr.dobby.utils.JwtTokenUtil;
-import io.jsonwebtoken.Jwt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -20,10 +18,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.LogoutHandler;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -75,7 +71,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                         .antMatchers("/api/v1/users/admin/**")
                         .access("hasRole('ROLE_ADMIN')")
-                        // .anyRequest().permitAll() //모두 허용
+                       // .anyRequest().permitAll() //모두 허용
                     )
                         .authorizeRequests()
                         .antMatchers("/api/v1/users/join","/login", "/logout").permitAll()
@@ -94,7 +90,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                                 JWT.require(Algorithm.HMAC512(JwtTokenUtil.secretKey)).build().verify(jwtToken).getClaim("username").asString();
                         User user=new User();
                         user.setName(username);
-                        System.out.println("addLogoutHandler..호출됨..");
                         Employee_adminDao.deleteToken(user);
                         }else {
                             return;
