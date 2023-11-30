@@ -1,8 +1,5 @@
 package com.emgram.kr.dobby.service;
 
-
-import com.emgram.kr.dobby.config.auth.PrincipalDetail;
-import com.emgram.kr.dobby.controller.ExcelController;
 import com.emgram.kr.dobby.dao.Employee_adminDao;
 import com.emgram.kr.dobby.dto.login.User;
 import com.emgram.kr.dobby.utils.JwtTokenUtil;
@@ -10,9 +7,6 @@ import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -30,27 +24,20 @@ public class UserService {
     @Autowired
     private Employee_adminDao Employee_adminDao;
 
-//    @Value("${jwt.token.secret}") // application.properties에 정의됨.
-//    private String key;
     private Long expireTimeMs = 1000*60*3l;
 
 
     public void join(User user){
         String name = user.getName();
-        System.out.println("name>>> "+ name);
         String rawPassword = user.getPassword();
         String encPassword = encoder.encode(rawPassword);
         user.setName(name);
         user.setPassword(encPassword);
         user.setRoles("ROLE_USER");
-
-        int result = Employee_adminDao.joinUser(user);
-        System.out.println("result>>> "+ result);
-
+        Employee_adminDao.joinUser(user);
     }
 
     public String  login(User user){
-      logger.info("/login userService..", user);
       String name = user.getName();
       String token = null;
       if(token == null){
@@ -96,7 +83,6 @@ public class UserService {
     }
 
     public int insertToken(User user){
-        System.out.println("userService.insertToken(user) 탐...");
         if(Employee_adminDao.insertToken(user) == 1){
             return 1;
         }else {
@@ -104,15 +90,15 @@ public class UserService {
         }
     }
 
-    public String encAndModifyPassword(User user){
-        String encPwd = encoder.encode(user.getPassword());
-        user.setPassword(encPwd);
+    public String newPwdEncoding(User user){
+        String encNewPwd = encoder.encode(user.getPassword());
+        user.setPassword(encNewPwd);
         return user.getPassword();
     }
 
     public boolean comparePwd(User user){
         boolean isMatch=false;
-        if(encoder.matches(user.getPassword(), encAndModifyPassword(user))){
+        if(encoder.matches(user.getPassword(), newPwdEncoding(user))){
             isMatch=true;
         }
         return isMatch;

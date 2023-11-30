@@ -20,14 +20,11 @@ public class ExcelService {
     private Employee_adminDao Employee_adminDao;
 
     public void excelDownload(User user, HttpServletResponse response) throws IOException {
-        System.out.println("ExcelService 탐..excel/download >>  " + user);
 
         List<User> list = Employee_adminDao.getAllUsers();
-        System.out.println("ExcelService.. >>"+ list);
-
+        Workbook wb = new XSSFWorkbook();
         try {
             //Workbook wb = new HSSFWorkbook();
-            Workbook wb = new XSSFWorkbook();
             Sheet sheet = wb.createSheet("첫번째 시트");
             //행,열,열번호
             Row row = null;
@@ -40,12 +37,11 @@ public class ExcelService {
             cell.setCellValue("사원번호");
 
             cell = row.createCell(1);
-            cell.setCellValue("권한");
-            cell = row.createCell(2);
             cell.setCellValue("이름");
+            cell = row.createCell(2);
+            cell.setCellValue("권한");
             cell = row.createCell(3);
             cell.setCellValue("메모");
-
 
             for(User excelData : list){
                 row=sheet.createRow(rowNum++);
@@ -53,28 +49,27 @@ public class ExcelService {
                 cell=row.createCell(0);
                 cell.setCellValue(excelData.getEmployee_no());
                 cell=row.createCell(1);
-                cell.setCellValue(excelData.getRoles());
+                cell.setCellValue(excelData.getEmployee_name());
                 cell=row.createCell(2);
-                cell.setCellValue(excelData.getName());
+                cell.setCellValue(excelData.getRoles());
                 cell=row.createCell(3);
                 cell.setCellValue(excelData.getMemo());
             }
 
             // 컨텐츠 타입과 파일명 지정
             response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;");
-            response.setHeader("Content-Disposition", "attachment;filename=example.xlsx");
+            response.setHeader("Content-Disposition", "attachment;filename=dayOffList.xlsx");
 
             // Excel File Output
             wb.write(response.getOutputStream());
 
-            String workbookInfo = WorkbookToString.workbookToString(wb);
-            System.out.println("wb >> "+workbookInfo);
+           // String workbookInfo = WorkbookToString.workbookToString(wb);
             response.getOutputStream().flush();
             response.getOutputStream().close();
-            wb.close();
-
-        }catch (Exception e){
+        }catch (IOException e){
             e.printStackTrace();
+        }finally {
+            wb.close();
         }
     }
 }

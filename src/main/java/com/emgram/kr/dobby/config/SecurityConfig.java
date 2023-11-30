@@ -35,17 +35,17 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     Employee_adminDao Employee_adminDao;
 
     @Autowired
-    PrincipalDetailService principalDetailService;
-
+    PrincipalDetailService principalDetailService; // o
 
     @Bean
-    public BCryptPasswordEncoder encoderPWD(){
+    public BCryptPasswordEncoder encoderPWD(){ // o
         return new BCryptPasswordEncoder();
     }
 
 
+    //AuthenticationManager에 Provider등록
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception { // o
         auth.userDetailsService(principalDetailService).passwordEncoder(encoderPWD());
     }
 
@@ -57,8 +57,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                     .addFilter(corsConfig.corsFilter())
-                    .formLogin().disable()
-                    .httpBasic().disable()
+                    .formLogin().disable() //로그인폼 사용 안 함 의미
+                    .httpBasic().disable() // id,pwd를 헤더에 넣어서 보내는 것. <-> Bearer방식(토큰방식) // rest api 만을 고려하므로 기본 설정은 해제하겠습니다.
+
                     .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                     .addFilter(new JwtAuthorizationFilter(authenticationManager(), Employee_adminDao))
 
@@ -71,12 +72,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                         .antMatchers("/api/v1/users/admin/**")
                         .access("hasRole('ROLE_ADMIN')")
-                       // .anyRequest().permitAll() //모두 허용
-                    )
-                        .authorizeRequests()
-                        .antMatchers("/api/v1/users/join","/login", "/logout").permitAll()
-                        .anyRequest().authenticated();
-
+                        .anyRequest().permitAll() //모두 허용
+                    );
+//                        .authorizeRequests()
+//                        .antMatchers("/api/v1/users/join","/login", "/logout").permitAll()
+//                        .anyRequest().authenticated();
 
         http.logout()
                 .logoutUrl("/logout")
@@ -91,16 +91,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                         User user=new User();
                         user.setName(username);
                         Employee_adminDao.deleteToken(user);
-                        }else {
-                            return;
                         }
                     }
                 })
                 .logoutSuccessUrl("/")
                 .deleteCookies("JSESSIONID", "remember-me");
-
     }
-
-
 }
 

@@ -1,12 +1,15 @@
 package com.emgram.kr.dobby.config.jwt;
 
 
+import com.emgram.kr.dobby.config.auth.CustomAuthenticationProvider;
 import com.emgram.kr.dobby.config.auth.PrincipalDetail;
 import com.emgram.kr.dobby.dto.login.User;
 import com.emgram.kr.dobby.service.UserService;
 import com.emgram.kr.dobby.utils.JwtTokenUtil;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -24,6 +27,8 @@ import java.io.IOException;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
+    private static final Logger logger = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
+
     private final AuthenticationManager authenticationManager;
 
     @Autowired
@@ -32,32 +37,27 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Autowired
     private UserService userService;
 
+    @Autowired
+    CustomAuthenticationProvider customAuthenticationProvider;
+
     @Override
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response) throws AuthenticationException {
-        System.out.println("JwtAuthenticationFilter : 로그인 시도중.");
-
+        logger.info("logger JwtAuthenticationFilter : 로그인 시도중....");
 
         try {
             ObjectMapper om =new ObjectMapper();
             User user=om.readValue(request.getInputStream(), User.class);
-            System.out.println("attemptAuthentication>> "+user);
-
             UsernamePasswordAuthenticationToken authenticationToken =
                     new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword());
 
-            System.out.println("user.getName()>>"+user.getName());
-            System.out.println("user.getPassword()>>"+user.getPassword());
-
-
-            System.out.println("=================UsernamePasswordAuthenticationToken=======================");
-
-             Authentication authentication = authenticationManager.authenticate(authenticationToken);
-            System.out.println("=================authentication=======================");
-
-            PrincipalDetail principalDetail = (PrincipalDetail) authentication.getPrincipal();
-            System.out.println("로그인 완료됨 : "+ principalDetail.getUsername());
-            System.out.println("=================================================");
-            return authentication;
+            try {
+            Authentication authentication = authenticationManager.authenticate(authenticationToken);
+              PrincipalDetail principalDetail = (PrincipalDetail) authentication.getPrincipal();
+              return authentication;
+            }catch (AuthenticationException e){
+                logger.error("Authentication 실패 : " + e.getMessage(), e);
+                throw e;
+            }
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -69,9 +69,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                                             throws IOException, ServletException {
 
         PrincipalDetail principalDetail = (PrincipalDetail) authResult.getPrincipal();
-
-        System.out.println("response로 토큰 보내기 token>> "+JwtTokenUtil.createToken(principalDetail.getUsername()));
-
         response.setHeader("Authorization", "Bearer "+ JwtTokenUtil.createToken(principalDetail.getUsername()));
     }
 

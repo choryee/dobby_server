@@ -57,6 +57,8 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
                     new UsernamePasswordAuthenticationToken(principalDetail, null, principalDetail.getAuthorities());
 
             SecurityContextHolder.getContext().setAuthentication(authentication);
+            System.out.println("SecurityContextHolder.getContext().getAuthentication() JwtAuthorizationFilter>> "+ SecurityContextHolder.getContext().getAuthentication());
+
             chain.doFilter(request,response);
         } // if
 
