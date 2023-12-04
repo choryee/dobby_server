@@ -37,7 +37,7 @@ public class UserService {
         Employee_adminDao.joinUser(user);
     }
 
-    public String  login(User user){
+    public String login(User user){
       String name = user.getName();
       String token = null;
       if(token == null){
@@ -59,7 +59,6 @@ public class UserService {
     }
 
     public int update(User user){
-
         String encPassword = encoder.encode(user.getPassword());
         user.setName(user.getName());
         user.setPassword(encPassword);
@@ -68,10 +67,7 @@ public class UserService {
         if(user.getPassword() !=null){
             result = Employee_adminDao.updateUser(user);
         }
-        if(result == 1){
-            return 1;
-        }
-        return 0;
+        return result == 1 ? 1:0;
     }
 
     public void insertMemo(User user){

@@ -1,6 +1,7 @@
 package com.emgram.kr.dobby.controller;
 
 import com.emgram.kr.dobby.config.auth.PrincipalDetail;
+import com.emgram.kr.dobby.dto.CommonResponse;
 import com.emgram.kr.dobby.dto.login.User;
 import com.emgram.kr.dobby.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,8 +23,6 @@ import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
-//@RequestMapping("/api/v1/users")
-@CrossOrigin(origins = "http://localhost:3000")
 public class UserController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserController.class);
@@ -42,10 +41,9 @@ public class UserController {
     }
 
 
-    @PostMapping("/api/v1/users/login") // 8080/login은 아예 컨트럴러 안 탐. 시큐리티가 알아서 처리하는 것.
-    @CrossOrigin(origins = "http://localhost:3000")
+    @PostMapping("/login") // 8080/login은 아예 컨트럴러 안 탐. 시큐리티가 알아서 처리하는 것.
     public ResponseEntity<String> login(@RequestBody User user){
-
+        System.out.println("userController /login 탐...");
         String token = userService.login(user);
         return ResponseEntity.ok().body(token);
     }
@@ -84,20 +82,35 @@ public class UserController {
         return Collections.emptyMap();
     }
 
+//    @PostMapping("/api/v1/users/user/update")
+//    public Map<String, Object> update(@RequestBody User user){
+//        String tokenRemovingBearer = user.getToken().replace("Bearer ", "");
+//        user.setToken(tokenRemovingBearer);
+//        userService.insertToken(user);
+//
+//        Map<String, Object> map=new HashMap<>();
+//        int result = userService.update(user);
+//        if(result==1){
+//            map.put("success",200);
+//            map.put("isMatch", userService.comparePwd(user));
+//            map.put("user", userService.getUser(user.getName()));
+//        }
+//      return map;
+//    }
+
     @PostMapping("/api/v1/users/user/update")
-    public Map<String, Object> update(@RequestBody User user){
+    public CommonResponse<String> update(@RequestBody User user){
+
         String tokenRemovingBearer = user.getToken().replace("Bearer ", "");
         user.setToken(tokenRemovingBearer);
         userService.insertToken(user);
 
-        Map<String, Object> map=new HashMap<>();
-        int result = userService.update(user);
-        if(result==1){
-            map.put("success",200);
-            map.put("isMatch", userService.comparePwd(user));
-            map.put("user", userService.getUser(user.getName()));
+        int updateResult = userService.update(user);
+        if(updateResult==1){
+            System.out.println("userController update 탐...");
+            return new CommonResponse<>("success");
         }
-      return map;
+        return null;
     }
 
     @PostMapping("/api/v1/users/user/memo")

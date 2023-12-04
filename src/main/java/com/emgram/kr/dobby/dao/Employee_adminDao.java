@@ -15,7 +15,5 @@ public interface Employee_adminDao {
     int insertToken(User user);
     int deleteToken(User user);
     int insertMemo(User user);
-
     int updateUser(User user);
-
 }
