@@ -58,7 +58,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 logger.error("Authentication 실패 : " + e.getMessage(), e);
                 throw e;
             }
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -67,7 +66,6 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     @Override
     public void successfulAuthentication(HttpServletRequest request, HttpServletResponse response, FilterChain chain, Authentication authResult)
                                             throws IOException, ServletException {
-
         PrincipalDetail principalDetail = (PrincipalDetail) authResult.getPrincipal();
         response.setHeader("Authorization", "Bearer "+ JwtTokenUtil.createToken(principalDetail.getUsername()));
     }

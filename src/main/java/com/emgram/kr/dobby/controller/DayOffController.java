@@ -28,8 +28,11 @@ public class DayOffController {
     private final DayoffService dayoffService;
     @GetMapping("/employee")
     @ResponseStatus(HttpStatus.OK)
-    public CommonResponse<DayoffResult> dayoffUse(@RequestParam String employeeNo,
-                                                  @RequestParam int year){
+    public CommonResponse<DayoffResult> dayoffUse(@RequestParam("employeeNo") String employeeNo,
+                                                  @RequestParam("year") int year){
+        System.out.println("employeeNo>>> "+employeeNo);
+        System.out.println("year>>> "+year);
+
         return new CommonResponse<>(dayoffCalculationService.getDayoffResult(employeeNo,year));
     }
 

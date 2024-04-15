@@ -64,7 +64,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                     .addFilter(new JwtAuthorizationFilter(authenticationManager(), Employee_adminDao))
 
                     .authorizeRequests(authorize ->
-                        authorize.antMatchers("/api/v1/users/user/**")
+                        authorize
+                        .antMatchers("/api/v1/users/user/**")
                         .access("hasRole('ROLE_USER') or hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
 
                         .antMatchers("/api/v1/users/manager/**")
@@ -72,6 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
                         .antMatchers("/api/v1/users/admin/**")
                         .access("hasRole('ROLE_ADMIN')")
+
                         .anyRequest().permitAll() //모두 허용
                     );
 //                        .authorizeRequests()

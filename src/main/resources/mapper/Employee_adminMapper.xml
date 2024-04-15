@@ -3,6 +3,10 @@
 
 <mapper namespace="com.emgram.kr.dobby.dao.Employee_adminDao">
 
+    <select id="getEmployeeNumber" >
+        select employee_no from employee_admin where employee_no=#{name}
+    </select>
+
     <select id="getAllUsers" parameterType="com.emgram.kr.dobby.dto.login.User"  resultType="com.emgram.kr.dobby.dto.login.User">
         select *
         from employee_admin

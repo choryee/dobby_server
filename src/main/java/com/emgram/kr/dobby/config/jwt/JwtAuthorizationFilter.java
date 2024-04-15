@@ -17,8 +17,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-
-
 public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
     private Employee_adminDao Employee_adminDao;
@@ -35,7 +33,6 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
         String jwtHeader = request.getHeader("Authorization");
         System.out.println("JwtAuthorizationFilter jwtHeader>> "+ jwtHeader);
-
 
         if(jwtHeader == null || !jwtHeader.startsWith("Bearer")){
             chain.doFilter(request,response);
@@ -61,7 +58,5 @@ public class JwtAuthorizationFilter extends BasicAuthenticationFilter {
 
             chain.doFilter(request,response);
         } // if
-
     }// doFilterInternal
-
 }

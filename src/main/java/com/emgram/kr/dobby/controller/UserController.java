@@ -48,31 +48,39 @@ public class UserController {
         return ResponseEntity.ok().body(token);
     }
 
+    @PostMapping("/getEmployeeNo")
+    public CommonResponse<User> getEmployeeNumber(@RequestBody User user){
+        System.out.println("User>> "+ user);
+        User user1 = userService.getUser(user.getName());
+        String employeeNo = user1.getEmployee_no();
+        System.out.println("employeeNo>> "+ employeeNo);
+        return new CommonResponse<>(user1);
+    }
+
     @GetMapping("/api/v1/users/user/getAllUsers")
-    public ResponseEntity<Map<String, Object>> getAllUsers() {
+    public CommonResponse<Object> getAllUsers() {
         try {
             Map<String, Object> map = new HashMap<>();
             List<User> list = userService.getAllUsers();
             map.put("users", list);
-            return ResponseEntity.ok(map);
+            return new CommonResponse<>(list);
         } catch (Exception e) {
             // Log the exception
             e.printStackTrace();
             // Return a meaningful error response
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body(Collections.singletonMap("error", "An internal server error occurred."));
+            return null;
         }
     }
 
 
     @PostMapping("/api/v1/users/user/getUser")
     public Map<String, Object> getUser(@RequestBody User user, Authentication authentication){
-        Map<String, Object> map=new HashMap<>();
-        PrincipalDetail principalDetail =(PrincipalDetail) authentication.getPrincipal();
+        Map<String, Object> map = new HashMap<>();
+        PrincipalDetail principalDetail = (PrincipalDetail) authentication.getPrincipal();
         String username = principalDetail.getUsername();
         User userFromServer = userService.getUser(username);
         if(encoder.matches(user.getPassword(), userFromServer.getPassword())){
-            User newUser=new User();
+            User newUser = new User();
             newUser.setName(userFromServer.getName());
             newUser.setPassword(user.getPassword());
             newUser.setRoles(userFromServer.getRoles());

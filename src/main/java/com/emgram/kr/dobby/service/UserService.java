@@ -54,6 +54,10 @@ public class UserService {
        return Employee_adminDao.getAllUsers();
     }
 
+    public User getEmployeeNumber(String name){
+        return Employee_adminDao.getEmployeeNumber(name);
+    }
+
     public User getUser(String username){
        return Employee_adminDao.getUser(username);
     }

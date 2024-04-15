@@ -47,7 +47,8 @@ public class DayoffCalculationService {
         LocalDate holidayStartDate  = LocalDate.of(year, 1, 1);// 추후 searchCondition 에서 받아 와야됨
         LocalDate holidayEndDate = LocalDate.of(year, 12, 31);// 추후 searchCondition 에서 받아 와야됨
 
-        List<DayoffVacation> dayoffVacations = getEmployeeDayoff(dayoffService.getUsedVacation(employeeNo, year),
+        List<DayoffVacation> dayoffVacations =
+                getEmployeeDayoff(dayoffService.getUsedVacation(employeeNo, year),
                 holidayService.getHolidays(holidayStartDate, holidayEndDate));
 
         Employee employee = employeeService.getEmployeeInfo(employeeNo);

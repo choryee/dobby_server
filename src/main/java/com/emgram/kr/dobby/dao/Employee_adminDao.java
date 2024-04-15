@@ -11,6 +11,7 @@ public interface Employee_adminDao {
     List<User> getAllUsers();
     User getUserInfo(User user);
     User getUser(String username);
+    User getEmployeeNumber(String username);
     int joinUser(User user);
     int insertToken(User user);
     int deleteToken(User user);

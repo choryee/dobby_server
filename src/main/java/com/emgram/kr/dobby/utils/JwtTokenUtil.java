@@ -15,12 +15,10 @@ public class JwtTokenUtil {
     public JwtTokenUtil(@Value("${secret-key}") String secretKey){
         this.secretKey=secretKey;
     }
-
-
         public static String createToken(String userName){
             String jwtToken = JWT.create()
                     .withSubject("연차")
-                    .withExpiresAt(new Date(System.currentTimeMillis()+(60000*10))) //10 min
+                    .withExpiresAt(new Date(System.currentTimeMillis()+(60000*60*5))) //60 min*5
                     .withClaim("username", userName)
                     .sign(Algorithm.HMAC512(secretKey));
             return jwtToken;

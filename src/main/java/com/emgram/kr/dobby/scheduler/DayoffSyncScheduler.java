@@ -26,7 +26,7 @@
 //        this.dayoffService = dayoffService;
 //    }
 //
-//    @Scheduled(cron = "0/10 * * * * ?")
+//    @Scheduled(cron = "0/10 * * * * ?") // <-- 이건 시간을 나타내는 것.
 //    public void scheduleTaskSyncDayoff(){
 //        /**
 //         * 연차 사용 내역 테이블 업데이트 로직
