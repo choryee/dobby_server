@@ -64,7 +64,7 @@
         </foreach>
     </insert>
 
-    <select id="infoDayOffEmployeeNo" resultType="com.emgram.kr.dobby.dto.dayoff.DayoffVacation">
+    <select id="infoDayOffEmployeeNo" parameterType="com.emgram.kr.dobby.dto.dayoff.DayoffVacation" resultType="com.emgram.kr.dobby.dto.dayoff.DayoffVacation">
         SELECT
             dh.employee_no AS employeeNo,
             dh.event_idx AS eventIdx,

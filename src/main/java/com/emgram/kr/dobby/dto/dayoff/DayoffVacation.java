@@ -12,13 +12,16 @@ import lombok.RequiredArgsConstructor;
 public class DayoffVacation {
 
     private String employeeNo;
-    private String dayoffType;
+    private String dayoffType; // 1001-->2(연차)
     private LocalDate dayoffDt;
     private String codeName;
     private String codeVal;
 
-    public DayoffVacation(String employeeNo, String dayoffType, Date dayoffDt, String codeName,
-        String codeVal) {
+    public DayoffVacation(String employeeNo,
+                          String dayoffType,
+                          Date dayoffDt,
+                          String codeName,
+                          String codeVal) {
         this.employeeNo = employeeNo;
         this.dayoffType = dayoffType;
         this.dayoffDt = dayoffDt.toLocalDate();

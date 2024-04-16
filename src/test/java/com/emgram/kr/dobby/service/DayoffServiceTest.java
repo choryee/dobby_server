@@ -52,4 +52,13 @@ public class DayoffServiceTest {
         LocalDate dayoffDt = LocalDate.parse(date);
         return new DayoffVacation("employeeNoValue", dayoffType, dayoffDt, "codeNameValue", "codeValValue");
     }
+
+    public void DayoffVacationTest(){
+        String employeeId="M073";
+        int year = 2024;
+        List<DayoffVacation> list = dayoffDao.infoDayOffEmployeeNo(employeeId, year);
+        System.out.println("list>>"+list);
+    }
+
+
 }

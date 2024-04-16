@@ -31,16 +31,23 @@ public class DayoffCalculationService {
         double totalDayoff = calculateTotalVacation(employee, year);
 
         List<DayoffVacation> dayoffVacations = dayoffService.getUsedDayoff(employeeNo, year);
+        System.out.println("dayoffVacations>>"+dayoffVacations);
+
         List<VerifyHolidayDto> holidayDtos = holidayService.getHolidays(startDate, endDate);
+        System.out.println("holidayDtos>>"+holidayDtos);
+
         List<VerifyHolidayDto> filteredHolidayDtos = holidayDtos.stream().filter(dto -> !dto.isWeekend()).collect(Collectors.toList());
+        System.out.println("filteredHolidayDtos>>"+filteredHolidayDtos);
 
         double usedDayoff = getUsedDayoff(
                 dayoffVacations, // 사용한 연차 List<DayoffVacation>
                 filteredHolidayDtos);
 
         final double leftDayoff = totalDayoff - usedDayoff;
+        DayoffResult dayoffResult= DayoffResult.buildDayoffResult(employee, totalDayoff, leftDayoff, usedDayoff);
+        System.out.println("dayoffResult>>"+dayoffResult);
 
-        return DayoffResult.buildDayoffResult(employee, totalDayoff,leftDayoff,usedDayoff);
+        return DayoffResult.buildDayoffResult(employee, totalDayoff, leftDayoff, usedDayoff);
     }
 
     public List<EmployeeDayoff> getDayoffDetails(String employeeNo,int year){
