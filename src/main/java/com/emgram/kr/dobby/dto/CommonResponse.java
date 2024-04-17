@@ -13,7 +13,7 @@ public class CommonResponse <T> {
 
     private T result;
 
-    public CommonResponse (T result) {
+    public CommonResponse (T result) { //인수 1개인 생성자
      //`this`는 자바에서 현재 객체를 가리키는 특수한 참조입니다. `this` 키워드를 사용하여 현재 객체의 멤버 변수,
         // 메서드 또는 다른 생성자를 참조할 수 있습니다.
         //위의 코드에서 `this`는 생성자를 호출할 때 사용됩니다. 예를 들어, `CommonResponse` 클래스의 생성자 중 하나가 다른 생성자를 호출할 때
@@ -21,7 +21,7 @@ public class CommonResponse <T> {
         this(0,"성공", result);
     }
 
-    public CommonResponse (String message, T result) {
+    public CommonResponse (String message, T result) { // 인수 2개인 생성자
         this(0, message, result);
     }
 }

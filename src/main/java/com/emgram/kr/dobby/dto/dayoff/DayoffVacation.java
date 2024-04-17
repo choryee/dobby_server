@@ -2,6 +2,9 @@ package com.emgram.kr.dobby.dto.dayoff;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -17,15 +20,29 @@ public class DayoffVacation {
     private String codeName;
     private String codeVal;
 
-    public DayoffVacation(String employeeNo,
-                          String dayoffType,
-                          Date dayoffDt,
-                          String codeName,
-                          String codeVal) {
+    public DayoffVacation(String employeeNo, String dayoffType, Date dayoffDt, String codeName, String codeVal) {
         this.employeeNo = employeeNo;
         this.dayoffType = dayoffType;
         this.dayoffDt = dayoffDt.toLocalDate();
         this.codeName = codeName;
         this.codeVal = codeVal;
+    }
+
+    public List<DayoffVacation> dayOffVacationsList(){
+        List<DayoffVacation> list =new ArrayList<>();
+        DayoffVacation dayoffVacation =new DayoffVacation();
+        list.add(dayoffVacation);
+        return list;
+    }
+
+    @Override
+    public String toString() {
+        return "DayoffVacation{" +
+                "employeeNo='" + employeeNo + '\'' +
+                ", dayoffType='" + dayoffType + '\'' +
+                ", dayoffDt=" + dayoffDt +
+                ", codeName='" + codeName + '\'' +
+                ", codeVal='" + codeVal + '\'' +
+                '}';
     }
 }

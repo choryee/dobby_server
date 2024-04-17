@@ -28,6 +28,10 @@ public class DayoffResult extends Employee{
                 .totalDayoff(totalDayoff)
                 .leftDayOff(leftDayOff)
                 .usedDayoff(usedDayoff)
+                .dayoffType(employee.getDayoffType())
+                .codeName(employee.getCodeName())
+                .dayoffDt(employee.getDayoffDt())
+                .codeVal(employee.getCodeVal())
                 .build();
     }
 

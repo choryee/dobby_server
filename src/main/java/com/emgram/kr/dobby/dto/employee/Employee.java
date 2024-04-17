@@ -21,14 +21,23 @@ public class Employee {
     private String name;
     private LocalDate joiningDt;
 
-    public Employee(String wid, String employeeNo, String rankName, int departmentNo, String name,
-        Date joiningDt) {
+    private String dayoffType;
+    private LocalDate dayoffDt;
+    private String codeName;
+    private String codeVal;
+
+    public Employee(String wid, String employeeNo, String rankName, int departmentNo, String name, Date joiningDt, String dayoffType,
+                    Date dayoffDt, String codeName, String codeVal) {
         this.wid = wid;
         this.employeeNo = employeeNo;
         this.rankName = rankName;
         this.departmentNo = departmentNo;
         this.name = name;
         this.joiningDt = joiningDt.toLocalDate();
+        this.dayoffType=dayoffType;
+        this.dayoffDt = dayoffDt.toLocalDate();
+        this.codeName=codeName;
+        this.codeVal=codeVal;
     }
 
     @Getter
