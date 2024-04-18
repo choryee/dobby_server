@@ -2,6 +2,10 @@ package com.emgram.kr.dobby.dto.dayoff;
 
 import java.sql.Date;
 import java.time.LocalDate;
+<<<<<<< HEAD
+=======
+import java.util.ArrayList;
+>>>>>>> 3f1457c21bd1dd4452ab7c8cd203bf432fc2b800
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -20,22 +24,30 @@ public class DayoffVacation {
     private String codeName;
     private String codeVal;
 
-//    private List<String> dayoffType;
-//    private List<LocalDate> dayoffDt;
-//    private List<String> codeName;
-//    private List<String> codeVal;
+    public DayoffVacation(String employeeNo, String dayoffType, Date dayoffDt, String codeName, String codeVal) {
+        this.employeeNo = employeeNo;
+        this.dayoffType = dayoffType;
+        this.dayoffDt = dayoffDt.toLocalDate();
+        this.codeName = codeName;
+        this.codeVal = codeVal;
+    }
 
-    private List<DayOffVacationDetail> dayOffVacationDetails;
+    public List<DayoffVacation> dayOffVacationsList(){
+        List<DayoffVacation> list =new ArrayList<>();
+        DayoffVacation dayoffVacation =new DayoffVacation();
+        list.add(dayoffVacation);
+        return list;
+    }
 
-//    public DayoffVacation(String employeeNo,
-//                          String dayoffType,
-//                          Date dayoffDt,
-//                          String codeName,
-//                          String codeVal) {
-//        this.employeeNo = employeeNo;
-//        this.dayoffType = dayoffType;
-//        this.dayoffDt = dayoffDt.toLocalDate();
-//        this.codeName = codeName;
-//        this.codeVal = codeVal;
-//    }
+    @Override
+    public String toString() {
+        return "DayoffVacation{" +
+                "employeeNo='" + employeeNo + '\'' +
+                ", dayoffType='" + dayoffType + '\'' +
+                ", dayoffDt=" + dayoffDt +
+                ", codeName='" + codeName + '\'' +
+                ", codeVal='" + codeVal + '\'' +
+                '}';
+    }
+>>>>>>> 3f1457c21bd1dd4452ab7c8cd203bf432fc2b800
 }

@@ -62,18 +62,22 @@ public class DayoffService {
     public List<DayoffVacation> getUsedVacation(String employeeId, int year) {
 
         List<DayoffVacation> list = dayoffDao.infoDayOffEmployeeNo(employeeId, year);
-        for (DayoffVacation dayoffVacation : list){
-            System.out.println("List<DayoffVacation> >>" +dayoffVacation.getDayoffDt());
-            System.out.println("List<DayoffVacation> >>" +dayoffVacation.getDayoffType());
+        System.out.println("List<DayoffVacation size> >> "+ list.size()); //
+        for(DayoffVacation dayoffVacation: list){
+            System.out.println("dayoffVacation>>" + dayoffVacation);
         }
-        System.out.println("List<DayoffVacation> getUsedVacation >> "+ list); // []
 
-       // List<DayoffVacation> list1 = dayoffDao.infoDayOffEmployeeNo(employeeId,year)
-              //  .stream()
-               // .filter(v -> !isWeekend(v.getDayoffDt()))
-               // .filter(this::dayOffCheck)
-               // .collect(Collectors.toList());
+        List<DayoffVacation> list1 = dayoffDao.infoDayOffEmployeeNo(employeeId,year)
+                .stream()
+                .filter(v -> !isWeekend(v.getDayoffDt()))
+                .filter(this::dayOffCheck)
+                .collect(Collectors.toList());
 
+
+
+        for(DayoffVacation dayoffVacation: list1){
+            System.out.println("dayoffVacation list1>>" + dayoffVacation);
+        }
 
         return dayoffDao.infoDayOffEmployeeNo(employeeId,year)
                 .stream()
