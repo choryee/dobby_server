@@ -7,6 +7,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.sql.Date;
+import java.util.List;
 
 @Getter
 @NoArgsConstructor
@@ -21,15 +22,21 @@ public class Employee {
     private String name;
     private LocalDate joiningDt;
 
-    public Employee(String wid, String employeeNo, String rankName, int departmentNo, String name,
-        Date joiningDt) {
-        this.wid = wid;
-        this.employeeNo = employeeNo;
-        this.rankName = rankName;
-        this.departmentNo = departmentNo;
-        this.name = name;
-        this.joiningDt = joiningDt.toLocalDate();
-    }
+//    private List<String> dayoffType;
+//    private List<LocalDate> dayoffDt;
+//    private List<String> codeName;
+//    private List<String> codeVal;
+
+
+//    public Employee(String wid, String employeeNo, String rankName, int departmentNo, String name,
+//        Date joiningDt) {
+//        this.wid = wid;
+//        this.employeeNo = employeeNo;
+//        this.rankName = rankName;
+//        this.departmentNo = departmentNo;
+//        this.name = name;
+//        this.joiningDt = joiningDt.toLocalDate();
+//    }
 
     @Getter
     @NoArgsConstructor

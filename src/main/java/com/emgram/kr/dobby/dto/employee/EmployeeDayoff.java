@@ -30,6 +30,7 @@ public class EmployeeDayoff extends Employee {
                 .name(employee.getName())
                 .departmentNo(employee.getDepartmentNo())
                 .joiningDt(employee.getJoiningDt())
+
                 .dayoffType(vacation.getDayoffType())
                 .codeName(vacation.getCodeName())
                 .startDayoffDt(startDayoffDt)

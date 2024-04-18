@@ -42,7 +42,11 @@ public class DayoffServiceTest {
         when(dayoffDao.infoDayOffEmployeeNo(employeeId,year)).thenReturn(mockDayoffVacations);
 
         List<DayoffVacation> result = dayoffService.getUsedVacation(employeeId, year);
+        for(DayoffVacation dayoffVacation : result){
+            System.out.println("dayoffVacation>> "+ dayoffVacation.getDayoffDt());
+            System.out.println("dayoffVacation>> "+ dayoffVacation.getDayoffType());
 
+        }
         assertEquals(2, result.size());
 
         verify(dayoffDao, times(1)).infoDayOffEmployeeNo(employeeId,year);

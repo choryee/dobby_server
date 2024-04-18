@@ -60,14 +60,19 @@ public class DayoffService {
 
     ////LocalDate 사용 자바 버전에 따라 바꿔야 한다면, Calendar 로 변경 해야됨
     public List<DayoffVacation> getUsedVacation(String employeeId, int year) {
-        List<DayoffVacation> list = dayoffDao.infoDayOffEmployeeNo(employeeId, year);
-        System.out.println("List<DayoffVacation> >> "+ list); // []
 
-        List<DayoffVacation> list1 = dayoffDao.infoDayOffEmployeeNo(employeeId,year)
-                .stream()
+        List<DayoffVacation> list = dayoffDao.infoDayOffEmployeeNo(employeeId, year);
+        for (DayoffVacation dayoffVacation : list){
+            System.out.println("List<DayoffVacation> >>" +dayoffVacation.getDayoffDt());
+            System.out.println("List<DayoffVacation> >>" +dayoffVacation.getDayoffType());
+        }
+        System.out.println("List<DayoffVacation> getUsedVacation >> "+ list); // []
+
+       // List<DayoffVacation> list1 = dayoffDao.infoDayOffEmployeeNo(employeeId,year)
+              //  .stream()
                // .filter(v -> !isWeekend(v.getDayoffDt()))
                // .filter(this::dayOffCheck)
-                .collect(Collectors.toList());
+               // .collect(Collectors.toList());
 
 
         return dayoffDao.infoDayOffEmployeeNo(employeeId,year)
