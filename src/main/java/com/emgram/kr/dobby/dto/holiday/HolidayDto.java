@@ -26,4 +26,13 @@ public class HolidayDto {
         this.dateKindNum = dateKindNum;
     }
 
+    @Override
+    public String toString() {
+        return "HolidayDto{" +
+                "holidayName='" + holidayName + '\'' +
+                ", holiday=" + holiday +
+                ", isRestInstitutions=" + isRestInstitutions +
+                ", dateKindNum='" + dateKindNum + '\'' +
+                '}';
+    }
 }

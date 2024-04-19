@@ -14,4 +14,15 @@ public class DayOffVacationDetail {
     private LocalDate dayoffDt;
     private String codeName;
     private String codeVal;
+
+
+    @Override
+    public String toString() {
+        return "DayOffVacationDetail{" +
+                "dayoffType='" + dayoffType + '\'' +
+                ", dayoffDt=" + dayoffDt +
+                ", codeName='" + codeName + '\'' +
+                ", codeVal='" + codeVal + '\'' +
+                '}';
+    }
 }

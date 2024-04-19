@@ -16,38 +16,45 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class DayoffCalculationService {
+public class DayoffCalculationService { //<--이게 DayoffService.java를 포함함. getDayoffResult(), getDayoffDetails()등 여러개 매소드 있음.
 
     private final EmployeeService employeeService;
     private final DayoffService dayoffService;
     private final HolidayService holidayService;
     private static final int DAY_OFF_DEFAULT = 2;
+    private DayoffVacation dayoffVacation;
 
     public DayoffResult getDayoffResult(String employeeNo, int year) {
         LocalDate startDate = LocalDate.of(year, 1, 1);// 추후 searchCondition 에서 받아 와야됨
         LocalDate endDate = LocalDate.of(year, 12, 31);// 추후 searchCondition 에서 받아 와야됨
 
+
         Employee employee = employeeService.getEmployeeByEmployeeNo(employeeNo);
         double totalDayoff = calculateTotalVacation(employee, year);
 
         List<DayoffVacation> dayoffVacations = dayoffService.getUsedDayoff(employeeNo, year);
-            System.out.println("dayoffVacations>>"+dayoffVacations);
+        //{employeeNo='M073', dayoffType='1003', dayoffDt=2023-12-15, codeName='오후반차', codeVal='0.5'}
+            System.out.println("DayoffCalculationService dayoffVacations>>"+dayoffVacations);
 
         List<VerifyHolidayDto> holidayDtos = holidayService.getHolidays(startDate, endDate);
-            System.out.println("holidayDtos>>"+holidayDtos);
+            System.out.println("DayoffCalculationService holidayDtos>>"+holidayDtos);
 
         List<VerifyHolidayDto> filteredHolidayDtos = holidayDtos.stream().filter(dto -> !dto.isWeekend()).collect(Collectors.toList());
-            System.out.println("filteredHolidayDtos>>"+filteredHolidayDtos);
+            System.out.println("DayoffCalculationService filteredHolidayDtos>>"+filteredHolidayDtos);
 
         double usedDayoff = getUsedDayoff(
-                dayoffVacations, // 사용한 연차 List<DayoffVacation>
-                filteredHolidayDtos);
+                                            dayoffVacations, // 사용한 연차 List<DayoffVacation>
+                                            filteredHolidayDtos);
 
         final double leftDayoff = totalDayoff - usedDayoff;
-        DayoffResult dayoffResult= DayoffResult.buildDayoffResult(employee, totalDayoff, leftDayoff, usedDayoff);
-            System.out.println("dayoffResult>>"+dayoffResult);
 
-        return DayoffResult.buildDayoffResult(employee, totalDayoff, leftDayoff, usedDayoff);
+        DayoffResult dayoffResult= DayoffResult.buildDayoffResult(employee, totalDayoff, leftDayoff, usedDayoff, year);
+            System.out.println("DayoffCalculationService dayoffResult>> "+ dayoffResult);
+
+        DayoffResult dayoffResult1 = new DayoffResult(dayoffService);
+        return dayoffResult1.buildDayoffResult1(employee, totalDayoff, leftDayoff, usedDayoff, year);
+
+       // return DayoffResult.buildDayoffResult(employee, totalDayoff, leftDayoff, usedDayoff, year);
     }
 
     public List<EmployeeDayoff> getDayoffDetails(String employeeNo,int year){
@@ -55,8 +62,8 @@ public class DayoffCalculationService {
         LocalDate holidayEndDate = LocalDate.of(year, 12, 31);// 추후 searchCondition 에서 받아 와야됨
 
         List<DayoffVacation> dayoffVacations =
-                getEmployeeDayoff(dayoffService.getUsedVacation(employeeNo, year),
-                holidayService.getHolidays(holidayStartDate, holidayEndDate));
+                getEmployeeDayoff( dayoffService.getUsedVacation(employeeNo, year),
+                                    holidayService.getHolidays(holidayStartDate, holidayEndDate) );
 
         Employee employee = employeeService.getEmployeeInfo(employeeNo);
 

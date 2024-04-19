@@ -32,18 +32,14 @@ public class DayOffController {
                                                   @RequestParam("year") int year){
         System.out.println("employeeNo>>> "+employeeNo);
         System.out.println("year>>> "+year);
-<<<<<<< HEAD
-        System.out.println("dayoffCalculationService.getDayoffResult(employeeNo,year) >>"
-                + dayoffCalculationService.getDayoffResult(employeeNo,year) );
-        DayoffResult commonResponse = dayoffCalculationService.getDayoffResult(employeeNo,year);
-=======
+
         System.out.println("dayoffCalculationService.getDayoffResult(employeeNo,year) >>" + dayoffCalculationService.getDayoffResult(employeeNo,year));
         DayoffResult commonResponse = dayoffCalculationService.getDayoffResult(employeeNo,year);
         System.out.println(commonResponse.getTotalDayoff());
         System.out.println(commonResponse.getLeftDayOff());
         System.out.println(commonResponse.getUsedDayoff());
 
->>>>>>> 3f1457c21bd1dd4452ab7c8cd203bf432fc2b800
+
 
         return new CommonResponse<>(dayoffCalculationService.getDayoffResult(employeeNo,year));
     }

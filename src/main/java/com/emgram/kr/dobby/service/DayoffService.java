@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 
 @Slf4j
 @Service
-public class DayoffService {
+public class DayoffService { // insertDayoff(), getUsedVacation(), getUsedDayoff()등등.
 
     private DayoffDao dayoffDao;
 
@@ -59,13 +59,11 @@ public class DayoffService {
     }
 
     ////LocalDate 사용 자바 버전에 따라 바꿔야 한다면, Calendar 로 변경 해야됨
-    public List<DayoffVacation> getUsedVacation(String employeeId, int year) {
+    public List<DayoffVacation> getUsedVacation(String employeeId, int year) {// DayoffCalculationService.java에서 호출 됨.
 
         List<DayoffVacation> list = dayoffDao.infoDayOffEmployeeNo(employeeId, year);
         System.out.println("List<DayoffVacation size> >> "+ list.size()); //
-        for(DayoffVacation dayoffVacation: list){
-            System.out.println("dayoffVacation>>" + dayoffVacation);
-        }
+
 
         List<DayoffVacation> list1 = dayoffDao.infoDayOffEmployeeNo(employeeId,year)
                 .stream()
@@ -73,11 +71,10 @@ public class DayoffService {
                 .filter(this::dayOffCheck)
                 .collect(Collectors.toList());
 
-
-
-        for(DayoffVacation dayoffVacation: list1){
-            System.out.println("dayoffVacation list1>>" + dayoffVacation);
-        }
+        //{employeeNo='M073', dayoffType='1003', dayoffDt=2023-12-15, codeName='오후반차', codeVal='0.5'}
+//        for(DayoffVacation dayoffVacation: list1){
+//            System.out.println("dayoffVacation list1>>" + dayoffVacation);
+//        }
 
         return dayoffDao.infoDayOffEmployeeNo(employeeId,year)
                 .stream()

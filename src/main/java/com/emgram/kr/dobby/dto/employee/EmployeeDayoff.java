@@ -38,4 +38,16 @@ public class EmployeeDayoff extends Employee {
                 .usedDayoff(usedDayoff)
                 .build();
     }
+
+    @Override
+    public String toString() {
+        return "EmployeeDayoff{" +
+                "wid='" + wid + '\'' +
+                ", dayoffType='" + dayoffType + '\'' +
+                ", codeName='" + codeName + '\'' +
+                ", startDayoffDt=" + startDayoffDt +
+                ", endDayoffDt=" + endDayoffDt +
+                ", usedDayoff=" + usedDayoff +
+                '}';
+    }
 }
