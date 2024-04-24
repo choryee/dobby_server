@@ -36,4 +36,12 @@
         FROM caldav_event_info
     </select>
 
+    <update id="updateDayoff" parameterType="com.emgram.kr.dobby.dto.calendar.Calendar">
+
+            UPDATE caldav_event_info
+            SET start_dt= #{start_dt}
+            WHERE split_part(create_user, ':', 1) = #{create_user}
+
+    </update>
+
 </mapper>
